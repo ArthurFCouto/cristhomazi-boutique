@@ -1,9 +1,8 @@
-import { Container } from '@mui/material';
+import { useAppThemeContext } from "../../shared/contexts"
 
 export default function Home() {
+  const { toggleTheme } = useAppThemeContext();
   return (
-    <Container maxWidth="lg">
-      <div><h1>Agora o bicho vai pegar!</h1></div>
-    </Container>
+    <span onClick={toggleTheme} style={{cursor: 'pointer'}}>Mudar o tema!</span>
   )
 }
