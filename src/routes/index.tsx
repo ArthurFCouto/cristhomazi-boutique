@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppThemeProvider } from '../shared/contexts';
 import { Home } from '../pages';
+import { AppThemeProvider } from '../shared/contexts';
 
 export default function FullRoutes() {
     return (

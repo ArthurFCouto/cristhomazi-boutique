@@ -14,16 +14,18 @@ export const useAppThemeContext = () => {
     return useContext(ThemeContext);
 }
 
-interface Props {
+interface AppThemeProviderProps {
     children: React.ReactNode;
 }
 
-export const AppThemeProvider: React.FC<Props> = ({ children }) => {
+export const AppThemeProvider: React.FC<AppThemeProviderProps> = ({ children }) => {
     const prefersColorScheme = window.matchMedia('(prefers-color-scheme: light)');
     const [themeName, setThemeName] = useState<'light' | 'dark'>(prefersColorScheme.matches ? 'light' : 'dark');
+
     const toggleTheme = useCallback(() => {
         setThemeName(oldThemeName => oldThemeName === 'light' ? 'dark' : 'light');
     }, []);
+    
     const theme = useMemo(() => {
         return themeName === 'light' ? LightTheme : DarkTheme;
     }, [themeName]);
