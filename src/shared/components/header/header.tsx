@@ -1,18 +1,39 @@
-import { useState } from 'react';
 import {
     Button, ButtonBase, Divider, FormControl,
     Icon, IconButton, InputAdornment, Link,
-    Menu, MenuItem, OutlinedInput, Typography, useMediaQuery, useTheme
+    OutlinedInput, Typography, useMediaQuery, useTheme
 } from '@mui/material';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { Instagram, LocalMall, Search, WhatsApp } from '@mui/icons-material';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
 
+interface IButtonLink {
+    label: string;
+    navigate: NavigateFunction;
+    to: string;
+};
+
+const ButtonLink: React.FC<IButtonLink> = ({ label, navigate, to }) => (
+    <Button size='small' onClick={() => navigate(to)}>
+        {label}
+    </Button>
+)
+
+const IconStartInput: React.FC = () => (
+    <InputAdornment position='start'>
+        <Search />
+    </InputAdornment>
+);
+
 export const Header: React.FC = () => {
     const theme = useTheme();
     const { themeName } = useAppThemeContext();
-    const { toggleDrawerOpen } = useDrawerContext();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+    const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
+    const navigate = useNavigate();
+    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    /*
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,11 +42,44 @@ export const Header: React.FC = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const iconStartInput = (
-        <InputAdornment position='start'>
-            <Search />
-        </InputAdornment>
-    );
+    const Menu: React.FC = () => (
+        <>
+            <Button
+                aria-controls={open ? 'menu-category' : undefined}
+                aria-haspopup='true'
+                aria-expanded={open ? 'true' : undefined}
+                id='btn-category'
+                onClick={handleClick}
+                size='small'
+            >
+                Roupas
+            </Button>
+            <Menu
+                anchorEl={anchorEl}
+                id='basic-menu'
+                onClose={handleClose}
+                open={open}
+                MenuListProps={{
+                    'aria-labelledby': 'btn-category',
+                }}
+            >
+                <MenuItem onClick={handleClose}>Blazer/Jaquetas/Casacos</MenuItem>
+                <MenuItem onClick={handleClose}>Blusas/Croppeds/Camisas</MenuItem>
+                <MenuItem onClick={handleClose}>Body</MenuItem>
+                <Divider />
+                <MenuItem onClick={handleClose}>Conjuntos</MenuItem>
+                <MenuItem onClick={handleClose}>Macaquinhos/Macacões</MenuItem>
+                <MenuItem onClick={handleClose}>Vestidos</MenuItem>
+                <Divider />
+                <MenuItem onClick={handleClose}>Calças</MenuItem>
+                <MenuItem onClick={handleClose}>Saias</MenuItem>
+                <MenuItem onClick={handleClose}>Shorts</MenuItem>
+                <Divider />
+                <MenuItem onClick={handleClose}>Moda praia</MenuItem>
+            </Menu>
+        </>
+    )
+    */
 
     return (
         <Box component='header' width='100%'>
@@ -36,7 +90,7 @@ export const Header: React.FC = () => {
                 width='100%'
             >
                 {
-                    smDown ? (
+                    smDownScreen ? (
                         <Box
                             display='flex'
                             alignItems='center'
@@ -48,12 +102,14 @@ export const Header: React.FC = () => {
                             <IconButton onClick={toggleDrawerOpen}>
                                 <Icon>menu</Icon>
                             </IconButton>
-                            <img
-                                            alt='Logo da Loja'
-                                            height={theme.spacing(10)}
-                                            loading='lazy'
-                                            src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
-                                        />
+                            <ButtonBase onClick={() => navigate('/')}>
+                                <img
+                                    alt='Logo da Loja'
+                                    height={theme.spacing(5)}
+                                    loading='lazy'
+                                    src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
+                                />
+                            </ButtonBase>
                             <IconButton onClick={() => alert('Ainda não implementado.')}>
                                 <Icon>local_mall</Icon>
                             </IconButton>
@@ -89,141 +145,108 @@ export const Header: React.FC = () => {
                     )
                 }
             </Box>
+            <Box
+                display='flex'
+                justifyContent='center'
+                width='100%'
+            >
+                <Box
+                    display='flex'
+                    marginX={theme.spacing(1)}
+                    paddingY={theme.spacing(0.5)}
+                    maxWidth='md'
+                    width='100%'
+                >
+                    <Box
+                        display={smDownScreen ? 'none' : 'flex'}
+                        width='25%'
+                    >
+                        <ButtonBase
+                            sx={{
+                                height: theme.spacing(15),
+                                marginRight: 'auto',
+                            }}
+                        >
+                            <img
+                                alt='Logo da Loja'
+                                height={theme.spacing(5)}
+                                loading='lazy'
+                                onClick={() => navigate('/')}
+                                src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
+                            />
+                        </ButtonBase>
+                    </Box>
+                    <Box
+                        display='flex'
+                        flexDirection='column'
+                        justifyContent='center'
+                        width={smDownScreen ? '100%' : '50%'}
+                        paddingY={smDownScreen ? theme.spacing(1) : 0}
+                    >
+                        <Typography
+                            component='label'
+                            display='block'
+                            variant='caption'
+                        >
+                            Seja bem-vindo(a) a CrisThomazi Boutique
+                        </Typography>
+                        <FormControl sx={{ width: '100%' }}>
+                            <OutlinedInput
+                                placeholder='Colcci, Calvin Klein, Lança Perfume ...'
+                                size='small'
+                                startAdornment={<IconStartInput />}
+                                sx={{
+                                    bgcolor: theme.palette.background.paper
+                                }}
+                            />
+                        </FormControl>
+                    </Box>
+                    <Box
+                        display={smDownScreen ? 'none' : 'flex'}
+                        alignItems='flex-end'
+                        flexDirection='column'
+                        justifyContent='center'
+                        width='25%'
+                    >
+                        <Button variant='text' color='secondary' size='small'>Minha Conta</Button>
+                        <Button variant='text' startIcon={<LocalMall fontSize='inherit' />}>
+                            Sacola
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
             {
-                !smDown && (
-                    <>
+                !smDownScreen && (
+                    <Box
+                        bgcolor={theme.palette.background.paper}
+                        display='flex'
+                        justifyContent='center'
+                        width='100%'
+                    >
                         <Box
+                            component='nav'
                             display='flex'
+                            gap={theme.spacing(5)}
+                            alignContent='center'
                             justifyContent='center'
+                            marginX={theme.spacing(1)}
+                            paddingY={theme.spacing(0.5)}
+                            maxWidth='md'
                             width='100%'
                         >
-                            <Box
-                                display='flex'
-                                marginX={theme.spacing(1)}
-                                paddingY={theme.spacing(0.5)}
-                                maxWidth='md'
-                                width='100%'
-                            >
-                                <Box display='flex' width='25%'>
-                                    <ButtonBase
-                                        sx={{
-                                            height: theme.spacing(15),
-                                            marginRight: 'auto',
-                                        }}
-                                    >
-                                        <img
-                                            alt='Logo da Loja'
-                                            height={theme.spacing(10)}
-                                            loading='lazy'
-                                            src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
-                                        />
-                                    </ButtonBase>
-                                </Box>
-                                <Box
-                                    display='flex'
-                                    flexDirection='column'
-                                    justifyContent='center'
-                                    width='50%'
-                                >
-                                    <Typography
-                                        component='label'
-                                        display='block'
-                                        variant='caption'
-                                    >
-                                        Seja bem-vindo(a) a CrisThomazi Boutique
-                                    </Typography>
-                                    <FormControl sx={{ width: '100%' }}>
-                                        <OutlinedInput
-                                            placeholder='Colcci, Calvin Klein, Lança Perfume ...'
-                                            size='small'
-                                            startAdornment={iconStartInput}
-                                            sx={{
-                                                bgcolor: theme.palette.background.paper
-                                            }}
-                                        />
-                                    </FormControl>
-                                </Box>
-                                <Box
-                                    display='flex'
-                                    alignItems='flex-end'
-                                    flexDirection='column'
-                                    justifyContent='center'
-                                    width='25%'
-                                >
-                                    <Button variant='text' color='secondary' size='small'>Minha Conta</Button>
-                                    <Button variant='text' startIcon={<LocalMall fontSize='inherit' />}>
-                                        Sacola
-                                    </Button>
-                                </Box>
-                            </Box>
+                            {
+                                drawerOptions.map((option) =>
+                                    <ButtonLink
+                                        label={option.label}
+                                        to={option.path}
+                                        navigate={navigate}
+                                    />
+                                )
+                            }
                         </Box>
-                        <Box
-                            bgcolor={theme.palette.background.paper}
-                            display='flex'
-                            justifyContent='center'
-                            width='100%'
-                        >
-                            <Box
-                                display='flex'
-                                gap={theme.spacing(5)}
-                                alignContent='center'
-                                justifyContent='center'
-                                marginX={theme.spacing(1)}
-                                paddingY={theme.spacing(0.5)}
-                                maxWidth='md'
-                                width='100%'
-                            >
-                                <Button size='small'>
-                                    Home
-                                </Button>
-                                <Button
-                                    aria-controls={open ? 'menu-category' : undefined}
-                                    aria-haspopup='true'
-                                    aria-expanded={open ? 'true' : undefined}
-                                    id='btn-category'
-                                    onClick={handleClick}
-                                    size='small'
-                                >
-                                    Roupas
-                                </Button>
-                                <Menu
-                                    anchorEl={anchorEl}
-                                    id='basic-menu'
-                                    onClose={handleClose}
-                                    open={open}
-                                    MenuListProps={{
-                                        'aria-labelledby': 'btn-category',
-                                    }}
-                                >
-                                    <MenuItem onClick={handleClose}>Blazer/Jaquetas/Casacos</MenuItem>
-                                    <MenuItem onClick={handleClose}>Blusas/Croppeds/Camisas</MenuItem>
-                                    <MenuItem onClick={handleClose}>Body</MenuItem>
-                                    <Divider />
-                                    <MenuItem onClick={handleClose}>Conjuntos</MenuItem>
-                                    <MenuItem onClick={handleClose}>Macaquinhos/Macacões</MenuItem>
-                                    <MenuItem onClick={handleClose}>Vestidos</MenuItem>
-                                    <Divider />
-                                    <MenuItem onClick={handleClose}>Calças</MenuItem>
-                                    <MenuItem onClick={handleClose}>Saias</MenuItem>
-                                    <MenuItem onClick={handleClose}>Shorts</MenuItem>
-                                    <Divider />
-                                    <MenuItem onClick={handleClose}>Moda praia</MenuItem>
-                                </Menu>
-                                <Button size='small'>
-                                    Acessórios
-                                </Button>
-                                <Button size='small'>
-                                    Promoções
-                                </Button>
-                                <Button size='small'>
-                                    Masculino
-                                </Button>
-                            </Box>
-                        </Box>
-                    </>
+                    </Box>
                 )
             }
-
-        </Box>
+        </Box >
     );
 }

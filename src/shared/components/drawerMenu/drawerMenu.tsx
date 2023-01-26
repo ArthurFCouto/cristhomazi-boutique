@@ -34,6 +34,7 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({ to, label, onClick }) => {
 
 export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
   const theme = useTheme();
+  const navigate = useNavigate()
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
   const { themeName, toggleTheme } = useAppThemeContext();
 
@@ -54,11 +55,13 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
             display='flex'
             alignItems='center'
             justifyContent='center'
+            height={theme.spacing(14)}
             width='100%'
           >
             <img
               alt='Logo da Loja'
               loading='lazy'
+              onClick={() => navigate('/')}
               src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
               width='60%'
             />
@@ -66,6 +69,13 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
           <Divider />
           <Box flex={1}>
             <List component='nav'>
+              <ListItemButton onClick={() => alert('Ainda não implementado.')}>
+                <ListItemIcon>
+                  <Icon>account_box</Icon>
+                </ListItemIcon>
+                <ListItemText primary='Minha Conta' />
+              </ListItemButton>
+              <Divider />
               {
                 drawerOptions.map(drawerOption => (
                   <ListItemLink
