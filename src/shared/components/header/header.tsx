@@ -1,12 +1,13 @@
 import {
-    Button, ButtonBase, Divider, FormControl,
+    Button, ButtonBase, FormControl,
     Icon, IconButton, InputAdornment, Link,
     OutlinedInput, Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { createSearchParams, NavigateFunction, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { Instagram, LocalMall, Search, WhatsApp } from '@mui/icons-material';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { useState } from 'react';
 
 interface IButtonLink {
     label: string;
@@ -20,18 +21,28 @@ const ButtonLink: React.FC<IButtonLink> = ({ label, navigate, to }) => (
     </Button>
 )
 
-const IconStartInput: React.FC = () => (
-    <InputAdornment position='start'>
-        <Search />
-    </InputAdornment>
-);
-
 export const Header: React.FC = () => {
     const theme = useTheme();
     const { themeName } = useAppThemeContext();
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const navigate = useNavigate();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [search, setsearch] = useState<string>('');
+
+    const handleInputSearch = () => {
+        navigate({
+            pathname: '/buscar',
+            search: createSearchParams({
+                search
+            }).toString()
+        });
+    }
+
+    const IconStartInput: React.FC = () => (
+        <InputAdornment position='end'>
+            <Search onClick={handleInputSearch} sx={{ cursor: 'pointer' }} />
+        </InputAdornment>
+    );
 
     /*
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -92,6 +103,7 @@ export const Header: React.FC = () => {
                 {
                     smDownScreen ? (
                         <Box
+                            component='nav'
                             display='flex'
                             alignItems='center'
                             justifyContent='space-between'
@@ -107,7 +119,7 @@ export const Header: React.FC = () => {
                                     alt='Logo da Loja'
                                     height={theme.spacing(5)}
                                     loading='lazy'
-                                    src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
+                                    src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
                                 />
                             </ButtonBase>
                             <IconButton onClick={() => alert('Ainda não implementado.')}>
@@ -116,6 +128,7 @@ export const Header: React.FC = () => {
                         </Box>
                     ) : (
                         <Box
+                            component='nav'
                             display='flex'
                             alignContent='center'
                             gap={theme.spacing(5)}
@@ -172,16 +185,23 @@ export const Header: React.FC = () => {
                                 height={theme.spacing(5)}
                                 loading='lazy'
                                 onClick={() => navigate('/')}
-                                src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
+                                src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
                             />
                         </ButtonBase>
                     </Box>
                     <Box
+                        component='form'
                         display='flex'
                         flexDirection='column'
                         justifyContent='center'
                         width={smDownScreen ? '100%' : '50%'}
                         paddingY={smDownScreen ? theme.spacing(1) : 0}
+                        onSubmit={
+                            (event) => {
+                                event.preventDefault();
+                                handleInputSearch();
+                            }
+                        }
                     >
                         <Typography
                             component='label'
@@ -192,9 +212,12 @@ export const Header: React.FC = () => {
                         </Typography>
                         <FormControl sx={{ width: '100%' }}>
                             <OutlinedInput
+                                name='search'
+                                value={search}
+                                onChange={(event) => setsearch(event.target.value)}
                                 placeholder='Colcci, Calvin Klein, Lança Perfume ...'
                                 size='small'
-                                startAdornment={<IconStartInput />}
+                                endAdornment={<IconStartInput />}
                                 sx={{
                                     bgcolor: theme.palette.background.paper
                                 }}
@@ -235,8 +258,9 @@ export const Header: React.FC = () => {
                             width='100%'
                         >
                             {
-                                drawerOptions.map((option) =>
+                                drawerOptions.map((option, index) =>
                                     <ButtonLink
+                                        key={index}
                                         label={option.label}
                                         to={option.path}
                                         navigate={navigate}

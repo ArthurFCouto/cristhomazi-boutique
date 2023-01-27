@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home } from '../pages';
+import { Buscar, Home } from '../pages';
 import { useDrawerContext } from '../shared/contexts';
 
 export default function FullRoutes() {
@@ -12,19 +12,19 @@ export default function FullRoutes() {
                 label: 'Home',
             },
             {
-                path: '/buscar',
+                path: '/buscar/roupas',
                 label: 'Roupas',
             },
             {
-                path: '/acessorios',
+                path: '/buscar/acessorios',
                 label: 'Acessórios',
             },
             {
-                path: '/promocoes',
+                path: '/buscar/promocoes',
                 label: 'Promoções',
             },
             {
-                path: '/masculino',
+                path: '/buscar/masculino',
                 label: 'Masculino',
             },
         ]);
@@ -34,7 +34,10 @@ export default function FullRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route element={<Home />} path='/' />
-                <Route element={<h1>Página não encontrada!</h1>} path='*' />
+                <Route element={<Buscar />} path='buscar' />
+                <Route element={<Buscar />} path='buscar/:categoria' />
+                <Route element={<Home />} path='buscar/detalhes/:id' />
+                <Route element={<span>Página não encontrada!</span>} path='*' />
             </Routes>
         </BrowserRouter>
     )

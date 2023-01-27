@@ -5,6 +5,7 @@ import {
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { useEffect } from 'react';
 
 interface ListItemLinkProps {
   label: string;
@@ -19,7 +20,7 @@ interface DrawerMenuProps {
 const ListItemLink: React.FC<ListItemLinkProps> = ({ to, label, onClick }) => {
   const navigate = useNavigate();
   const resolvedPath = useResolvedPath(to);
-  const match = useMatch({ path: resolvedPath.pathname, end: false });
+  const match = useMatch({ path: resolvedPath.pathname, end: true });
   const handleClick = () => {
     navigate(to);
     onClick?.();
@@ -62,7 +63,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
               alt='Logo da Loja'
               loading='lazy'
               onClick={() => navigate('/')}
-              src={themeName === 'light' ? 'logoDark.png' : 'logoLight.png'}
+              src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
               width='60%'
             />
           </Box>
