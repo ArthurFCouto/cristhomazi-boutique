@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Paper, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import { DrawerMenu, Header } from '../components';
+import { DrawerMenu, Footer, Header } from '../components';
 
 interface BaseLayout {
     children: React.ReactNode;
@@ -10,7 +10,6 @@ interface BaseLayout {
 
 export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
     const theme = useTheme();
-    const [value, setValue] = useState(0);
     useEffect(() => {
         document.title = title;
     }, []);
@@ -33,7 +32,6 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
                 >
                     <Box
                         height='100%'
-                        marginX={theme.spacing(1)}
                         maxWidth='md'
                         overflow='auto'
                         paddingY={theme.spacing(1)}
@@ -42,6 +40,7 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
                         {children}
                     </Box>
                 </Box>
+                <Footer />
             </Box>
         </DrawerMenu>
     );
