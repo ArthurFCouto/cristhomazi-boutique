@@ -5,7 +5,6 @@ import {
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
-import { useEffect } from 'react';
 
 interface ListItemLinkProps {
   label: string;

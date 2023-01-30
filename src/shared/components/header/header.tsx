@@ -93,7 +93,11 @@ export const Header: React.FC = () => {
     */
 
     return (
-        <Box component='header' width='100%'>
+        <Box
+        display='block'
+        component='header'
+        width='100%'
+        >
             <Box
                 bgcolor={theme.palette.background.paper}
                 display='flex'

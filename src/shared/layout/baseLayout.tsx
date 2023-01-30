@@ -19,21 +19,25 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
             <Box
                 display='flex'
                 flexDirection='column'
-                justifyContent='center'
+                alignItems='center'
                 height='100%'
+                overflow='auto'
             >
                 <Header />
                 <Box
+                    bgcolor={theme.palette.background.default}
+                    borderRadius={0}
                     component={Paper}
                     display='flex'
                     flex={1}
                     flexDirection='column'
                     alignItems='center'
+                    width='100%'
                 >
                     <Box
+                        bgcolor={theme.palette.background.paper}
                         height='100%'
                         maxWidth='md'
-                        overflow='auto'
                         paddingY={theme.spacing(1)}
                         width='100%'
                     >

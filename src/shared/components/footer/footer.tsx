@@ -28,6 +28,7 @@ export const Footer: React.FC = () => {
                     <Typography variant='caption'>
                         <br />Rua Alcides Carneiro 162 Centro
                         <br />Arinos - MG
+                        <br />38680-000
                     </Typography>
                 </Grid>
                 <Grid item xs>
