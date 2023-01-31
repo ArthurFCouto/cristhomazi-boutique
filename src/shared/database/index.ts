@@ -1,3 +1,23 @@
+interface ITamanhoCor {
+    tamanho: string;
+    cor: string[];
+    
+}
+
+export interface IDatabase {
+    id: number;
+    produto: {
+        id: number;
+        sku: string;
+        titulo: string;
+        categoria: string[];
+    };
+    tamanhoCor: ITamanhoCor[];
+    valor: number;
+    descricao: string;
+    imagens: string[];
+}
+
 export default [
     {
         'id': 1,
@@ -12,20 +32,20 @@ export default [
         },
         'tamanhoCor': [
             {
-                'valor': 'P',
+                'tamanho': 'P',
                 'cor': [
                     'nude',
                     'roxo simples'
                 ]
             },
             {
-                'valor': 'M',
+                'tamanho': 'M',
                 'cor': [
                     'nude',
                 ]
             },
             {
-                'valor': 'G',
+                'tamanho': 'G',
                 'cor': [
                     'nude',
                     'roxo simples'
@@ -54,23 +74,23 @@ export default [
         },
         'tamanhoCor': [
             {
-                'valor': '40',
+                'tamanho': '40',
                 'cor': [
                     'default'
                 ]
             },
             {
-                'valor': '42',
+                'tamanho': '42',
                 'cor': [
                     'default',
                 ]
             },
             {
-                'valor': '36',
+                'tamanho': '36',
                 'cor': []
             },
             {
-                'valor': '38',
+                'tamanho': '38',
                 'cor': [
                     'default'
                 ]
@@ -85,4 +105,4 @@ export default [
             'https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-mom-escura--p-1673294384356.jpeg'
         ]
     },
-]
+] as IDatabase[];
