@@ -1,4 +1,4 @@
-import { Box, Button, ButtonBase, IconButton, Paper, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, IconButton, Paper, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { Bookmark, Share } from '@mui/icons-material';
 import { IDatabase } from '../../database';
 
@@ -28,13 +28,16 @@ export const CardArea: React.FC<ICardArea> = ({ children }) => {
 
 export const Card: React.FC<ICard> = ({ item }) => {
     const theme = useTheme();
+    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { produto: { titulo }, imagens, valor } = item;
+    const sizeFontButton = mdDownScreen ? 'small' : 'medium';
     return (
         <Box
             component={Paper}
             display='flex'
             flexDirection='column'
+            height={theme.spacing(40)}
             width={smDownScreen ? '40%' : '30%'}
         >
             <Box
@@ -53,7 +56,7 @@ export const Card: React.FC<ICard> = ({ item }) => {
                     }}
                 />
             </Box>
-            <Box padding={theme.spacing(1)} overflow='hidden'>
+            <Box display='flex' flexDirection='column' padding={theme.spacing(1)} overflow='hidden' height='100%'>
                 <Typography
                     component='div'
                     noWrap
@@ -62,18 +65,18 @@ export const Card: React.FC<ICard> = ({ item }) => {
                 >
                     {titulo}
                 </Typography>
-                <Box display='flex' alignItems='baseline'>
-                    <Typography variant='caption' mt={theme.spacing(1)}>por</Typography>
-                    <Typography variant='subtitle2'>&nbsp;R$ {valor}</Typography>
+                <Box display='flex' alignItems='baseline' marginTop={theme.spacing(1)}>
+                    <Typography color='text.secondary' variant='caption'>por</Typography>
+                    <Typography variant='subtitle2'>&nbsp; R$ {valor}</Typography>
                 </Box>
-                <Box display='flex' alignItems='center'>
-                    <IconButton>
-                    <Bookmark color='disabled' fontSize={smDownScreen ? 'small' : 'medium'} />
+                <Box display='flex' alignItems='center' flex={1}>
+                    <IconButton onClick={()=> alert('Ainda não implementado')}>
+                        <Bookmark color='action' fontSize={sizeFontButton} />
                     </IconButton>
-                    <IconButton>
-                    <Share color='disabled' fontSize={smDownScreen ? 'small' : 'medium'} />
+                    <IconButton onClick={()=> alert('Ainda não implementado')}>
+                        <Share color='action' fontSize={sizeFontButton} />
                     </IconButton>
-                    <Button color='secondary' variant='contained' size={smDownScreen ? 'small' : 'medium'} sx={{ marginLeft: 'auto' }}>
+                    <Button color='secondary' variant='contained' size={sizeFontButton} sx={{ marginLeft: 'auto' }} onClick={()=> alert('Ainda não implementado')}>
                         Comprar
                     </Button>
                 </Box>
