@@ -105,4 +105,48 @@ export default [
             'https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-mom-escura--p-1673294384356.jpeg'
         ]
     },
+    {
+        'id': 3,
+        'produto': {
+            'id': 3,
+            'sku': 'ONSHLCB',
+            'titulo': 'SHORT DUNA THEODORA',
+            'categoria': [
+                'shorts',
+                'roupas'
+            ],
+        },
+        'tamanhoCor': [
+            {
+                'tamanho': 'P',
+                'cor': [
+                    'preto',
+                    'verde limão',
+                    'laranja neon',
+                    'funcsia'
+                ]
+            },
+            {
+                'tamanho': 'M',
+                'cor': [
+                    'preto',
+                    'laranja neon',
+                    'funcsia'
+                ]
+            },
+            {
+                'tamanho': 'G',
+                'cor': [
+                    'verde limão'
+                ]
+            },
+
+        ],
+        'valor': 99.9,
+        'descricao': 'A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.',
+        'imagens': [
+            'https://54325.cdn.simplo7.net/static/54325/sku/roupas-shorts-short-duna-theodora-p-1673899081929.jpeg',
+            'https://54325.cdn.simplo7.net/static/54325/sku/roupas-shorts-short-duna-theodora-p-1673896105825.jpeg'
+        ]
+    },
 ] as IDatabase[];

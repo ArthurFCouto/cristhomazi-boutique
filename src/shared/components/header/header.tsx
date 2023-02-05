@@ -1,7 +1,7 @@
 import {
     Button, ButtonBase, FormControl,
     Icon, IconButton, InputAdornment, Link,
-    OutlinedInput, Typography, useMediaQuery, useTheme
+    OutlinedInput, Paper, Typography, useMediaQuery, useTheme
 } from '@mui/material';
 import { createSearchParams, NavigateFunction, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
@@ -94,9 +94,9 @@ export const Header: React.FC = () => {
 
     return (
         <Box
-        display='block'
-        component='header'
-        width='100%'
+            display='block'
+            component='header'
+            width='100%'
         >
             <Box
                 bgcolor={theme.palette.background.paper}
