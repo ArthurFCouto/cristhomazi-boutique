@@ -2,12 +2,11 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs, Button, Typography } from '@mui/material';
 import { Class, Home, List } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
-import { CardArea } from '../../shared/components';
 
-export const Buscar: React.FC = () => {
+export const Detalhes: React.FC = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { categoria } = useParams();
+    const { categoria, id } = useParams();
     const search = searchParams.get('search');
 
     return (
@@ -45,18 +44,6 @@ export const Buscar: React.FC = () => {
                     )
                 }
             </Breadcrumbs>
-            <CardArea>
-                <Typography>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                    Teste de Overflow<br/><br/>
-                </Typography>
-            </CardArea>
         </BaseLayout>
     )
 }

@@ -18,16 +18,6 @@ export const Home: React.FC = () => {
             <Card item={item} key={index} />
           ))
         }
-        {
-          database.map((item, index) => (
-            <Card item={item} key={index} />
-          ))
-        }
-        {
-          database.map((item, index) => (
-            <Card item={item} key={index} />
-          ))
-        }
       </CardArea>
     </BaseLayout>
   )
