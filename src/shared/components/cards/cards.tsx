@@ -1,10 +1,10 @@
 import {
     Button, Card as MuiCard, CardActions,
     CardContent, CardMedia, Grid, IconButton,
-    Link, Typography, useMediaQuery, useTheme
+    Link, Skeleton, Typography, useMediaQuery, useTheme
 } from '@mui/material'
 import { Favorite } from '@mui/icons-material';
-import { IDatabase } from '../../database';
+import { IDatabase } from '../../service';
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -23,6 +23,7 @@ export const CardArea: React.FC<ICardArea> = ({ children }) => {
             paddingX={1}
             rowSpacing={3}
             spacing={2}
+            marginTop={0}
         >
             {children}
         </Grid>
@@ -39,7 +40,7 @@ export const Card: React.FC<ICard> = ({ item }) => {
     const [image, setImage] = useState(imagens[0]);
     const changeImage = () => {
         const secondImage = imagens[1];
-        if(secondImage)
+        if (secondImage)
             setImage(secondImage)
     }
 
@@ -55,7 +56,7 @@ export const Card: React.FC<ICard> = ({ item }) => {
                         height='60%'
                         image={image}
                         onMouseEnter={changeImage}
-                        onMouseOut={()=>setImage(imagens[0])}
+                        onMouseOut={() => setImage(imagens[0])}
                         title={titulo}
                         sx={{
                             objectFit: 'contain'
@@ -87,8 +88,8 @@ export const Card: React.FC<ICard> = ({ item }) => {
                         display: 'flex',
                         padding: 0
                     }}>
-                        <Typography color='text.secondary' variant='caption'>por</Typography>
-                        <Typography variant='subtitle2'>&nbsp; R$ {valor}</Typography>
+                        <Typography color='text.secondary' variant='caption' sx={{cursor: 'default'}}>por</Typography>
+                        <Typography variant='subtitle2' sx={{cursor: 'default'}}>&nbsp; R$ {valor}</Typography>
                     </CardContent>
                     <CardActions sx={{
                         marginTop: 2,
@@ -107,6 +108,42 @@ export const Card: React.FC<ICard> = ({ item }) => {
                         >
                             Comprar
                         </Button>
+                    </CardActions>
+                </CardContent>
+            </MuiCard>
+        </Grid>
+    )
+}
+
+export const CardSkeleton: React.FC = () => {
+    const theme = useTheme();
+    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    return (
+        <Grid item xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}>
+            <MuiCard sx={{
+                height: theme.spacing(40),
+            }}>
+                <Skeleton variant='rectangular' height={theme.spacing(24)} />
+                <CardContent sx={{
+                    flex: '1 0 auto',
+                    padding: 1
+                }}>
+                    <Skeleton variant='text' sx={{ fontSize: smDownScreen ? 12 : 'auto' }} />
+                    <CardContent sx={{
+                        display: 'flex',
+                        padding: 0
+                    }}>
+                        <Skeleton variant='text' sx={{ fontSize: smDownScreen ? 12 : 'auto', width: '50%' }} />
+                    </CardContent>
+                    <CardActions sx={{
+                        marginTop: 2,
+                        padding: 0,
+                        justifyContent: 'space-between'
+                    }}>
+                        <Skeleton variant='circular' width={20}/>
+                        <Skeleton variant='rounded' width={50}/>
                     </CardActions>
                 </CardContent>
             </MuiCard>

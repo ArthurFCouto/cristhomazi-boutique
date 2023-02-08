@@ -1,7 +1,7 @@
 import {
     Button, ButtonBase, FormControl,
     Icon, IconButton, InputAdornment, Link,
-    OutlinedInput, Paper, Typography, useMediaQuery, useTheme
+    OutlinedInput, Tooltip, Typography, useMediaQuery, useTheme
 } from '@mui/material';
 import { createSearchParams, NavigateFunction, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
@@ -126,9 +126,11 @@ export const Header: React.FC = () => {
                                     src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
                                 />
                             </ButtonBase>
-                            <IconButton onClick={() => alert('Ainda não implementado.')}>
-                                <Icon>local_mall</Icon>
-                            </IconButton>
+                            <Tooltip title='Sacola'>
+                                <IconButton onClick={() => alert('Ainda não implementado.')}>
+                                    <Icon>local_mall</Icon>
+                                </IconButton>
+                            </Tooltip>
                         </Box>
                     ) : (
                         <Box
@@ -215,17 +217,19 @@ export const Header: React.FC = () => {
                             Seja bem-vindo(a) a CrisThomazi Boutique
                         </Typography>
                         <FormControl sx={{ width: '100%' }}>
-                            <OutlinedInput
-                                name='search'
-                                value={search}
-                                onChange={(event) => setsearch(event.target.value)}
-                                placeholder='Colcci, Calvin Klein, Lança Perfume ...'
-                                size='small'
-                                endAdornment={<IconStartInput />}
-                                sx={{
-                                    bgcolor: theme.palette.background.paper
-                                }}
-                            />
+                            <Tooltip title='Digite algo para pesquisar'>
+                                <OutlinedInput
+                                    name='search'
+                                    value={search}
+                                    onChange={(event) => setsearch(event.target.value)}
+                                    placeholder='Colcci, Calvin Klein, Lança Perfume ...'
+                                    size='small'
+                                    endAdornment={<IconStartInput />}
+                                    sx={{
+                                        bgcolor: theme.palette.background.paper
+                                    }}
+                                />
+                            </Tooltip>
                         </FormControl>
                     </Box>
                     <Box
