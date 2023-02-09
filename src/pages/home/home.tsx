@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <BaseLayout title='Cris Thomazi Boutique' >
+    <BaseLayout title='Cris Thomazi Boutique' showSearch>
       <Box textAlign='center'>
         <Typography variant='h6'>Seja bem vindo(a)<br /> Site em construção</Typography>
         <Engineering />

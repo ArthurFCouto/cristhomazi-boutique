@@ -1,49 +1,39 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Breadcrumbs, Button, Typography } from '@mui/material';
-import { Class, Home, List } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
+import { Typography } from '@mui/material';
 import { BaseLayout } from '../../shared/layout';
+import { useEffect, useState } from 'react';
+import { Api } from '../../shared/service';
+import { Breadcrumbs } from '../../shared/components';
 
 export const Detalhes: React.FC = () => {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const { categoria, id } = useParams();
-    const search = searchParams.get('search');
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [produto, setProduto] = useState({});
+    const [titulo, setTitulo] = useState();
+
+    useEffect(() => {
+        const buscarProdutos = async () => {
+            const url = `produtos/${id}`;
+            setLoading(true);
+            const response = await Api.get(url).catch((error) => error.response);
+            if (response) {
+                const { data } = response;
+                if (!data.error) {
+                    setProduto(data);
+                    setTitulo(data.produto.titulo);
+                }
+            } else {
+                alert('Erro ao conectar com servidor.');
+            }
+            setLoading(false);
+        }
+        buscarProdutos();
+    }, [id]);
 
     return (
-        <BaseLayout title='Cris Thomazi Boutique' >
-            <Breadcrumbs aria-label='breadcrumb'>
-                <Button
-                    color='inherit'
-                    onClick={() => navigate('/')}
-                    size='small'
-                    startIcon={<Home />}
-                >
-                    Home
-                </Button>
-                {
-                    categoria && categoria !== null && categoria.length > 0 && (
-                        <Button
-                            color='inherit'
-                            onClick={() => navigate(`/buscar/${categoria}`)}
-                            size='small'
-                            startIcon={<Class />}
-                        >
-                            {categoria}
-                        </Button>
-                    )
-                }
-                {
-                    search && search !== null && search.length > 0 && (
-                        <Typography
-                            sx={{ display: 'flex', alignItems: 'center' }}
-                            color='text.primary'
-                        >
-                            <List sx={{ mr: 0.5 }} fontSize='inherit' />
-                            {search}
-                        </Typography>
-                    )
-                }
-            </Breadcrumbs>
+        <BaseLayout title='Cris Thomazi Boutique' showSearch>
+            <Breadcrumbs title={titulo} />
+            <Typography>Teste</Typography>
         </BaseLayout>
     )
 }

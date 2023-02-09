@@ -5,10 +5,11 @@ import { DrawerMenu, Footer, Header } from '../components';
 
 interface BaseLayout {
     children: React.ReactNode;
+    showSearch?: boolean;
     title: string;
 }
 
-export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
+export const BaseLayout: React.FC<BaseLayout> = ({ children, showSearch, title }) => {
     const theme = useTheme();
     useEffect(() => {
         document.title = title;
@@ -23,7 +24,7 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, title }) => {
                 height='100%'
                 overflow='auto'
             >
-                <Header />
+                <Header showSearch={showSearch} />
                 <Box
                     bgcolor={theme.palette.background.default}
                     borderRadius={0}

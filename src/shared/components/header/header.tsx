@@ -21,7 +21,11 @@ const ButtonLink: React.FC<IButtonLink> = ({ label, navigate, to }) => (
     </Button>
 )
 
-export const Header: React.FC = () => {
+interface IHeader {
+    showSearch?: boolean;
+};
+
+export const Header: React.FC<IHeader> = ({ showSearch }) => {
     const theme = useTheme();
     const { themeName } = useAppThemeContext();
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
@@ -43,54 +47,6 @@ export const Header: React.FC = () => {
             <Search onClick={handleInputSearch} sx={{ cursor: 'pointer' }} />
         </InputAdornment>
     );
-
-    /*
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const Menu: React.FC = () => (
-        <>
-            <Button
-                aria-controls={open ? 'menu-category' : undefined}
-                aria-haspopup='true'
-                aria-expanded={open ? 'true' : undefined}
-                id='btn-category'
-                onClick={handleClick}
-                size='small'
-            >
-                Roupas
-            </Button>
-            <Menu
-                anchorEl={anchorEl}
-                id='basic-menu'
-                onClose={handleClose}
-                open={open}
-                MenuListProps={{
-                    'aria-labelledby': 'btn-category',
-                }}
-            >
-                <MenuItem onClick={handleClose}>Blazer/Jaquetas/Casacos</MenuItem>
-                <MenuItem onClick={handleClose}>Blusas/Croppeds/Camisas</MenuItem>
-                <MenuItem onClick={handleClose}>Body</MenuItem>
-                <Divider />
-                <MenuItem onClick={handleClose}>Conjuntos</MenuItem>
-                <MenuItem onClick={handleClose}>Macaquinhos/Macacões</MenuItem>
-                <MenuItem onClick={handleClose}>Vestidos</MenuItem>
-                <Divider />
-                <MenuItem onClick={handleClose}>Calças</MenuItem>
-                <MenuItem onClick={handleClose}>Saias</MenuItem>
-                <MenuItem onClick={handleClose}>Shorts</MenuItem>
-                <Divider />
-                <MenuItem onClick={handleClose}>Moda praia</MenuItem>
-            </Menu>
-        </>
-    )
-    */
 
     return (
         <Box
@@ -164,88 +120,92 @@ export const Header: React.FC = () => {
                     )
                 }
             </Box>
-            <Box
-                display='flex'
-                justifyContent='center'
-                width='100%'
-            >
-                <Box
-                    display='flex'
-                    marginX={theme.spacing(1)}
-                    paddingY={theme.spacing(0.5)}
-                    maxWidth='md'
-                    width='100%'
-                >
+            {
+                showSearch && (
                     <Box
-                        display={smDownScreen ? 'none' : 'flex'}
-                        width='25%'
-                    >
-                        <ButtonBase
-                            sx={{
-                                height: theme.spacing(15),
-                                marginRight: 'auto',
-                            }}
-                        >
-                            <img
-                                alt='Logo da Loja'
-                                height={theme.spacing(5)}
-                                loading='lazy'
-                                onClick={() => navigate('/')}
-                                src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
-                            />
-                        </ButtonBase>
-                    </Box>
-                    <Box
-                        component='form'
                         display='flex'
-                        flexDirection='column'
                         justifyContent='center'
-                        width={smDownScreen ? '100%' : '50%'}
-                        paddingY={smDownScreen ? theme.spacing(1) : 0}
-                        onSubmit={
-                            (event) => {
-                                event.preventDefault();
-                                handleInputSearch();
-                            }
-                        }
+                        width='100%'
                     >
-                        <Typography
-                            component='label'
-                            display='block'
-                            variant='caption'
+                        <Box
+                            display='flex'
+                            marginX={theme.spacing(1)}
+                            paddingY={theme.spacing(0.5)}
+                            maxWidth='md'
+                            width='100%'
                         >
-                            Seja bem-vindo(a) a CrisThomazi Boutique
-                        </Typography>
-                        <FormControl sx={{ width: '100%' }}>
-                            <Tooltip title='Digite algo para pesquisar'>
-                                <OutlinedInput
-                                    name='search'
-                                    value={search}
-                                    onChange={(event) => setsearch(event.target.value)}
-                                    placeholder='Colcci, Calvin Klein, Lança Perfume ...'
-                                    size='small'
-                                    endAdornment={<IconStartInput />}
+                            <Box
+                                display={smDownScreen ? 'none' : 'flex'}
+                                width='25%'
+                            >
+                                <ButtonBase
                                     sx={{
-                                        bgcolor: theme.palette.background.paper
+                                        height: theme.spacing(15),
+                                        marginRight: 'auto',
                                     }}
-                                />
-                            </Tooltip>
-                        </FormControl>
+                                >
+                                    <img
+                                        alt='Logo da Loja'
+                                        height={theme.spacing(5)}
+                                        loading='lazy'
+                                        onClick={() => navigate('/')}
+                                        src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
+                                    />
+                                </ButtonBase>
+                            </Box>
+                            <Box
+                                component='form'
+                                display='flex'
+                                flexDirection='column'
+                                justifyContent='center'
+                                width={smDownScreen ? '100%' : '50%'}
+                                paddingY={smDownScreen ? theme.spacing(1) : 0}
+                                onSubmit={
+                                    (event) => {
+                                        event.preventDefault();
+                                        handleInputSearch();
+                                    }
+                                }
+                            >
+                                <Typography
+                                    component='label'
+                                    display='block'
+                                    variant='caption'
+                                >
+                                    Seja bem-vindo(a) a CrisThomazi Boutique
+                                </Typography>
+                                <FormControl sx={{ width: '100%' }}>
+                                    <Tooltip title='Digite algo para pesquisar'>
+                                        <OutlinedInput
+                                            name='search'
+                                            value={search}
+                                            onChange={(event) => setsearch(event.target.value)}
+                                            placeholder='Colcci, Calvin Klein, Lança Perfume ...'
+                                            size='small'
+                                            endAdornment={<IconStartInput />}
+                                            sx={{
+                                                bgcolor: theme.palette.background.paper
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </FormControl>
+                            </Box>
+                            <Box
+                                display={smDownScreen ? 'none' : 'flex'}
+                                alignItems='flex-end'
+                                flexDirection='column'
+                                justifyContent='center'
+                                width='25%'
+                            >
+                                <Button variant='text' color='secondary' size='small'>Minha Conta</Button>
+                                <Button variant='text' startIcon={<LocalMall fontSize='inherit' />}>
+                                    Sacola
+                                </Button>
+                            </Box>
+                        </Box>
                     </Box>
-                    <Box
-                        display={smDownScreen ? 'none' : 'flex'}
-                        alignItems='flex-end'
-                        flexDirection='column'
-                        justifyContent='center'
-                        width='25%'
-                    >
-                        <Button variant='text' color='secondary' size='small'>Minha Conta</Button>
-                        <Button variant='text' startIcon={<LocalMall fontSize='inherit' />}>
-                            Sacola
-                        </Button>
-                    </Box>
-                </Box>
-            </Box>
+                )
+            }
             {
                 !smDownScreen && (
                     <Box
