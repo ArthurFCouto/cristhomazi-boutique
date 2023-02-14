@@ -1,131 +1,161 @@
 {
-    "produtos": [
+    "produto": [
         {
             "id": 1,
-            "produto": {
-                "id": 1,
-                "sku": "CJOA",
-                "titulo": "Calça de linho Joana",
-                "categoria": [
-                    "calças",
-                    "roupas"
-                ]
-            },
-            "tamanhoCor": [
-                {
-                    "tamanho": "P",
-                    "cor": [
-                        "nude",
-                        "roxo simples"
-                    ]
-                },
-                {
-                    "tamanho": "M",
-                    "cor": [
-                        "nude"
-                    ]
-                },
-                {
-                    "tamanho": "G",
-                    "cor": [
-                        "nude",
-                        "roxo simples"
-                    ]
-                }
+            "sku": "CDLJ",
+            "titulo": "Calça de linho Joana",
+            "categoria": [
+                "calças",
+                "roupas"
             ],
-            "valor": 159.9,
             "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "imagens": [
-                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana-p-1674506551553.jpeg",
-                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana-p-1674762305153.jpeg",
-                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana--p-1665437883307.jpeg"
-            ]
+            "marca": "Própria"
         },
         {
             "id": 2,
-            "produto": {
-                "id": 1,
-                "sku": "CLME",
-                "titulo": "CALÇA MOM ESCURA",
-                "categoria": [
-                    "calças",
-                    "roupas"
-                ]
-            },
-            "tamanhoCor": [
-                {
-                    "tamanho": "40",
-                    "cor": [
-                        "default"
-                    ]
-                },
-                {
-                    "tamanho": "42",
-                    "cor": [
-                        "default"
-                    ]
-                },
-                {
-                    "tamanho": "36",
-                    "cor": []
-                },
-                {
-                    "tamanho": "38",
-                    "cor": [
-                        "default"
-                    ]
-                }
+            "sku": "CME",
+            "titulo": "Calça MOM Escura",
+            "categoria": [
+                "calças",
+                "roupas"
             ],
-            "valor": 179.9,
             "descricao": "A modelo está vestindo tamanho 40. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+            "marca": "Própria"
+        },
+        {
+            "id": 3,
+            "sku": "TSCW",
+            "titulo": "T-SHIRT CUTE WILD",
+            "categoria": [
+                "blusas",
+                "roupas"
+            ],
+            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+            "marcar": "propria"
+        },
+        {
+            "id": 4,
+            "sku": "BLCZ",
+            "titulo": "BLUSA DE LINHO COM ZIPER",
+            "categoria": [
+                "blusas",
+                "roupas"
+            ],
+            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+            "marcar": "propria"
+        }
+    ],
+    "estoque": [
+        {
+            "id": 1,
+            "idProduto": 1,
+            "nome": "calca-de-linho-joana-nude",
+            "cor": "nude",
+            "hex": "#F7D1C6",
+            "imagens": [
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana--p-1665437883307.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana-p-1674762305153.jpeg"
+            ],
+            "tamanhos": [
+                "P",
+                "M",
+                "G"
+            ],
+            "valor": 149.9
+        },
+        {
+            "id": 2,
+            "idProduto": 1,
+            "nome": "calca-de-linho-joana-roxo-simples",
+            "cor": "roxo simples",
+            "hex": "#993399",
+            "imagens": [
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana-p-1674506551553.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-de-linho-joana-p-1674762305153.jpeg"
+            ],
+            "tamanhos": [
+                "M",
+                "G"
+            ],
+            "valor": 159.9
+        },
+        {
+            "id": 3,
+            "idProduto": 2,
+            "nome": "calca-mom-escura-azul",
+            "cor": "Azul",
+            "hex": "#467FA8",
             "imagens": [
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-mom-escura--p-1674506838811.jpeg",
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-mom-escura--p-1673294384356.jpeg",
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-calcas-calca-mom-escura--p-1673294384356.jpeg"
-            ]
+            ],
+            "tamanhos": [
+                "36",
+                "38",
+                "40",
+                "42"
+            ],
+            "valor": 179.9
         },
         {
-            "id": 3,
-            "produto": {
-                "id": 3,
-                "sku": "ONSHLCB",
-                "titulo": "SHORT DUNA THEODORA",
-                "categoria": [
-                    "shorts",
-                    "roupas"
-                ]
-            },
-            "tamanhoCor": [
-                {
-                    "tamanho": "P",
-                    "cor": [
-                        "preto",
-                        "verde limão",
-                        "laranja neon",
-                        "funcsia"
-                    ]
-                },
-                {
-                    "tamanho": "M",
-                    "cor": [
-                        "preto",
-                        "laranja neon",
-                        "funcsia"
-                    ]
-                },
-                {
-                    "tamanho": "G",
-                    "cor": [
-                        "verde limão"
-                    ]
-                }
-            ],
-            "valor": 99.9,
-            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+            "id": 4,
+            "idProduto": 3,
+            "nome": "t-shirt-cute-wild-branco",
+            "cor": "Branco",
+            "hex": "#EFEFEF",
             "imagens": [
-                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-shorts-short-duna-theodora-p-1673899081929.jpeg",
-                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-shorts-short-duna-theodora-p-1673896105825.jpeg"
-            ]
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071394692.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071392192.jpeg"
+            ],
+            "tamanhos": [
+                "P",
+                "M"
+            ],
+            "valor": 39.9
+        },
+        {
+            "id": 5,
+            "idProduto": 3,
+            "nome": "t-shirt-cute-wild-laranja",
+            "cor": "Laranja",
+            "hex": "#FF8602",
+            "imagens": [
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1673300016303.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071392192.jpeg"
+            ],
+            "tamanhos": [],
+            "valor": 39.9
+        },
+        {
+            "id": 6,
+            "idProduto": 3,
+            "nome": "t-shirt-cute-wild-amarelo",
+            "cor": "Amarelo",
+            "hex": "#E4F000",
+            "imagens": [
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1673299967183.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071392192.jpeg"
+            ],
+            "tamanhos": [
+                "M"
+            ],
+            "valor": 49.9
+        },
+        {
+            "id": 7,
+            "idProduto": 4,
+            "nome": "blusa-de-linho-com-ziper-verde",
+            "cor": "Verde",
+            "hex": "#90a96c",
+            "imagens": [
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-blusa-de-linho-com-ziper--p-1653949207352.jpeg",
+                "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-blusa-de-linho-com-ziper--p-1653949205945.jpeg"
+            ],
+            "tamanhos": [
+                "Unico"
+            ],
+            "valor": 89.9
         }
     ]
 }

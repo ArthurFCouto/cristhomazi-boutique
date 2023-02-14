@@ -4,7 +4,7 @@ import {
     Link, Skeleton, Typography, useMediaQuery, useTheme
 } from '@mui/material'
 import { Favorite } from '@mui/icons-material';
-import { IDatabase } from '../../service';
+import { IEstoqueProduto } from '../../service';
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -13,7 +13,7 @@ interface ICardArea {
 }
 
 interface ICard {
-    item: IDatabase;
+    item: IEstoqueProduto;
 }
 
 export const CardArea: React.FC<ICardArea> = ({ children }) => {
@@ -35,8 +35,8 @@ export const Card: React.FC<ICard> = ({ item }) => {
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const sizeFontButton = mdDownScreen ? 'small' : 'medium';
-    const { produto: { categoria, titulo }, id, imagens, valor } = item;
-
+    const { produto: { categoria, titulo }, cor, nome, imagens, valor } = item;
+    const title = (titulo+' '+cor).split(' ').map((word) => word[0].toUpperCase() + word.substring(1)).join(' ');
     const [image, setImage] = useState(imagens[0]);
     const changeImage = () => {
         const secondImage = imagens[1];
@@ -49,15 +49,15 @@ export const Card: React.FC<ICard> = ({ item }) => {
             <MuiCard sx={{
                 height: theme.spacing(40),
             }}>
-                <Link component={RouterLink} to={`/buscar/${categoria[0]}/${id}`}>
+                <Link component={RouterLink} to={`/buscar/${categoria[0]}/${nome}`}>
                     <CardMedia
-                        alt={titulo}
+                        alt={title}
                         component='img'
                         height='60%'
                         image={image}
                         onMouseEnter={changeImage}
                         onMouseOut={() => setImage(imagens[0])}
-                        title={titulo}
+                        title={title}
                         sx={{
                             objectFit: 'contain'
                         }}
@@ -69,7 +69,7 @@ export const Card: React.FC<ICard> = ({ item }) => {
                 }}>
                     <Typography
                         component='div'
-                        fontSize={smDownScreen ? 12 : 'auto'}
+                        fontSize={12}
                         gutterBottom
                         noWrap
                         textOverflow='ellipsis'
@@ -77,11 +77,12 @@ export const Card: React.FC<ICard> = ({ item }) => {
                     >
                         <Link
                             component={RouterLink}
-                            to={`/buscar/${categoria[0]}/${id}`}
+                            to={`/buscar/${categoria[0]}/${nome}`}
+                            title={title}
                             sx={{ textDecoration: 'none' }}
                             variant='inherit'
                         >
-                            {titulo}
+                            {title}
                         </Link>
                     </Typography>
                     <CardContent sx={{
@@ -130,12 +131,12 @@ export const CardSkeleton: React.FC = () => {
                     flex: '1 0 auto',
                     padding: 1
                 }}>
-                    <Skeleton variant='text' sx={{ fontSize: smDownScreen ? 12 : 'auto' }} />
+                    <Skeleton variant='text' sx={{ fontSize: 12 }} />
                     <CardContent sx={{
                         display: 'flex',
                         padding: 0
                     }}>
-                        <Skeleton variant='text' sx={{ fontSize: smDownScreen ? 12 : 'auto', width: '50%' }} />
+                        <Skeleton variant='text' sx={{ fontSize: 12, width: '50%' }} />
                     </CardContent>
                     <CardActions sx={{
                         marginTop: 2,

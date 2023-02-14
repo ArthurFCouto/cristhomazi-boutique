@@ -36,7 +36,7 @@ export default function FullRoutes() {
                 <Route element={<Home />} path='/' />
                 <Route element={<Buscar />} path='buscar' />
                 <Route element={<Buscar />} path='buscar/:categoria' />
-                <Route element={<Detalhes />} path='buscar/:categoria/:id' />
+                <Route element={<Detalhes />} path='buscar/:categoria/:nome' />
                 <Route element={<span>Página não encontrada!</span>} path='*' />
             </Routes>
         </BrowserRouter>

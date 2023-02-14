@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Card, CardArea, CardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { Engineering } from '@mui/icons-material';
-import { Api } from '../../shared/service';
+import { Api, IEstoqueProduto } from '../../shared/service';
 
 export const Home: React.FC = () => {
 
@@ -12,11 +12,16 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     const buscarProdutos = async () => {
-      const response = await Api.get('produtos').catch((error) => error.response);
-      if (response) {
-        const { data } = response;
-        if (!data.error)
-          setProdutos(data);
+      const responseProduto = await Api.get('produto').catch((error) => error.response);
+      const responseEstoque = await Api.get('estoque').catch((error) => error.response);
+      if (responseProduto && responseEstoque) {
+        const { data: dataProduto } = responseProduto;
+        const { data: dataEstoque } = responseEstoque;
+        const cards = dataEstoque.map((item: IEstoqueProduto) => {
+          item.produto = dataProduto[item.idProduto - 1];
+          return item;
+        })
+        setProdutos(cards);
       } else {
         alert('Erro ao conectar com servidor.');
       }
@@ -49,6 +54,10 @@ export const Home: React.FC = () => {
       {
         loading && (
           <CardArea>
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
             <CardSkeleton />
             <CardSkeleton />
           </CardArea>

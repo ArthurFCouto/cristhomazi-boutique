@@ -1,16 +1,18 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Breadcrumbs as MuiBreadcrumbs, Button, Typography } from '@mui/material';
+import { Breadcrumbs as MuiBreadcrumbs, Button, Skeleton, Typography, useTheme } from '@mui/material';
 import { Class, Home, List } from '@mui/icons-material';
 
 interface IBreadcrumbs {
+    loadingTitle?: boolean;
     title?: string;
 }
 
-export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ title }) => {
+export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { categoria } = useParams();
     const search = searchParams.get('search');
+    const theme = useTheme();
 
     return (
         <MuiBreadcrumbs aria-label='breadcrumb'>
@@ -52,7 +54,11 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ title }) => {
                         color='text.primary'
                     >
                         <List sx={{ mr: 0.5 }} fontSize='inherit' />
-                        {title}
+                        {
+                            loadingTitle ? (
+                                <Skeleton variant='text' sx={{ fontSize: 'inherit', width: theme.spacing(10) }} />
+                            ) : title
+                        }
                     </Typography>
                 )
             }

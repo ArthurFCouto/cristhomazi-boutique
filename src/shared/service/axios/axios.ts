@@ -1,27 +1,38 @@
 import axios from 'axios';
+import { interceptiorError, intereptorResponse } from './interceptors';
 
-export const Api = axios.create({
+const Api = axios.create({
   baseURL: 'http://localhost:3030/'
 })
 
-/* Remover */
+Api.interceptors.response.use(
+  (response) => intereptorResponse(response),
+  (error) => interceptiorError(error)
+);
 
-interface ITamanhoCor {
-  tamanho: string;
-  cor: string[];
-  
+export { Api };
+
+/* Remover */
+export interface IProduto {
+  id: number;
+  sku: string,
+  titulo: string,
+  categoria: string[],
+  descricao: string,
+  marca: string
 }
 
-export interface IDatabase {
-  id: number;
-  produto: {
-      id: number;
-      sku: string;
-      titulo: string;
-      categoria: string[];
-  };
-  tamanhoCor: ITamanhoCor[];
-  valor: number;
-  descricao: string;
-  imagens: string[];
+export interface IEstoque {
+  id: number,
+  idProduto: number,
+  nome: string,
+  cor: string,
+  hex: string,
+  imagens: string[],
+  tamanhos: string[],
+  valor: number
+}
+
+export interface IEstoqueProduto extends IEstoque {
+  produto: IProduto
 }
