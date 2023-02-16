@@ -3,29 +3,24 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Card, CardArea, CardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { Engineering } from '@mui/icons-material';
-import { Api, IEstoqueProduto } from '../../shared/service';
+import { IProduto, ProdutoService } from '../../shared/service';
 
 export const Home: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
-  const [produtos, setProdutos] = useState([]);
+  const [produtos, setProdutos] = useState<IProduto[]>([]);
 
   useEffect(() => {
     const buscarProdutos = async () => {
-      const responseProduto = await Api.get('produto').catch((error) => error.response);
-      const responseEstoque = await Api.get('estoque').catch((error) => error.response);
-      if (responseProduto && responseEstoque) {
-        const { data: dataProduto } = responseProduto;
-        const { data: dataEstoque } = responseEstoque;
-        const cards = dataEstoque.map((item: IEstoqueProduto) => {
-          item.produto = dataProduto[item.idProduto - 1];
-          return item;
-        })
-        setProdutos(cards);
-      } else {
-        alert('Erro ao conectar com servidor.');
-      }
-      setLoading(false);
+      ProdutoService.getAll()
+        .then((response) => {
+          setLoading(false);
+          if (response instanceof Error) {
+            alert(response.message);
+          } else {
+            setProdutos(response.list);
+          }
+        });
     }
     buscarProdutos();
   }, []);
@@ -54,12 +49,9 @@ export const Home: React.FC = () => {
       {
         loading && (
           <CardArea>
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
+            {
+              Array.from(Array(12)).map(() => (<CardSkeleton />))
+            }
           </CardArea>
         )
       }

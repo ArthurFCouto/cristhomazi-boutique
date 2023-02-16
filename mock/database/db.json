@@ -1,5 +1,5 @@
 {
-    "produto": [
+    "produtoBase": [
         {
             "id": 1,
             "sku": "CDLJ",
@@ -45,10 +45,10 @@
             "marcar": "propria"
         }
     ],
-    "estoque": [
+    "produto": [
         {
             "id": 1,
-            "idProduto": 1,
+            "idProdutoBase": 1,
             "nome": "calca-de-linho-joana-nude",
             "cor": "nude",
             "hex": "#F7D1C6",
@@ -65,7 +65,7 @@
         },
         {
             "id": 2,
-            "idProduto": 1,
+            "idProdutoBase": 1,
             "nome": "calca-de-linho-joana-roxo-simples",
             "cor": "roxo simples",
             "hex": "#993399",
@@ -81,7 +81,7 @@
         },
         {
             "id": 3,
-            "idProduto": 2,
+            "idProdutoBase": 2,
             "nome": "calca-mom-escura-azul",
             "cor": "Azul",
             "hex": "#467FA8",
@@ -100,7 +100,7 @@
         },
         {
             "id": 4,
-            "idProduto": 3,
+            "idProdutoBase": 3,
             "nome": "t-shirt-cute-wild-branco",
             "cor": "Branco",
             "hex": "#EFEFEF",
@@ -116,7 +116,7 @@
         },
         {
             "id": 5,
-            "idProduto": 3,
+            "idProdutoBase": 3,
             "nome": "t-shirt-cute-wild-laranja",
             "cor": "Laranja",
             "hex": "#FF8602",
@@ -129,7 +129,7 @@
         },
         {
             "id": 6,
-            "idProduto": 3,
+            "idProdutoBase": 3,
             "nome": "t-shirt-cute-wild-amarelo",
             "cor": "Amarelo",
             "hex": "#E4F000",
@@ -144,7 +144,7 @@
         },
         {
             "id": 7,
-            "idProduto": 4,
+            "idProdutoBase": 4,
             "nome": "blusa-de-linho-com-ziper-verde",
             "cor": "Verde",
             "hex": "#90a96c",
