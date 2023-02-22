@@ -1,60 +1,57 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Engineering } from '@mui/icons-material';
 import { Card, CardArea, CardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
-import { Engineering } from '@mui/icons-material';
 import { IProduto, ProdutoService } from '../../shared/service';
 
 export const Home: React.FC = () => {
-
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<IProduto[]>([]);
 
   useEffect(() => {
-    const buscarProdutos = async () => {
-      ProdutoService.getAll()
-        .then((response) => {
-          setLoading(false);
-          if (response instanceof Error) {
-            alert(response.message);
-          } else {
-            setProdutos(response.list);
-          }
-        });
-    }
-    buscarProdutos();
+    ProdutoService.getAll()
+      .then((response) => setProdutos(response.list))
+      .catch((error) => {
+        console.log('Erro:', error);
+        alert(error.customMessage);
+      })
+      .finally(() =>setLoading(false));
   }, []);
 
   return (
-    <BaseLayout title='Cris Thomazi Boutique' showSearch>
+    <BaseLayout showSearch>
       <Box textAlign='center'>
-        <Typography variant='h6'>Seja bem vindo(a)<br /> Site em construção</Typography>
-        <Engineering />
+        <Typography variant='h6'>ÚLTIMOS LANÇAMENTOS</Typography>
       </Box>
       {
-        !loading && (
-          produtos.length === 0 ? (
-            <Typography variant='body1'>Não há produtos para exibir.</Typography>
-          ) : (
+        loading ?
+          (
             <CardArea>
               {
-                produtos.map((item, index) => (
-                  <Card item={item} key={index} />
-                ))
+                Array.from(Array(12)).map((_, index) => (<CardSkeleton key={index} />))
               }
             </CardArea>
+          ) : (
+            produtos.length === 0 ?
+              (
+                <Box textAlign='center'>
+                  <Typography variant='h6'>Não encontramos produtos para exibir</Typography>
+                  <Engineering />
+                </Box>
+              ) : (
+                <CardArea>
+                  {
+                    produtos.map((item, index) => <Card item={item} key={index} />)
+                  }
+                </CardArea>
+              )
           )
-        )
       }
-      {
-        loading && (
-          <CardArea>
-            {
-              Array.from(Array(12)).map(() => (<CardSkeleton />))
-            }
-          </CardArea>
-        )
-      }
+      <Box textAlign='center'>
+        <Typography variant='h6'>Site em construção</Typography>
+        <Engineering />
+      </Box>
     </BaseLayout>
   )
 }

@@ -2,23 +2,23 @@ import { Api } from '../axios/axios';
 
 export interface IProdutoBase {
     id: number;
-    sku: string,
-    titulo: string,
     categoria: string[],
     descricao: string,
     marca: string
+    sku: string,
+    titulo: string,
 }
 
 export interface IProduto {
     id: number,
-    idProduto: number,
-    nome: string,
+    idProdutoBase: number,
     cor: string,
     hex: string,
     imagens: string[],
+    nome: string,
+    produto: IProdutoBase
     tamanhos: string[],
     valor: number,
-    produto: IProdutoBase
 }
 
 interface IGetAll {
@@ -26,14 +26,14 @@ interface IGetAll {
     total: number
 }
 
-const getAll = async (): Promise<IGetAll | Error> => {
+const getAll = async (): Promise<IGetAll> => {
     try {
         const responseProdutoBase = await Api.get('produtoBase').catch((error) => error.response);
         const responseProduto = await Api.get('produto').catch((error) => error.response);
         const { data: dataProdutoBase } = responseProdutoBase;
         const { data: dataProduto } = responseProduto;
         const list = dataProduto.map((item: IProduto) => {
-            const position = item.idProduto - 1;
+            const position = item.idProdutoBase - 1;
             item.produto = dataProdutoBase[position];
             return item;
         });
@@ -42,11 +42,30 @@ const getAll = async (): Promise<IGetAll | Error> => {
             total: list.length
         }
     } catch (error) {
-        console.error('Erro ao listar produtos:', error);
-        return new Error((error as { message: string }).message || 'Erro ao listar produtos.');
+        (error as {customMessage: string}).customMessage = 'Erro ao listar produtos.';
+        return Promise.reject(error);
+    }
+}
+
+const getByName = async (nome: string): Promise<IProduto> => {
+    try {
+        const url = `produto?nome=${nome}`;
+        const responseProdutoBase = await Api.get('produtoBase').catch((error) => error.response);
+        const responseProduto = await Api.get(url).catch((error) => error.response);
+        if (responseProduto.data.length < 1)
+            throw new Error('Produto não encontrado');
+        const { data: dataProduto } = responseProduto;
+        const { data: dataProdutoBase } = responseProdutoBase;
+        const position = dataProduto[0].idProdutoBase - 1;
+        dataProduto[0].produto = dataProdutoBase[position];
+        return dataProduto[0];
+    } catch (error) {
+        (error as {customMessage: string}).customMessage = 'Erro ao listar produto.';
+        return Promise.reject(error);
     }
 }
 
 export const ProdutoService = {
-    getAll
+    getAll,
+    getByName
 }

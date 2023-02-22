@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "server": "json-server -d 2000 -w ./mock/database/db.json -p 3030"
+    "server": "json-server -d 1000 -w ./mock/database/db.json -p 3030"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
