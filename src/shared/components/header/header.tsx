@@ -3,11 +3,12 @@ import {
     Icon, IconButton, InputAdornment, Link,
     OutlinedInput, Tooltip, Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { createSearchParams, NavigateFunction, useNavigate } from 'react-router-dom';
+import { createSearchParams, NavigateFunction, useNavigate, useSearchParams } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { Instagram, LocalMall, Search, WhatsApp } from '@mui/icons-material';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
 import { useState } from 'react';
+import { Environment } from '../../environment';
 
 interface IButtonLink {
     label: string;
@@ -31,9 +32,11 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const navigate = useNavigate();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [, setSearchParams] = useSearchParams();
     const [search, setsearch] = useState<string>('');
 
     const handleInputSearch = () => {
+        /*setSearchParams({ search }, { replace: true });*/
         navigate({
             pathname: '/buscar',
             search: createSearchParams({
@@ -83,7 +86,7 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                 />
                             </ButtonBase>
                             <Tooltip title='Sacola'>
-                                <IconButton onClick={() => alert('Ainda não implementado.')}>
+                                <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
                                     <Icon>local_mall</Icon>
                                 </IconButton>
                             </Tooltip>
