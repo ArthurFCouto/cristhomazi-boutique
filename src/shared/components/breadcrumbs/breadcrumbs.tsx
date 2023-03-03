@@ -1,6 +1,7 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs as MuiBreadcrumbs, Button, Skeleton, Typography, useTheme } from '@mui/material';
 import { Class, Home, List } from '@mui/icons-material';
+import { useMemo } from 'react';
 
 interface IBreadcrumbs {
     loadingTitle?: boolean;
@@ -11,8 +12,9 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { categoria } = useParams();
-    const search = searchParams.get('search');
     const theme = useTheme();
+
+    const search = useMemo(()=> searchParams.get('busca'), [searchParams]);
 
     return (
         <MuiBreadcrumbs aria-label='breadcrumb'>
@@ -25,7 +27,7 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
                 Home
             </Button>
             {
-                categoria && categoria !== null && categoria.length > 0 && (
+                categoria && categoria.length > 0 && (
                     <Button
                         color='inherit'
                         onClick={() => navigate(`/buscar/${categoria}`)}
@@ -37,13 +39,13 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
                 )
             }
             {
-                search && search !== null && search.length > 0 && (
+                search  && search.length > 0 && (
                     <Typography
                         sx={{ display: 'flex', alignItems: 'center' }}
                         color='text.primary'
                     >
                         <List sx={{ mr: 0.5 }} fontSize='inherit' />
-                        {search}
+                        {`Resultados para ${search?.toUpperCase()}`}
                     </Typography>
                 )
             }

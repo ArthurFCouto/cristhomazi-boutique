@@ -1,46 +1,41 @@
+import React, { useState } from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import {
-    Button, ButtonBase, FormControl,
+    Box, Button, ButtonBase, FormControl,
     Icon, IconButton, InputAdornment, Link,
     OutlinedInput, Tooltip, Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { createSearchParams, NavigateFunction, useNavigate, useSearchParams } from 'react-router-dom';
-import { Box } from '@mui/system';
 import { Instagram, LocalMall, Search, WhatsApp } from '@mui/icons-material';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
-import { useState } from 'react';
 import { Environment } from '../../environment';
+
+interface IImgLogo {
+    height: number;
+}
 
 interface IButtonLink {
     label: string;
-    navigate: NavigateFunction;
     to: string;
 };
 
-const ButtonLink: React.FC<IButtonLink> = ({ label, navigate, to }) => (
-    <Button size='small' onClick={() => navigate(to)}>
-        {label}
-    </Button>
-)
-
 interface IHeader {
+    showCategories?: boolean;
     showSearch?: boolean;
 };
 
-export const Header: React.FC<IHeader> = ({ showSearch }) => {
+export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
     const theme = useTheme();
     const { themeName } = useAppThemeContext();
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const navigate = useNavigate();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const [, setSearchParams] = useSearchParams();
-    const [search, setsearch] = useState<string>('');
+    const [busca, setBusca] = useState<string>('');
 
     const handleInputSearch = () => {
-        /*setSearchParams({ search }, { replace: true });*/
         navigate({
             pathname: '/buscar',
             search: createSearchParams({
-                search
+                busca
             }).toString()
         });
     }
@@ -51,12 +46,24 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
         </InputAdornment>
     );
 
+    const ImgLogo: React.FC<IImgLogo> = ({ height }) => (
+        <img
+            alt={Environment.DEFAULT_TITLE}
+            height={theme.spacing(height)}
+            loading='lazy'
+            onClick={() => navigate('/')}
+            src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
+        />
+    )
+
+    const ButtonLink: React.FC<IButtonLink> = ({ label, to }) => (
+        <Button size='small' onClick={() => navigate(to)}>
+            {label}
+        </Button>
+    )
+
     return (
-        <Box
-            display='block'
-            component='header'
-            width='100%'
-        >
+        <Box component='header' width='100%'>
             <Box
                 bgcolor={theme.palette.background.paper}
                 display='flex'
@@ -70,55 +77,52 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                             display='flex'
                             alignItems='center'
                             justifyContent='space-between'
-                            marginX={theme.spacing(1)}
-                            paddingY={theme.spacing(1)}
+                            marginX={1}
+                            paddingY={1}
                             width='100%'
                         >
                             <IconButton onClick={toggleDrawerOpen}>
                                 <Icon>menu</Icon>
                             </IconButton>
-                            <ButtonBase onClick={() => navigate('/')}>
-                                <img
-                                    alt='Logo da Loja'
-                                    height={theme.spacing(5)}
-                                    loading='lazy'
-                                    src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
-                                />
+                            <ButtonBase>
+                                <ImgLogo height={5} />
                             </ButtonBase>
-                            <Tooltip title='Sacola'>
-                                <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
-                                    <Icon>local_mall</Icon>
-                                </IconButton>
-                            </Tooltip>
+                            <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
+                                <Icon>local_mall</Icon>
+                            </IconButton>
                         </Box>
                     ) : (
                         <Box
                             component='nav'
                             display='flex'
                             alignContent='center'
-                            gap={theme.spacing(5)}
+                            gap={5}
                             justifyContent='end'
-                            marginX={theme.spacing(1)}
+                            marginX={1}
                             maxWidth='md'
-                            paddingY={theme.spacing(1)}
+                            paddingY={1}
                             width='100%'
                         >
-                            <Link href='https://www.instagram.com/cristhomaziboutique/' underline='none'>
-                                <Box display='flex' alignContent='center'>
-                                    <Instagram fontSize='small' htmlColor={theme.palette.primary.contrastText} />
-                                    <Typography variant='body2' ml={theme.spacing(0.5)}>
-                                        @cristhomaziboutique
-                                    </Typography>
-                                </Box>
-                            </Link>
-                            <Link href='https://api.whatsapp.com/send?phone=553897326440&text=Ol%C3%A1!%20' underline='none'>
-                                <Box display='flex' alignContent='center'>
-                                    <WhatsApp fontSize='small' htmlColor={theme.palette.primary.contrastText} />
-                                    <Typography variant='body2' ml={theme.spacing(0.5)}>
-                                        (38) 99732-6440
-                                    </Typography>
-                                </Box>
-                            </Link>
+                            <Tooltip title='Visite nosso #insta'>
+                                <Link href='https://www.instagram.com/cristhomaziboutique/' target='_blank' underline='none'>
+                                    <Box display='flex' alignContent='center'>
+                                        <Instagram fontSize='small' htmlColor={theme.palette.primary.contrastText} />
+                                        <Typography variant='body2' ml={0.5}>
+                                            @cristhomaziboutique
+                                        </Typography>
+                                    </Box>
+                                </Link>
+                            </Tooltip>
+                            <Tooltip title='Chama no #whats'>
+                                <Link href='https://api.whatsapp.com/send?phone=553897326440&text=Ol%C3%A1!%20' target='_blank' underline='none'>
+                                    <Box display='flex' alignContent='center'>
+                                        <WhatsApp fontSize='small' htmlColor={theme.palette.primary.contrastText} />
+                                        <Typography variant='body2' ml={0.5}>
+                                            (38) 99732-6440
+                                        </Typography>
+                                    </Box>
+                                </Link>
+                            </Tooltip>
                         </Box>
                     )
                 }
@@ -132,8 +136,8 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                     >
                         <Box
                             display='flex'
-                            marginX={theme.spacing(1)}
-                            paddingY={theme.spacing(0.5)}
+                            marginX={1}
+                            paddingY={0.5}
                             maxWidth='md'
                             width='100%'
                         >
@@ -141,19 +145,8 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                 display={smDownScreen ? 'none' : 'flex'}
                                 width='25%'
                             >
-                                <ButtonBase
-                                    sx={{
-                                        height: theme.spacing(15),
-                                        marginRight: 'auto',
-                                    }}
-                                >
-                                    <img
-                                        alt='Logo da Loja'
-                                        height={theme.spacing(5)}
-                                        loading='lazy'
-                                        onClick={() => navigate('/')}
-                                        src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
-                                    />
+                                <ButtonBase sx={{ height: theme.spacing(15), marginRight: 'auto' }}>
+                                    <ImgLogo height={5} />
                                 </ButtonBase>
                             </Box>
                             <Box
@@ -162,7 +155,7 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                 flexDirection='column'
                                 justifyContent='center'
                                 width={smDownScreen ? '100%' : '50%'}
-                                paddingY={smDownScreen ? theme.spacing(1) : 0}
+                                paddingY={smDownScreen ? 1 : 0}
                                 onSubmit={
                                     (event) => {
                                         event.preventDefault();
@@ -181,14 +174,12 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                     <Tooltip title='Digite algo para pesquisar'>
                                         <OutlinedInput
                                             name='search'
-                                            value={search}
-                                            onChange={(event) => setsearch(event.target.value)}
+                                            value={busca}
+                                            onChange={(event) => setBusca(event.target.value)}
                                             placeholder='Colcci, Calvin Klein, Lança Perfume ...'
                                             size='small'
                                             endAdornment={<IconStartInput />}
-                                            sx={{
-                                                bgcolor: theme.palette.background.paper
-                                            }}
+                                            sx={{ bgcolor: theme.palette.background.paper }}
                                         />
                                     </Tooltip>
                                 </FormControl>
@@ -200,8 +191,10 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                 justifyContent='center'
                                 width='25%'
                             >
-                                <Button variant='text' color='secondary' size='small'>Minha Conta</Button>
-                                <Button variant='text' startIcon={<LocalMall fontSize='inherit' />}>
+                                <Button color='secondary' onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)} size='small' title='Acessar conta' variant='text'>
+                                    Minha Conta
+                                </Button>
+                                <Button onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)} startIcon={<LocalMall fontSize='inherit' />} title='Ver sacola' variant='text'>
                                     Sacola
                                 </Button>
                             </Box>
@@ -210,7 +203,7 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                 )
             }
             {
-                !smDownScreen && (
+                (!smDownScreen && showCategories) && (
                     <Box
                         bgcolor={theme.palette.background.paper}
                         display='flex'
@@ -220,11 +213,11 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                         <Box
                             component='nav'
                             display='flex'
-                            gap={theme.spacing(5)}
                             alignContent='center'
+                            gap={5}
                             justifyContent='center'
-                            marginX={theme.spacing(1)}
-                            paddingY={theme.spacing(0.5)}
+                            marginX={1}
+                            paddingY={0.5}
                             maxWidth='md'
                             width='100%'
                         >
@@ -234,7 +227,6 @@ export const Header: React.FC<IHeader> = ({ showSearch }) => {
                                         key={index}
                                         label={option.label}
                                         to={option.path}
-                                        navigate={navigate}
                                     />
                                 )
                             }

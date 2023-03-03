@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { BaseLayout } from '../../shared/layout';
-import { Breadcrumbs, Card, CardArea, CardSkeleton } from '../../shared/components';
+import { Breadcrumbs, MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { IProduto, ProdutoService } from '../../shared/service';
+import { Environment } from '../../shared/environment';
+import { Engineering } from '@mui/icons-material';
 
 export const Buscar: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -11,7 +13,7 @@ export const Buscar: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [produtos, setProdutos] = useState<IProduto[]>([]);
 
-    const search = useMemo(() => searchParams.get('search'), [searchParams]);
+    const search = useMemo(() => searchParams.get('busca'), [searchParams]);
 
     const buscarProdutos = () => {
         setLoading(true);
@@ -33,32 +35,31 @@ export const Buscar: React.FC = () => {
     }, [categoria, search]);
 
     return (
-        <BaseLayout title='Cris Thomazi Boutique' showSearch>
+        <BaseLayout title='Cris Thomazi Boutique' showCategories showSearch>
             <Breadcrumbs />
             {
-                !loading && (
-                    produtos.length === 0 ? (
-                        <Typography variant='body1'>Não há produtos para exibir.</Typography>
-                    ) : (
-                        <CardArea>
-                            {
-                                produtos.map((item, index) => (
-                                    <Card item={item} key={index} />
-                                ))
-                            }
-                        </CardArea>
-                    )
-                )
-            }
-            {
-                loading && (
-                    <CardArea>
+                loading ? (
+                    <MCardArea>
                         {
-                            Array.from(Array(12)).map((_, index) => (<CardSkeleton key={index} />))
+                            Array.from(Array(12)).map((_, index) => <MCardSkeleton key={index} />)
                         }
-                    </CardArea>
+                    </MCardArea>
+                ) : produtos.length === 0 ? (
+                    <Box textAlign='center'>
+                        <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
+                    </Box>
+                ) : (
+                    <MCardArea>
+                        {
+                            produtos.map((item, index) => <MCard item={item} key={index} />)
+                        }
+                    </MCardArea>
                 )
             }
+            <Box textAlign='center' bgcolor={'snow'}>
+                <Typography variant='h6'>Site em construção</Typography>
+                <Engineering />
+            </Box>
         </BaseLayout>
     )
 }

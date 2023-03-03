@@ -1,3 +1,4 @@
+import { Normalize } from '../../../util';
 import { Api } from '../axios/axios';
 
 export interface IProdutoBase {
@@ -49,12 +50,10 @@ const getAll = async (): Promise<IGetAll> => {
 
 const getAllWithFilter = async (nome: string, categoria: string): Promise<IGetAll> => {
     try {
-        
-        const url = `produto?q=${nome}`;
-        const responseProdutoBase = await Api.get('produtoBase').catch((error) => error.response);
-        const responseProduto = await Api.get(url).catch((error) => error.response);
-        const { data: dataProdutoBase } = responseProdutoBase;
-        const { data: dataProduto } = responseProduto;
+        const url = `produto?q=${Normalize(nome)}`;
+        const { data: dataProdutoBase } = await Api.get('produtoBase').catch((error) => error.response);
+        const { data: dataProduto } = await Api.get(url).catch((error) => error.response);
+        console.log('Data produto', dataProduto);
         if (dataProduto.length < 1)
             throw new Error('Nenhum produto encontrado');
         let list = dataProduto.map((item: IProduto) => {

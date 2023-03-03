@@ -7,11 +7,12 @@ import { Environment } from '../environment';
 interface BaseLayout {
     children: React.ReactNode;
     description?: string;
+    showCategories?: boolean;
     showSearch?: boolean;
     title?: string;
 }
 
-export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showSearch, title }) => {
+export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showCategories, showSearch, title }) => {
     const theme = useTheme();
     useEffect(() => {
         document.title = title || Environment.DEFAULT_TITLE;
@@ -27,7 +28,7 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showSe
                 height='100%'
                 overflow='auto'
             >
-                <Header showSearch={showSearch} />
+                <Header showSearch={showSearch} showCategories={showCategories}/>
                 <Box
                     bgcolor={theme.palette.background.default}
                     borderRadius={0}

@@ -1,24 +1,25 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    Button, Card as MuiCard, CardActions,
+    Button, Card, CardActions,
     CardContent, CardMedia, Grid, IconButton,
-    Link, Skeleton, Typography, useMediaQuery, useTheme
+    Link, Skeleton, Stack, Typography, useMediaQuery, useTheme
 } from '@mui/material'
 import { Favorite } from '@mui/icons-material';
 import { IProduto } from '../../service';
 import { Capitalize, FormatBRL } from '../../util';
 import { Environment } from '../../environment';
 
-interface ICardArea {
+interface IMCardArea {
     children: React.ReactNode;
 }
 
-interface ICard {
+interface IMCard {
     item: IProduto;
 }
 
-export const CardArea: React.FC<ICardArea> = ({ children }) => {
+export const MCardArea: React.FC<IMCardArea> = ({ children }) => {
+
     return (
         <Grid
             container
@@ -33,7 +34,7 @@ export const CardArea: React.FC<ICardArea> = ({ children }) => {
     )
 }
 
-export const Card: React.FC<ICard> = ({ item }) => {
+export const MCard: React.FC<IMCard> = ({ item }) => {
     const theme = useTheme();
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,7 +53,7 @@ export const Card: React.FC<ICard> = ({ item }) => {
 
     return (
         <Grid item xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}>
-            <MuiCard sx={{ height: theme.spacing(40) }}>
+            <Card sx={{ height: theme.spacing(40) }}>
                 <Link component={RouterLink} to={url}>
                     <CardMedia
                         alt={title}
@@ -124,19 +125,19 @@ export const Card: React.FC<ICard> = ({ item }) => {
                         </Button>
                     </CardActions>
                 </CardContent>
-            </MuiCard>
+            </Card>
         </Grid>
     )
 }
 
-export const CardSkeleton: React.FC = () => {
+export const MCardSkeleton: React.FC = () => {
     const theme = useTheme();
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
         <Grid item xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}>
-            <MuiCard sx={{ height: theme.spacing(40) }}>
+            <Card sx={{ height: theme.spacing(40) }}>
                 <Skeleton height={theme.spacing(24)} variant='rectangular'/>
                 <CardContent sx={{
                     flex: '1 0 auto',
@@ -158,7 +159,7 @@ export const CardSkeleton: React.FC = () => {
                         <Skeleton variant='rounded' width={50} />
                     </CardActions>
                 </CardContent>
-            </MuiCard>
+            </Card>
         </Grid>
     )
 }

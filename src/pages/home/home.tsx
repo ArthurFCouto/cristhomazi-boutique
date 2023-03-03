@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Engineering } from '@mui/icons-material';
-import { Card, CardArea, CardSkeleton } from '../../shared/components';
+import { MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
+import { Environment } from '../../shared/environment';
 
 export const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -16,39 +17,34 @@ export const Home: React.FC = () => {
         console.log('Erro:', error);
         alert(error.customMessage);
       })
-      .finally(() =>setLoading(false));
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <BaseLayout showSearch>
+    <BaseLayout showSearch showCategories>
       <Box textAlign='center'>
         <Typography variant='h6'>ÚLTIMOS LANÇAMENTOS</Typography>
       </Box>
       {
-        loading ?
-          (
-            <CardArea>
-              {
-                Array.from(Array(12)).map((_, index) => (<CardSkeleton key={index} />))
-              }
-            </CardArea>
-          ) : (
-            produtos.length === 0 ?
-              (
-                <Box textAlign='center'>
-                  <Typography variant='h6'>Não encontramos produtos para exibir</Typography>
-                  <Engineering />
-                </Box>
-              ) : (
-                <CardArea>
-                  {
-                    produtos.map((item, index) => <Card item={item} key={index} />)
-                  }
-                </CardArea>
-              )
-          )
+        loading ? (
+          <MCardArea>
+            {
+              Array.from(Array(12)).map((_, index) => <MCardSkeleton key={index} />)
+            }
+          </MCardArea>
+        ) : produtos.length === 0 ? (
+          <Box textAlign='center'>
+            <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
+          </Box>
+        ) : (
+          <MCardArea>
+            {
+              produtos.map((item, index) => <MCard item={item} key={index} />)
+            }
+          </MCardArea>
+        )
       }
-      <Box textAlign='center'>
+      <Box textAlign='center' bgcolor={'snow'}>
         <Typography variant='h6'>Site em construção</Typography>
         <Engineering />
       </Box>
