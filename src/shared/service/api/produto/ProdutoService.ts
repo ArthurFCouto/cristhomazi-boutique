@@ -20,6 +20,7 @@ export interface IProduto {
     produto: IProdutoBase
     tamanhos: string[],
     valor: number,
+    visitas: number
 }
 
 interface IGetAll {
@@ -48,12 +49,11 @@ const getAll = async (): Promise<IGetAll> => {
     }
 }
 
-const getAllWithFilter = async (nome: string, categoria: string): Promise<IGetAll> => {
+const getAllWithFilter = async (nome: string, categoria: string, sort: 'id' | 'nome' | 'valor' | 'visitas', order: 'desc' | 'asc'): Promise<IGetAll> => {
     try {
-        const url = `produto?q=${Normalize(nome)}`;
+        const url = `produto?q=${Normalize(nome)}&_sort=${sort}&_order=${order}`;
         const { data: dataProdutoBase } = await Api.get('produtoBase').catch((error) => error.response);
         const { data: dataProduto } = await Api.get(url).catch((error) => error.response);
-        console.log('Data produto', dataProduto);
         if (dataProduto.length < 1)
             throw new Error('Nenhum produto encontrado');
         let list = dataProduto.map((item: IProduto) => {
@@ -91,8 +91,31 @@ const getByName = async (nome: string): Promise<IProduto> => {
     }
 }
 
+const getAllByCategory = async (categoria: string): Promise<IGetAll> => {
+    try {
+        const { data: dataProdutoBase } = await Api.get('produtoBase').catch((error) => error.response);
+        const { data: dataProduto } = await Api.get('produto').catch((error) => error.response);
+        if (dataProduto.length < 1)
+            throw new Error('Nenhum produto encontrado');
+        let list = dataProduto.map((item: IProduto) => {
+            const position = item.idProdutoBase - 1;
+            item.produto = dataProdutoBase[position];
+            return item;
+        });
+        list.filter((item: IProduto) => item.produto.categoria.includes(categoria.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()));
+        return {
+            list,
+            total: list.length
+        }
+    } catch (error) {
+        (error as { customMessage: string }).customMessage = 'Erro ao listar produtos.';
+        return Promise.reject(error);
+    }
+}
+
 export const ProdutoService = {
     getAll,
+    getAllByCategory,
     getAllWithFilter,
     getByName
 }

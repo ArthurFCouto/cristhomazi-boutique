@@ -61,7 +61,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
             <img
               alt='Logo da Loja'
               loading='lazy'
-              onClick={() => navigate('/')}
+              onClick={() => { toggleDrawerOpen(); navigate('/') }}
               src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
               width='60%'
             />
@@ -69,7 +69,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
           <Divider />
           <Box flex={1}>
             <List component='nav'>
-              <ListItemButton onClick={() => alert('Ainda não implementado.')}>
+              <ListItemButton onClick={() => { toggleDrawerOpen(); navigate('/dashboard') }}>
                 <ListItemIcon>
                   <Icon>account_box</Icon>
                 </ListItemIcon>

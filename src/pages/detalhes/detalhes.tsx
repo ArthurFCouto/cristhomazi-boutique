@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
-import { Box, Button, Card, CardContent, CardMedia, Divider, IconButton, Link, Paper, Skeleton, Stack, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box, Button, Card, CardContent,
+    CardMedia, Divider, IconButton, Link,
+    Paper, Skeleton, Stack, Tooltip,
+    Typography, useMediaQuery, useTheme
+} from '@mui/material';
 import { AddCard, Favorite, LocalMall, WhatsApp } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
@@ -108,9 +113,10 @@ export const Detalhes: React.FC = () => {
     }
 
     const handleListProducts = () => {
-        ProdutoService.getAllWithFilter('', categoria)
+        ProdutoService.getAllByCategory(categoria)
             .then((response) => setProdutos(response.list))
-            .catch((error) => alert(error.message));
+            .catch((error) => alert(error.message))
+            .finally(() => setLoadingProducts(false));
     }
 
     const handleFavorite = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
@@ -120,14 +126,15 @@ export const Detalhes: React.FC = () => {
     const handleBuy = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+        setLoading(true);
+        setLoadingProducts(true);
         ProdutoService.getByName(nome || '')
             .then((response) => {
                 setProduto(response);
                 setSourceImage(response.imagens[0]);
             })
-            .catch((error) => {
-                alert(error.message);
-            })
+            .catch((error) => alert(error.message))
             .finally(() => {
                 setLoading(false);
                 handleListProducts();
@@ -235,9 +242,7 @@ export const Detalhes: React.FC = () => {
                                             }
                                         </Stack>
                                     ) : (
-                                        <>
-                                            {produto && <ListSizes list={produto.tamanhos} />}
-                                        </>
+                                        produto && <ListSizes list={produto.tamanhos} />
                                     )
                                 }
                                 <Box
@@ -287,6 +292,7 @@ export const Detalhes: React.FC = () => {
                                 </Button>
                                 <Link
                                     href={`https://wa.me/?text=${window.location.href}`}
+                                    target='_blank'
                                     title='Compartilhar pelo WhatsApp'
                                     underline='hover'
                                 >
@@ -328,6 +334,7 @@ export const Detalhes: React.FC = () => {
             </Card>
             <Typography
                 fontWeight={500}
+                marginLeft={smDownScreen ? 2 : 0}
                 marginY={2}
                 variant='h6'
                 sx={{ textTransform: 'uppercase' }}
@@ -340,7 +347,7 @@ export const Detalhes: React.FC = () => {
                 square
                 variant='outlined'
             >
-                <MCardArea>
+                <MCardArea directionRow>
                     {
                         loadingProducts ? (
                             Array.from(Array(countMCardSkeleton)).map((_, index) => <MCardSkeleton key={index} />)

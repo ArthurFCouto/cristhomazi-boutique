@@ -5,7 +5,6 @@ import { BaseLayout } from '../../shared/layout';
 import { Breadcrumbs, MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { IProduto, ProdutoService } from '../../shared/service';
 import { Environment } from '../../shared/environment';
-import { Engineering } from '@mui/icons-material';
 
 export const Buscar: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -18,15 +17,9 @@ export const Buscar: React.FC = () => {
     const buscarProdutos = () => {
         setLoading(true);
         setProdutos([]);
-        ProdutoService.getAllWithFilter(search || '', categoria || '')
-            .then((response) => {
-                setProdutos(response.list);
-                console.log('Response', response);
-            })
-            .catch((error) => {
-                console.log('Erro:', error);
-                alert(error.customMessage);
-            })
+        ProdutoService.getAllWithFilter(search || '', categoria || '', 'valor', 'asc')
+            .then((response) => setProdutos(response.list))
+            .catch((error) => alert(error.customMessage))
             .finally(() => setLoading(false));
     }
 
@@ -56,10 +49,6 @@ export const Buscar: React.FC = () => {
                     </MCardArea>
                 )
             }
-            <Box textAlign='center' bgcolor={'snow'}>
-                <Typography variant='h6'>Site em construção</Typography>
-                <Engineering />
-            </Box>
         </BaseLayout>
     )
 }

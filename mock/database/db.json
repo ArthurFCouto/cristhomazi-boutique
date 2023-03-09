@@ -61,7 +61,8 @@
                 "M",
                 "G"
             ],
-            "valor": 149.9
+            "valor": 149.9,
+            "visitas": 2
         },
         {
             "id": 2,
@@ -77,7 +78,8 @@
                 "M",
                 "G"
             ],
-            "valor": 159.9
+            "valor": 159.9,
+            "visitas": 7
         },
         {
             "id": 3,
@@ -96,7 +98,8 @@
                 "40",
                 "42"
             ],
-            "valor": 179.9
+            "valor": 179.9,
+            "visitas": 3
         },
         {
             "id": 4,
@@ -112,7 +115,8 @@
                 "P",
                 "M"
             ],
-            "valor": 39.9
+            "valor": 39.9,
+            "visitas": 1
         },
         {
             "id": 5,
@@ -125,7 +129,8 @@
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071392192.jpeg"
             ],
             "tamanhos": [],
-            "valor": 39.9
+            "valor": 39.9,
+            "visitas": 1
         },
         {
             "id": 6,
@@ -140,7 +145,8 @@
             "tamanhos": [
                 "M"
             ],
-            "valor": 49.9
+            "valor": 49.9,
+            "visitas": 11
         },
         {
             "id": 7,
@@ -155,7 +161,8 @@
             "tamanhos": [
                 "Unico"
             ],
-            "valor": 89.9
+            "valor": 89.9,
+            "visitas": 9
         }
     ]
 }

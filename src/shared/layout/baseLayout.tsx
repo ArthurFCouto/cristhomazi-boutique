@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
-import { Paper, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { Engineering } from '@mui/icons-material';
 import { DrawerMenu, Footer, Header } from '../components';
 import { Environment } from '../environment';
 
 interface BaseLayout {
     children: React.ReactNode;
     description?: string;
+    sampleFooter?: boolean;
     showCategories?: boolean;
     showSearch?: boolean;
     title?: string;
 }
 
-export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showCategories, showSearch, title }) => {
+export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sampleFooter, showCategories, showSearch, title }) => {
     const theme = useTheme();
     useEffect(() => {
         document.title = title || Environment.DEFAULT_TITLE;
@@ -28,7 +29,7 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showCa
                 height='100%'
                 overflow='auto'
             >
-                <Header showSearch={showSearch} showCategories={showCategories}/>
+                <Header showSearch={showSearch} showCategories={showCategories} />
                 <Box
                     bgcolor={theme.palette.background.default}
                     borderRadius={0}
@@ -41,6 +42,8 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showCa
                 >
                     <Box
                         //bgcolor={theme.palette.background.paper}
+                        display='flex'
+                        flexDirection='column'
                         height='100%'
                         maxWidth='md'
                         paddingBottom={4}
@@ -49,8 +52,12 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, showCa
                     >
                         {children}
                     </Box>
+                    <Box textAlign='center' bgcolor={'snow'} width='100%'>
+                        <Typography variant='h6'>Site em construção</Typography>
+                        <Engineering />
+                    </Box>
                 </Box>
-                <Footer />
+                <Footer sampleFooter={sampleFooter} />
             </Box>
         </DrawerMenu>
     );

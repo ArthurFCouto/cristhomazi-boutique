@@ -87,7 +87,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                             <ButtonBase>
                                 <ImgLogo height={5} />
                             </ButtonBase>
-                            <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
+                            <IconButton onClick={() => navigate('/sacola')}>
                                 <Icon>local_mall</Icon>
                             </IconButton>
                         </Box>
@@ -191,10 +191,10 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                                 justifyContent='center'
                                 width='25%'
                             >
-                                <Button color='secondary' onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)} size='small' title='Acessar conta' variant='text'>
+                                <Button color='secondary' onClick={() => navigate('/acessar')} size='small' title='Acessar conta' variant='text'>
                                     Minha Conta
                                 </Button>
-                                <Button onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)} startIcon={<LocalMall fontSize='inherit' />} title='Ver sacola' variant='text'>
+                                <Button onClick={() => navigate('/sacola')} startIcon={<LocalMall fontSize='inherit' />} title='Ver sacola' variant='text'>
                                     Sacola
                                 </Button>
                             </Box>

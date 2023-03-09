@@ -12,22 +12,30 @@ import { Environment } from '../../environment';
 
 interface IMCardArea {
     children: React.ReactNode;
+    directionRow?: boolean;
 }
 
 interface IMCard {
     item: IProduto;
 }
 
-export const MCardArea: React.FC<IMCardArea> = ({ children }) => {
-
+export const MCardArea: React.FC<IMCardArea> = ({ children, directionRow }) => {
     return (
         <Grid
             container
-            paddingX={1}
-            rowSpacing={3}
-            spacing={2}
+            direction={directionRow ? 'row' : undefined}
+            padding={1}
+            marginX={0}
             marginBottom={3}
             marginTop={0}
+            overflow='auto'
+            sx={{
+                '::-webkit-scrollbar': {
+                    display: 'none'
+                }
+            }}
+            width='100%'
+            wrap={directionRow ? 'nowrap' : undefined}
         >
             {children}
         </Grid>
@@ -52,9 +60,13 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
     }
 
     return (
-        <Grid item xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}>
+        <Grid
+            paddingX={1}
+            paddingTop={2}
+            xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}
+        >
             <Card sx={{ height: theme.spacing(40) }}>
-                <Link component={RouterLink} to={url}>
+                <Link component={RouterLink} to={url} preventScrollReset={true}>
                     <CardMedia
                         alt={title}
                         component='img'
@@ -81,17 +93,14 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
                         <Link
                             component={RouterLink}
                             to={url}
-                            sx={{ textDecoration: 'none' }}
                             title={title}
+                            underline='none'
                             variant='inherit'
                         >
                             {title}
                         </Link>
                     </Typography>
-                    <CardContent sx={{
-                        display: 'flex',
-                        padding: 0
-                    }}>
+                    <Stack direction='row' spacing={1}>
                         <Typography
                             color='text.secondary'
                             sx={{ cursor: 'default' }}
@@ -103,26 +112,31 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
                             sx={{ cursor: 'default' }}
                             variant='subtitle2'
                         >
-                            &nbsp; {price}
+                            {price}
                         </Typography>
-                    </CardContent>
+                    </Stack>
                     <CardActions sx={{
                         marginTop: 2,
                         padding: 0,
-                        justifyContent: 'space-between'
                     }}>
-                        <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
-                            <Favorite color='action' fontSize={sizeFontButton} />
-                        </IconButton>
-                        <Button
-                            color='secondary'
-                            disableElevation
-                            variant='contained'
-                            size={sizeFontButton}
-                            onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}
+                        <Stack
+                            direction='row'
+                            justifyContent='space-between'
+                            width='100%'
                         >
-                            Comprar
-                        </Button>
+                            <IconButton onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}>
+                                <Favorite color='action' fontSize={sizeFontButton} />
+                            </IconButton>
+                            <Button
+                                color='secondary'
+                                disableElevation
+                                variant='contained'
+                                size={sizeFontButton}
+                                onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}
+                            >
+                                Comprar
+                            </Button>
+                        </Stack>
                     </CardActions>
                 </CardContent>
             </Card>
@@ -136,27 +150,36 @@ export const MCardSkeleton: React.FC = () => {
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Grid item xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}>
+        <Grid
+            paddingX={1}
+            paddingTop={2}
+            xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}
+        >
             <Card sx={{ height: theme.spacing(40) }}>
-                <Skeleton height={theme.spacing(24)} variant='rectangular'/>
+                <Skeleton height={theme.spacing(24)} variant='rectangular' />
                 <CardContent sx={{
                     flex: '1 0 auto',
                     padding: 1
                 }}>
-                    <Skeleton variant='text'/>
+                    <Skeleton variant='text' />
                     <CardContent sx={{
                         display: 'flex',
                         padding: 0
                     }}>
-                        <Skeleton sx={{ width: '50%' }} variant='text'/>
+                        <Skeleton sx={{ width: '50%' }} variant='text' />
                     </CardContent>
                     <CardActions sx={{
                         marginTop: 2,
-                        padding: 0,
-                        justifyContent: 'space-between'
+                        padding: 0
                     }}>
-                        <Skeleton variant='circular' width={20} />
-                        <Skeleton variant='rounded' width={50} />
+                        <Stack
+                            direction='row'
+                            justifyContent='space-between'
+                            width='100%'
+                        >
+                            <Skeleton variant='circular' width={20} />
+                            <Skeleton variant='rounded' width={50} />
+                        </Stack>
                     </CardActions>
                 </CardContent>
             </Card>
