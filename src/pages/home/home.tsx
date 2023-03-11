@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Card, CardMedia, Chip, Typography } from '@mui/material';
+import { Box, Card, CardMedia, Chip, Skeleton, Typography } from '@mui/material';
 import { MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
@@ -30,7 +30,7 @@ export const Home: React.FC = () => {
           <CardMedia
             alt='Teste de Banner'
             component='img'
-            image='https://s3images.coroflot.com/user_files/individual_files/505541_njloub9luqsdctrszc6itlpya.png'
+            image='/banner.png'
             title='Banner'
             width='100%'
           />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Button, Card, CardActions,
     CardContent, CardMedia, Grid, IconButton,
@@ -34,7 +34,6 @@ export const MCardArea: React.FC<IMCardArea> = ({ children, directionRow }) => {
                     display: 'none'
                 }
             }}
-            width='100%'
             wrap={directionRow ? 'nowrap' : undefined}
         >
             {children}
@@ -44,8 +43,8 @@ export const MCardArea: React.FC<IMCardArea> = ({ children, directionRow }) => {
 
 export const MCard: React.FC<IMCard> = ({ item }) => {
     const theme = useTheme();
+    const navigation = useNavigate();
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const sizeFontButton = mdDownScreen ? 'small' : 'medium';
     const { produto: { categoria, titulo }, cor, nome, imagens, valor } = item;
     const title = Capitalize(titulo + ' ' + cor);
@@ -61,9 +60,12 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
 
     return (
         <Grid
+            item
             paddingX={1}
             paddingTop={2}
-            xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}
+            xs={6}
+            sm={4}
+            md={3}
         >
             <Card sx={{ height: theme.spacing(40) }}>
                 <Link component={RouterLink} to={url} preventScrollReset={true}>
@@ -132,7 +134,7 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
                                 disableElevation
                                 variant='contained'
                                 size={sizeFontButton}
-                                onClick={() => alert(Environment.NOT_IMPLEMENTED_MESSAGE)}
+                                onClick={() => navigation(url)}
                             >
                                 Comprar
                             </Button>
@@ -146,14 +148,15 @@ export const MCard: React.FC<IMCard> = ({ item }) => {
 
 export const MCardSkeleton: React.FC = () => {
     const theme = useTheme();
-    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
         <Grid
+            item
             paddingX={1}
             paddingTop={2}
-            xs={smDownScreen ? 6 : mdDownScreen ? 4 : 3}
+            xs={6}
+            sm={4}
+            md={3}
         >
             <Card sx={{ height: theme.spacing(40) }}>
                 <Skeleton height={theme.spacing(24)} variant='rectangular' />

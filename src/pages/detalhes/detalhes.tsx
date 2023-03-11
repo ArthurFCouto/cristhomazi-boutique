@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import {
     Box, Button, Card, CardContent,
     CardMedia, Divider, IconButton, Link,
@@ -12,6 +12,7 @@ import { IProduto, ProdutoService } from '../../shared/service';
 import { Breadcrumbs, MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
+import { useCartContext } from '../../shared/contexts';
 
 interface ILists {
     list: string[]
@@ -39,11 +40,14 @@ const ListCategories: React.FC<ILists> = ({ list }) => {
 export const Detalhes: React.FC = () => {
     const { categoria = 'roupas', nome } = useParams();
     const theme = useTheme();
+    const navigation = useNavigate();
+    const { addItem } = useCartContext();
     const [loading, setLoading] = useState(true);
     const [loadingProducts, setLoadingProducts] = useState(true);
     const [produto, setProduto] = useState<IProduto>();
     const [produtos, setProdutos] = useState<IProduto[]>([]);
     const [sourceImage, setSourceImage] = useState<string>();
+    const [sizeSelected, setSizeSelected] = useState('');
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const countMCardSkeleton = smDownScreen ? 2 : mdDownScreen ? 3 : 4;
@@ -62,6 +66,7 @@ export const Detalhes: React.FC = () => {
                     list.map((image, index) =>
                         <Paper
                             elevation={1}
+                            key={index}
                             square
                             sx={{ cursor: 'pointer', padding: 0.5 }}
                         >
@@ -83,9 +88,11 @@ export const Detalhes: React.FC = () => {
     }
 
     const ListSizes: React.FC<ILists> = ({ list }) => {
-        const [selected, setSelected] = useState('');
-
-        const handleClick = (tamanho: string) => setSelected((oldSelected) => oldSelected != tamanho ? tamanho : '');
+        const handleClick = (tamanho: string) => setSizeSelected((oldSizeSelected) => oldSizeSelected !== tamanho ? tamanho : '');
+        useEffect(() => {
+            if (list.length === 1)
+                setSizeSelected(list[0]);
+        }, [list]);
 
         return (
             <Stack direction='row' marginTop={1} spacing={1}>
@@ -93,7 +100,7 @@ export const Detalhes: React.FC = () => {
                     list.map((tamanho, index) =>
                         <Box
                             component={Paper}
-                            bgcolor={tamanho === selected ? theme.palette.background.default : 'default'}
+                            bgcolor={tamanho === sizeSelected ? theme.palette.background.default : 'default'}
                             elevation={1}
                             key={index}
                             onClick={() => handleClick(tamanho)}
@@ -121,9 +128,49 @@ export const Detalhes: React.FC = () => {
 
     const handleFavorite = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
 
-    const handleShoppingBag = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
+    const handleShoppingBag = () => {
+        if (produto) {
+            if (sizeSelected.length > 0) {
+                const cartProduct = {
+                    id: produto.id,
+                    titulo: produto.produto.titulo,
+                    nome: produto.nome,
+                    cor: produto.cor,
+                    imagem: produto.imagens[0],
+                    tamanho: sizeSelected,
+                    valor: produto.valor,
+                }
+                addItem(cartProduct);
+                alert('Produto adicionado a sacola!');
+            } else {
+                alert('Selecione um tamanho!')
+            }
+        } else {
+            alert('Não é possível adicionar a sacola!');
+        }
+    };
 
-    const handleBuy = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
+    const handleBuy = () => {
+        if (produto) {
+            if (sizeSelected.length > 0) {
+                const cartProduct = {
+                    id: produto.id,
+                    titulo: produto.produto.titulo,
+                    nome: produto.nome,
+                    cor: produto.cor,
+                    imagem: produto.imagens[0],
+                    tamanho: sizeSelected,
+                    valor: produto.valor,
+                }
+                addItem(cartProduct);
+                navigation('/sacola');
+            } else {
+                alert('Selecione um tamanho!')
+            }
+        } else {
+            alert('Não é possível fazer esta operação!');
+        }
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
