@@ -2,8 +2,12 @@ import { Close } from '@mui/icons-material';
 import { Alert, IconButton, Slide, Snackbar } from '@mui/material';
 import { createContext, useContext, useState } from 'react';
 
+type ISeverity = 'info' | 'error' | 'success' | 'warning';
+
+type IDirection = 'up' | 'right' | 'down' | 'left';
+
 interface IDialogContextData {
-    showAlert: (message: string, severity: 'info' | 'error' | 'success' | 'warning', direction?: 'up' | 'right' | 'down' | 'left')=> void;
+    showAlert: (message: string, severity: ISeverity, direction?: IDirection) => void;
 }
 
 interface DialogProviderProps {
@@ -17,14 +21,14 @@ export const useDialogContext = () => {
 }
 
 export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
+    const [severityAlert, setSeverityAlert] = useState<ISeverity>('info');
+    const [directionAlert, setDirectionAlert] = useState<IDirection>('up');
     const [objAlert, setObjAlert] = useState({
         message: '',
         open: false
     });
-    const [severityAlert, setSeverityAlert] = useState<'info' | 'error' | 'success' | 'warning'>('info');
-    const [directionAlert, setDirectionAlert] = useState<'up' | 'right' | 'down' | 'left'>('up');
 
-    const showAlert = (message: string, severity: 'info' | 'error' | 'success' | 'warning', direction?: 'up' | 'right' | 'down' | 'left') => {
+    const showAlert = (message: string, severity: ISeverity, direction?: IDirection) => {
         setSeverityAlert(severity);
         setDirectionAlert(direction || 'up');
         setObjAlert({
@@ -43,33 +47,36 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
         });
     };
 
+    const SnackbarAction: React.FC = () => (
+        <IconButton
+            size='small'
+            color='inherit'
+            onClick={closeAlert}
+        >
+            <Close fontSize='small' />
+        </IconButton>
+    )
+
     return (
         <DialogContext.Provider value={{
             showAlert
         }}>
             {children}
             <Snackbar
-                    autoHideDuration={4000}
+                autoHideDuration={5000}
+                onClose={closeAlert}
+                open={objAlert.open}
+                TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
+                action={<SnackbarAction />}
+            >
+                <Alert
                     onClose={closeAlert}
-                    open={objAlert.open}
-                    TransitionComponent={(props)=> <Slide {...props} direction={directionAlert} />}
-                    action={
-                        <IconButton
-                            size='small'
-                            color='inherit'
-                            onClick={closeAlert}
-                        >
-                            <Close fontSize='small' />
-                        </IconButton>}
+                    severity={severityAlert}
+                    sx={{ width: '100%' }}
                 >
-                    <Alert
-                        onClose={closeAlert}
-                        severity={severityAlert}
-                        sx={{ width: '100%' }}
-                    >
-                        {objAlert.message}
-                    </Alert>
-                </Snackbar>
+                    {objAlert.message}
+                </Alert>
+            </Snackbar>
         </DialogContext.Provider>
     )
 }

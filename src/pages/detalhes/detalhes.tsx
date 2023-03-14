@@ -138,6 +138,7 @@ export const Detalhes: React.FC = () => {
                     cor: produto.cor,
                     imagem: produto.imagens[0],
                     tamanho: sizeSelected,
+                    categoria: produto.produto.categoria[0],
                     valor: produto.valor,
                 }
                 addItem(cartProduct);
@@ -160,6 +161,7 @@ export const Detalhes: React.FC = () => {
                     cor: produto.cor,
                     imagem: produto.imagens[0],
                     tamanho: sizeSelected,
+                    categoria: produto.produto.categoria[0],
                     valor: produto.valor,
                 }
                 addItem(cartProduct);

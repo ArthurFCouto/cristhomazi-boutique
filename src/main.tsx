@@ -7,13 +7,13 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <AppThemeProvider>
-      <CartProvider>
-        <DrawerProvider>
-          <DialogProvider>
+      <DialogProvider>
+        <CartProvider>
+          <DrawerProvider>
             <FullRoutes />
-          </DialogProvider>
-        </DrawerProvider>
-      </CartProvider>
+          </DrawerProvider>
+        </CartProvider>
+      </DialogProvider>
     </AppThemeProvider>
   </React.StrictMode>,
 )

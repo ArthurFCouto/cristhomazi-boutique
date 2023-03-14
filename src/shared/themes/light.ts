@@ -11,14 +11,25 @@ export const LightTheme = createTheme({
             contrastText: '#121212',
         },
         secondary: {
-            main: cyan[500],
-            dark: cyan[400],
-            light: cyan[300],
+            //main: cyan[500],
+            main: '#333333',
+            dark: '#33333380',
+            light: '#33333350',
             contrastText: '#ffffff',
         },
         background: {
-            paper: '#ffffff',
-            default: '#f7f6f3'
+            paper: '#f5f6f7' || '#f0ead8' || '#eceff5',
+            default: '#ffffff',
         }
+    },
+    typography: {
+        allVariants: {
+            color: 'black',
+        },
+        fontFamily: [
+            '-apple-system',
+            '"Helvetica Neue"',
+            'sans-serif',
+        ].join(','),
     }
 });

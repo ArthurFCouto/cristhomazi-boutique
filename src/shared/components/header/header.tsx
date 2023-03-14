@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-    Box, Button, ButtonBase, FormControl,
+    Badge, Box, ButtonBase,
+    Divider, FormControl, Grid,
     Icon, IconButton, InputAdornment, Link,
-    OutlinedInput, Tooltip, Typography, useMediaQuery, useTheme
+    OutlinedInput, Paper, Stack, Tooltip,
+    Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { Instagram, LocalMall, Search, WhatsApp } from '@mui/icons-material';
-import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { DarkMode, Favorite, Instagram, LocalMall, PeopleAlt, Person2, Search, WhatsApp } from '@mui/icons-material';
+import { useAppThemeContext, useCartContext, useDialogContext, useDrawerContext } from '../../contexts';
 import { Environment } from '../../environment';
-
-interface IImgLogo {
-    height: number;
-}
-
-interface IButtonLink {
-    label: string;
-    to: string;
-};
 
 interface IHeader {
     showCategories?: boolean;
@@ -25,13 +18,21 @@ interface IHeader {
 
 export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
     const theme = useTheme();
-    const { themeName } = useAppThemeContext();
-    const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const navigate = useNavigate();
+    const { themeName, toggleTheme } = useAppThemeContext();
+    const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
+    const { items } = useCartContext();
+    const { showAlert } = useDialogContext();
+    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [busca, setBusca] = useState<string>('');
 
-    const handleInputSearch = () => {
+    const handleInputSearch = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        redirectSearch();
+    }
+
+    const redirectSearch = () => {
         navigate({
             pathname: '/buscar',
             search: createSearchParams({
@@ -40,13 +41,13 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
         });
     }
 
-    const IconStartInput: React.FC = () => (
+    const IconInput: React.FC = () => (
         <InputAdornment position='end'>
-            <Search onClick={handleInputSearch} sx={{ cursor: 'pointer' }} />
+            <Search onClick={redirectSearch} sx={{ cursor: 'pointer' }} />
         </InputAdornment>
     );
 
-    const ImgLogo: React.FC<IImgLogo> = ({ height }) => (
+    const ImgLogo: React.FC<{ height: number }> = ({ height }) => (
         <img
             alt={Environment.DEFAULT_TITLE}
             height={theme.spacing(height)}
@@ -56,26 +57,35 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
         />
     )
 
-    const ButtonLink: React.FC<IButtonLink> = ({ label, to }) => (
+    const ButtonLink: React.FC<{ label: string, to: string }> = ({ label, to }) => (
+        /*
         <Button size='small' onClick={() => navigate(to)}>
             {label}
         </Button>
+        */
+        <Link
+            component={RouterLink}
+            to={to}
+            underline='none'
+        >
+            {label.toLowerCase()}
+        </Link>
     )
 
     return (
         <Box component='header' width='100%'>
             <Box
-                bgcolor={theme.palette.background.paper}
+                bgcolor={theme.palette.background.default}
+                component={Paper}
                 display='flex'
                 justifyContent='center'
+                square
                 width='100%'
             >
                 {
                     smDownScreen ? (
-                        <Box
-                            component='nav'
-                            display='flex'
-                            alignItems='center'
+                        <Stack
+                            direction='row'
                             justifyContent='space-between'
                             marginX={1}
                             paddingY={1}
@@ -88,42 +98,54 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                                 <ImgLogo height={5} />
                             </ButtonBase>
                             <IconButton onClick={() => navigate('/sacola')}>
-                                <Icon>local_mall</Icon>
+                                <Badge
+                                    color='secondary'
+                                    badgeContent={items.length}
+                                    max={9}
+                                >
+                                    <Icon>local_mall</Icon>
+                                </Badge>
                             </IconButton>
-                        </Box>
+                        </Stack>
                     ) : (
-                        <Box
-                            component='nav'
-                            display='flex'
-                            alignContent='center'
-                            gap={5}
+                        <Stack
+                            direction='row'
+                            spacing={5}
                             justifyContent='end'
                             marginX={1}
-                            maxWidth='md'
+                            maxWidth='lg'
                             paddingY={1}
                             width='100%'
                         >
                             <Tooltip title='Visite nosso #insta'>
-                                <Link href='https://www.instagram.com/cristhomaziboutique/' target='_blank' underline='none'>
-                                    <Box display='flex' alignContent='center'>
-                                        <Instagram fontSize='small' htmlColor={theme.palette.primary.contrastText} />
-                                        <Typography variant='body2' ml={0.5}>
-                                            @cristhomaziboutique
+                                <Link
+                                    href={Environment.INFORMATION_BASE.BASE_INSTAGRAM.url}
+                                    target='_blank'
+                                    underline='none'
+                                >
+                                    <Box display='flex' alignItems='center'>
+                                        <Instagram htmlColor={theme.palette.primary.contrastText} sx={{ fontSize: 14 }} />
+                                        <Typography fontSize={12} ml={0.5} variant='body2'>
+                                            {Environment.INFORMATION_BASE.BASE_INSTAGRAM.user}
                                         </Typography>
                                     </Box>
                                 </Link>
                             </Tooltip>
                             <Tooltip title='Chama no #whats'>
-                                <Link href='https://api.whatsapp.com/send?phone=553897326440&text=Ol%C3%A1!%20' target='_blank' underline='none'>
-                                    <Box display='flex' alignContent='center'>
-                                        <WhatsApp fontSize='small' htmlColor={theme.palette.primary.contrastText} />
-                                        <Typography variant='body2' ml={0.5}>
-                                            (38) 99732-6440
+                                <Link
+                                    href={Environment.INFORMATION_BASE.BASE_URL_WHATSAPP('Olá CrisThomazi!')}
+                                    target='_blank'
+                                    underline='none'
+                                >
+                                    <Box display='flex' alignItems='center'>
+                                        <WhatsApp htmlColor={theme.palette.primary.contrastText} sx={{ fontSize: 14 }} />
+                                        <Typography fontSize={12} ml={0.5} variant='body2'>
+                                            {Environment.INFORMATION_BASE.BASE_TELL}
                                         </Typography>
                                     </Box>
                                 </Link>
                             </Tooltip>
-                        </Box>
+                        </Stack>
                     )
                 }
             </Box>
@@ -134,71 +156,96 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                         justifyContent='center'
                         width='100%'
                     >
-                        <Box
-                            display='flex'
+                        <Grid
+                            alignItems='center'
+                            container
+                            direction='row'
                             marginX={1}
-                            paddingY={0.5}
-                            maxWidth='md'
+                            paddingY={1}
+                            maxWidth='lg'
                             width='100%'
                         >
-                            <Box
+                            <Grid
+                                item
                                 display={smDownScreen ? 'none' : 'flex'}
-                                width='25%'
+                                sm={3}
                             >
-                                <ButtonBase sx={{ height: theme.spacing(15), marginRight: 'auto' }}>
-                                    <ImgLogo height={5} />
+                                <ButtonBase sx={{ height: theme.spacing(10), marginRight: 'auto' }} >
+                                    <ImgLogo height={mdDownScreen ? 5 : 7} />
                                 </ButtonBase>
-                            </Box>
-                            <Box
-                                component='form'
-                                display='flex'
-                                flexDirection='column'
-                                justifyContent='center'
-                                width={smDownScreen ? '100%' : '50%'}
+                            </Grid>
+                            <Grid
+                                item
                                 paddingY={smDownScreen ? 1 : 0}
-                                onSubmit={
-                                    (event) => {
-                                        event.preventDefault();
-                                        handleInputSearch();
-                                    }
-                                }
+                                sm={9}
+                                xs={12}
                             >
-                                <Typography
-                                    component='label'
-                                    display='block'
-                                    variant='caption'
+                                <Stack
+                                    direction='row'
+                                    spacing={3}
+                                    width='100%'
                                 >
-                                    Seja bem-vindo(a) a CrisThomazi Boutique
-                                </Typography>
-                                <FormControl sx={{ width: '100%' }}>
-                                    <Tooltip title='Digite algo para pesquisar'>
-                                        <OutlinedInput
-                                            name='search'
-                                            value={busca}
-                                            onChange={(event) => setBusca(event.target.value)}
-                                            placeholder='Colcci, Calvin Klein, Lança Perfume ...'
+                                    <FormControl
+                                        component='form'
+                                        fullWidth
+                                        onSubmit={handleInputSearch}
+                                    >
+                                        <Tooltip title='Digite algo para pesquisar'>
+                                            <OutlinedInput
+                                                endAdornment={<IconInput />}
+                                                name='search'
+                                                placeholder='Colcci, Calvin Klein, Santa Lolla ...'
+                                                onChange={(event) => setBusca(event.target.value)}
+                                                size='small'
+                                                value={busca}
+                                            />
+                                        </Tooltip>
+                                    </FormControl>
+                                    <Box
+                                        alignItems='center'
+                                        display={smDownScreen ? 'none' : 'flex'}
+                                        flexDirection='row'
+                                        gap={1}
+                                        justifyContent='end'
+                                    >
+                                        <Tooltip title='Alternar Tema'>
+                                            <IconButton
+                                                onClick={toggleTheme}
+                                                size='small'
+                                            >
+                                                <DarkMode />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title='Acessar conta'>
+                                            <IconButton
+                                                onClick={() => navigate('/acessar')}
+                                                size='small'
+                                            >
+                                                <Person2 />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <IconButton
+                                            onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
                                             size='small'
-                                            endAdornment={<IconStartInput />}
-                                            sx={{ bgcolor: theme.palette.background.paper }}
-                                        />
-                                    </Tooltip>
-                                </FormControl>
-                            </Box>
-                            <Box
-                                display={smDownScreen ? 'none' : 'flex'}
-                                alignItems='flex-end'
-                                flexDirection='column'
-                                justifyContent='center'
-                                width='25%'
-                            >
-                                <Button color='secondary' onClick={() => navigate('/acessar')} size='small' title='Acessar conta' variant='text'>
-                                    Minha Conta
-                                </Button>
-                                <Button onClick={() => navigate('/sacola')} startIcon={<LocalMall fontSize='inherit' />} title='Ver sacola' variant='text'>
-                                    Sacola
-                                </Button>
-                            </Box>
-                        </Box>
+                                        >
+                                            <Favorite />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() => navigate('/sacola')}
+                                            size='small'
+                                        >
+                                            <Badge
+                                                badgeContent={items.length}
+                                                color='secondary'
+                                                max={10}
+                                            >
+                                                <LocalMall />
+                                            </Badge>
+                                        </IconButton>
+                                    </Box>
+                                </Stack>
+                            </Grid>
+                        </Grid>
                     </Box>
                 )
             }
@@ -210,19 +257,18 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                         justifyContent='center'
                         width='100%'
                     >
-                        <Box
-                            component='nav'
-                            display='flex'
-                            alignContent='center'
+                        <Stack
+                            alignItems='center'
+                            direction='row'
                             gap={5}
                             justifyContent='center'
                             marginX={1}
-                            paddingY={0.5}
-                            maxWidth='md'
+                            paddingY={1}
+                            maxWidth='lg'
                             width='100%'
                         >
                             {
-                                drawerOptions.map((option, index) =>
+                                drawerOptions.slice(0, 4).map((option, index) =>
                                     <ButtonLink
                                         key={index}
                                         label={option.label}
@@ -230,7 +276,17 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                                     />
                                 )
                             }
-                        </Box>
+                            <Divider orientation='vertical' />
+                            {
+                                drawerOptions.slice(4).map((option, index) =>
+                                    <ButtonLink
+                                        key={index}
+                                        label={option.label}
+                                        to={option.path}
+                                    />
+                                )
+                            }
+                        </Stack>
                     </Box>
                 )
             }

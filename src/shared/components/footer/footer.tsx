@@ -42,8 +42,8 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                                 Atendimento
                             </Typography>
                             <Typography variant='caption'>
-                                <br />(61) 99187-2888 (Cris Thomazi)
-                                <br />(38) 9732-6440 (WhatsApp)
+                                <br />(38) 99187-2888 (Cris Thomazi)
+                                <br />(38) 99732-6440 (WhatsApp)
                                 <br />Atendimento: Segunda à Sexta das 13h às 19h e Sábado das 9h às 13h.
                                 <br /><Link href='mailto:cristhomazi07@gmail.com' underline='none'>cristhomazi07@gmail.com</Link>
                             </Typography>

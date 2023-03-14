@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { useDialogContext } from './dialogContext';
 
 export interface ICartProduct {
     id: number;
@@ -7,6 +8,7 @@ export interface ICartProduct {
     cor: string;
     imagem: string;
     tamanho: string;
+    categoria: string;
     valor: number;
 }
 
@@ -14,7 +16,7 @@ interface ICartContextData {
     addItem: (item: ICartProduct) => void;
     clearCart: () => void;
     items: ICartProduct[];
-    removeItem: (id: number) => void;
+    removeItem: (item: ICartProduct) => void;
 }
 
 interface CartProviderProps {
@@ -28,16 +30,29 @@ export const useCartContext = () => {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+    const { showAlert } = useDialogContext();
     const [items, setItems] = useState<ICartProduct[]>([]);
+
     const addItem = (item: ICartProduct) => {
-        const existItem = items.filter((produto) => produto.id == item.id && produto.tamanho == item.tamanho);
-        if (existItem.length == 0)
+        const existItem = items.filter((produto) => produto.id == item.id);
+        if (existItem.length == 0) {
             setItems([...items, item]);
+            showAlert('Item adicionado a sacola', 'success');
+        }
+        else {
+            showAlert('Este item já está adicionado a sacola', 'error');
+        }
     }
-    const removeItem = (id: number) => {
-        setItems(items.filter((item) => item.id != id));
+
+    const removeItem = (item: ICartProduct) => {
+        setItems(items.filter((produto) => produto.id != item.id));
+        showAlert('Item removido da sacola', 'success');
     }
-    const clearCart = () => setItems([]);
+
+    const clearCart = () => {
+        setItems([]);
+        showAlert('Todos os itens foram removidos da sacola', 'warning');
+    }
 
     return (
         <CartContext.Provider value={{

@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Box, Button, Card,
     CardActions, CardContent, CardMedia, Chip,
     Dialog, DialogActions, DialogContent,
-    DialogContentText, DialogTitle, IconButton,
-    Paper, Stack, Typography,
+    DialogContentText, DialogTitle, Divider, IconButton,
+    Link, Paper, Stack, Tooltip, Typography,
     useMediaQuery, useTheme
 } from '@mui/material'
 import { Clear, Delete, DeleteForever, Done } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout'
-import { useCartContext, useDialogContext } from '../../shared/contexts';
+import { ICartProduct, useCartContext, useDialogContext } from '../../shared/contexts';
 import { BuyRedirectCart, FormatBRL } from '../../shared/util';
 
 interface IDetailsProduct {
@@ -26,26 +26,44 @@ export const Sacola: React.FC = () => {
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showDialog, setShowDialog] = useState(false);
-    const [idForRemove, setIdForRemove] = useState(0);
+    const [itemForRemove, setItemForRemove] = useState<ICartProduct>();
+    const [objDialog, setObjDialog] = useState({
+        title: '',
+        contentText: '',
+        action: () => { }
+    })
 
     const handleCheckout = () => {
         if (items.length > 0) {
             BuyRedirectCart(items);
             clearCart();
         } else {
-            showAlert('Seu carrinho está vazio.', 'info');
+            showAlert('Seu carrinho está vazio', 'info');
         }
     }
 
-    const handleDialog = (id: number) => {
+    const handleDialogRemove = (item: ICartProduct) => {
+        setObjDialog({
+            title: 'Remover item da sacola?',
+            contentText: 'Tem certeza que deseja remover este item da sacola?',
+            action: handleRemove
+        });
         setShowDialog(true);
-        setIdForRemove(id);
+        setItemForRemove(item);
+    }
+
+    const handleDialogClear = () => {
+        setObjDialog({
+            title: 'Remover todos os itens da sacola?',
+            contentText: 'Tem certeza que deseja remover todos os itens da sacola?',
+            action: clearCart
+        });
+        setShowDialog(true);
     }
 
     const handleRemove = () => {
-        removeItem(idForRemove);
+        itemForRemove && removeItem(itemForRemove);
         setShowDialog(false);
-        showAlert('Removido com sucesso.', 'success');
     }
 
     const DetailsProduct: React.FC<IDetailsProduct> = ({ param, value }) => (
@@ -63,7 +81,6 @@ export const Sacola: React.FC = () => {
         </Stack>
     )
 
-
     return (
         <BaseLayout
             showCategories
@@ -77,15 +94,19 @@ export const Sacola: React.FC = () => {
             >
                 <Stack direction='row' justifyContent='space-between'>
                     <Typography variant='h6'>Minha Sacola ({items.length})</Typography>
-                    <Button
-                        color='secondary'
-                        onClick={clearCart}
-                        startIcon={<Clear />}
-                        size='small'
-                        variant='contained'
-                    >
-                        Limpar
-                    </Button>
+                    {
+                        items.length > 0 && (
+                            <Tooltip title='Remover todos os itens'>
+                                <IconButton
+                                    color='secondary'
+                                    onClick={handleDialogClear}
+                                    size='small'
+                                >
+                                    <Clear />
+                                </IconButton>
+                            </Tooltip>
+                        )
+                    }
                 </Stack>
             </Box>
             <Box
@@ -115,7 +136,14 @@ export const Sacola: React.FC = () => {
                             </CardContent>
                             <CardContent sx={{ width: '50%' }}>
                                 <Stack spacing={1}>
-                                    <Typography gutterBottom variant='button'>{produto.titulo}</Typography>
+                                    <Link
+                                        component={RouterLink}
+                                        to={`/buscar/${produto.categoria}/${produto.nome}`}
+                                        underline='none'
+                                        variant='inherit'
+                                    >
+                                        <Typography gutterBottom variant='button'>{produto.titulo}</Typography>
+                                    </Link>
                                     <DetailsProduct param='Cor' value={produto.cor} />
                                     <DetailsProduct param='Tamanho' value={produto.tamanho} />
                                 </Stack>
@@ -132,14 +160,14 @@ export const Sacola: React.FC = () => {
                                     <CardActions>
                                         {
                                             mdDownScreen ? (
-                                                <IconButton onClick={() => handleDialog(produto.id)}>
+                                                <IconButton onClick={() => handleDialogRemove(produto)}>
                                                     <DeleteForever color='secondary' />
                                                 </IconButton>
                                             ) : (
                                                 <Button
                                                     color='secondary'
                                                     disableElevation
-                                                    onClick={() => handleDialog(produto.id)}
+                                                    onClick={() => handleDialogRemove(produto)}
                                                     size='small'
                                                     startIcon={<Delete />}
                                                     variant='contained'
@@ -164,15 +192,16 @@ export const Sacola: React.FC = () => {
                 <Stack
                     direction='row'
                     justifyContent='space-between'
-                    marginBottom={2}
-                    marginTop={1}
+                    marginY={1}
                 >
                     <Typography>Total</Typography>
                     <Typography fontWeight={500}>{FormatBRL(items.reduce((total, produto) => total += produto.valor, 0))}</Typography>
                 </Stack>
+                <Divider />
                 <Stack
                     direction='row'
                     justifyContent='end'
+                    marginY={1}
                     spacing={1}
                 >
                     <Button
@@ -198,16 +227,22 @@ export const Sacola: React.FC = () => {
                     onClose={() => setShowDialog(false)}
                 >
                     <DialogTitle>
-                        Remover item da sacola?
+                        {objDialog.title}
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Tem certeza que deseja remover este item da sacola?
+                            {objDialog.contentText}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowDialog(false)}>Cancelar</Button>
-                        <Button onClick={handleRemove} autoFocus>
+                        <Button onClick={() => setShowDialog(false)} size='small'>Cancelar</Button>
+                        <Button
+                            autoFocus
+                            color='secondary'
+                            onClick={objDialog.action}
+                            size='small'
+                            variant='contained'
+                        >
                             Remover
                         </Button>
                     </DialogActions>
