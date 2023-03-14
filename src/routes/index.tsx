@@ -8,16 +8,16 @@ export default function FullRoutes() {
     useEffect(() => {
         setDrawerOptions([
             {
+                path: '/buscar/blusas',
+                label: 'Blusas',
+            },
+            {
+                path: '/buscar/vestidos',
+                label: 'Vestidos',
+            },
+            {
                 path: '/buscar/roupas',
                 label: 'Roupas',
-            },
-            {
-                path: '/buscar/calcas',
-                label: 'Calças',
-            },
-            {
-                path: '/buscar/camisas',
-                label: 'Camisas',
             },
             {
                 path: '/buscar/acessorios',

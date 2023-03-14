@@ -13,7 +13,6 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
     const [searchParams] = useSearchParams();
     const { categoria } = useParams();
     const theme = useTheme();
-
     const search = useMemo(()=> searchParams.get('busca'), [searchParams]);
 
     return (

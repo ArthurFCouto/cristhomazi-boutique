@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import { createSearchParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Badge, Box, ButtonBase,
-    Divider, FormControl, Grid,
-    Icon, IconButton, InputAdornment, Link,
+    ButtonGroup, Divider, FormControl, Grid,
+    IconButton, InputAdornment, Link,
     OutlinedInput, Paper, Stack, Tooltip,
     Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { DarkMode, Favorite, Instagram, LocalMall, PeopleAlt, Person2, Search, WhatsApp } from '@mui/icons-material';
-import { useAppThemeContext, useCartContext, useDialogContext, useDrawerContext } from '../../contexts';
+import {
+    DarkMode, Favorite, Instagram,
+    LocalMall, Menu, Person2, Search, WhatsApp
+} from '@mui/icons-material';
+import {
+    useAppThemeContext, useCartContext,
+    useDialogContext, useDrawerContext
+} from '../../contexts';
 import { Environment } from '../../environment';
 
 interface IHeader {
@@ -26,6 +32,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [busca, setBusca] = useState<string>('');
+    const [isShowSearch, setIsShowSearch] = useState<boolean>(showSearch || false);
 
     const handleInputSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -33,6 +40,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
     }
 
     const redirectSearch = () => {
+        setIsShowSearch(false);
         navigate({
             pathname: '/buscar',
             search: createSearchParams({
@@ -73,9 +81,15 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
     )
 
     return (
-        <Box component='header' width='100%'>
+        <Box
+            bgcolor={theme.palette.background.default}
+            component='header'
+            position={smDownScreen ? 'sticky' : 'relative'}
+            top={0}
+            width='100%'
+            zIndex={smDownScreen ? 1 : 'auto'}
+        >
             <Box
-                bgcolor={theme.palette.background.default}
                 component={Paper}
                 display='flex'
                 justifyContent='center'
@@ -92,20 +106,25 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                             width='100%'
                         >
                             <IconButton onClick={toggleDrawerOpen}>
-                                <Icon>menu</Icon>
+                                <Menu />
                             </IconButton>
                             <ButtonBase>
                                 <ImgLogo height={5} />
                             </ButtonBase>
-                            <IconButton onClick={() => navigate('/sacola')}>
-                                <Badge
-                                    color='secondary'
-                                    badgeContent={items.length}
-                                    max={9}
-                                >
-                                    <Icon>local_mall</Icon>
-                                </Badge>
-                            </IconButton>
+                            <ButtonGroup>
+                                <IconButton onClick={() => setIsShowSearch(true)}>
+                                    <Search />
+                                </IconButton>
+                                <IconButton onClick={() => navigate('/sacola')}>
+                                    <Badge
+                                        color='secondary'
+                                        badgeContent={items.length}
+                                        max={9}
+                                    >
+                                        <LocalMall />
+                                    </Badge>
+                                </IconButton>
+                            </ButtonGroup>
                         </Stack>
                     ) : (
                         <Stack
@@ -150,7 +169,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                 }
             </Box>
             {
-                showSearch && (
+                isShowSearch && (
                     <Box
                         display='flex'
                         justifyContent='center'
@@ -224,24 +243,28 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                                                 <Person2 />
                                             </IconButton>
                                         </Tooltip>
-                                        <IconButton
-                                            onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
-                                            size='small'
-                                        >
-                                            <Favorite />
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={() => navigate('/sacola')}
-                                            size='small'
-                                        >
-                                            <Badge
-                                                badgeContent={items.length}
-                                                color='secondary'
-                                                max={10}
+                                        <Tooltip title='Ver favoritos'>
+                                            <IconButton
+                                                onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
+                                                size='small'
                                             >
-                                                <LocalMall />
-                                            </Badge>
-                                        </IconButton>
+                                                <Favorite />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title='Ver sacola'>
+                                            <IconButton
+                                                onClick={() => navigate('/sacola')}
+                                                size='small'
+                                            >
+                                                <Badge
+                                                    badgeContent={items.length}
+                                                    color='secondary'
+                                                    max={10}
+                                                >
+                                                    <LocalMall />
+                                                </Badge>
+                                            </IconButton>
+                                        </Tooltip>
                                     </Box>
                                 </Stack>
                             </Grid>
@@ -252,7 +275,6 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
             {
                 (!smDownScreen && showCategories) && (
                     <Box
-                        bgcolor={theme.palette.background.paper}
                         display='flex'
                         justifyContent='center'
                         width='100%'
@@ -260,10 +282,10 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                         <Stack
                             alignItems='center'
                             direction='row'
-                            gap={5}
                             justifyContent='center'
                             marginX={1}
                             paddingY={1}
+                            spacing={4}
                             maxWidth='lg'
                             width='100%'
                         >
@@ -288,6 +310,23 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                             }
                         </Stack>
                     </Box>
+                )
+            }
+            {
+                !smDownScreen && (
+                    <Stack
+                        component={Paper}
+                        direction='row'
+                        justifyContent='center'
+                        padding={1}
+                        spacing={2}
+                        square
+                        width='100%'
+                    >
+                        <Typography variant='caption'>
+                            As novidades das melhores marcas você encontra aqui!
+                        </Typography>
+                    </Stack>
                 )
             }
         </Box >
