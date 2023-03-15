@@ -52,10 +52,6 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                     >
                         {children}
                     </Box>
-                    <Box textAlign='center' bgcolor={'snow'} width='100%'>
-                        <Typography variant='h6'>Site em construção</Typography>
-                        <Engineering />
-                    </Box>
                 </Box>
                 <Footer sampleFooter={sampleFooter} />
             </Box>

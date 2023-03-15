@@ -31,7 +31,7 @@
                 "roupas"
             ],
             "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marcar": "propria"
+            "marca": "propria"
         },
         {
             "id": 4,
@@ -42,7 +42,7 @@
                 "roupas"
             ],
             "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marcar": "propria"
+            "marca": "propria"
         }
     ],
     "produto": [

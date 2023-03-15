@@ -1,3 +1,39 @@
+const installment = (price: number) => {
+    const parcelValue = [
+        {
+            quantidade: 2,
+            valorMinimo: 100
+        },
+        {
+            quantidade: 3,
+            valorMinimo: 200
+        },
+        {
+            quantidade: 4,
+            valorMinimo: 300
+        },
+        {
+            quantidade: 5,
+            valorMinimo: 400
+        },
+        {
+            quantidade: 6,
+            valorMinimo: 500
+        }
+    ]
+    const response = {
+        quantidade: 1,
+        parcela: price
+    }
+    for (const item of parcelValue) {
+        if (price >= item.valorMinimo) {
+            response.quantidade = item.quantidade;
+            response.parcela = price / item.quantidade;
+        } else break;
+    }
+    return response;
+}
+
 export const Environment = {
     /**
      * Define o titulo padrão da página
@@ -21,22 +57,23 @@ export const Environment = {
     DEFAULT_NOT_FOUND_MESSAGE: 'Não encontramos produtos para exibir.',
     /**
      * Informações básicas da loja
+     * 
+     * @BASE_TELL - Telefone atual da loja no formato (xx) xxxxx-xxxx
+     * 
+     * @BASE_URL_WHATSAPP - Url base para enviar mensagem para o Whats da loja, incluir o texto da mensagem
+     * 
+     * @BASE_INSTAGRAM - Url base para para o IG, e usuário do IG da loja
      */
     INFORMATION_BASE: {
-        /**
-         * Telefone atual da loja no formato (xx) xxxxx-xxxx
-         */
         BASE_TELL: '(38) 99732-6440',
-        /**
-        * Url base para enviar mensagem para o Whats da loja, incluir o texto da mensagem
-        */
         BASE_URL_WHATSAPP: (message: string) => `https://api.whatsapp.com/send?phone=553897326440&text=${message}`,
-        /**
-         * Url base para para o IG, e usuário do IG da loja
-         */
         BASE_INSTAGRAM: {
             url: 'https://www.instagram.com/cristhomaziboutique/',
             user: '@cristhomaziboutique'
         },
-    }
+    },
+    /**
+     * Retorna a quantidade de parcelas possíveis o valor, e o valor da parcelas
+     */
+    CALCULATE_INSTALLMENT: installment,
 }
