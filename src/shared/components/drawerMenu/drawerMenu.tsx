@@ -5,6 +5,7 @@ import {
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { AccountBox, DarkMode } from '@mui/icons-material';
 
 interface ListItemLinkProps {
   label: string;
@@ -44,6 +45,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
         onClose={toggleDrawerOpen}
         open={isDrawerOpen}
         variant={'temporary'}
+        sx={{ zIndex: 2000 }}
       >
         <Box
           display='flex'
@@ -69,9 +71,9 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
           <Divider />
           <Box flex={1}>
             <List component='nav'>
-              <ListItemButton onClick={() => { toggleDrawerOpen(); navigate('/dashboard') }}>
+              <ListItemButton onClick={() => { toggleDrawerOpen(); navigate('/acessar') }}>
                 <ListItemIcon>
-                  <Icon>account_box</Icon>
+                  <AccountBox />
                 </ListItemIcon>
                 <ListItemText primary='Minha Conta' />
               </ListItemButton>
@@ -92,7 +94,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
             <List component='nav'>
               <ListItemButton onClick={toggleTheme}>
                 <ListItemIcon>
-                  <Icon>dark_mode</Icon>
+                  <DarkMode />
                 </ListItemIcon>
                 <ListItemText primary='Alternar tema' />
               </ListItemButton>

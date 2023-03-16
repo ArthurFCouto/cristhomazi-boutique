@@ -127,7 +127,9 @@
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1673300016303.jpeg",
                 "https://54325.cdn.simplo7.net/static/54325/sku/roupas-blusas-t-shirt-cute-wild--p-1669071392192.jpeg"
             ],
-            "tamanhos": [],
+            "tamanhos": [
+                "P"
+            ],
             "valor": 39.9,
             "visitas": 1
         },

@@ -64,6 +64,22 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
             {children}
             <Snackbar
                 autoHideDuration={5000}
+                action={<SnackbarAction />}
+                message={objAlert.message}
+                onClose={closeAlert}
+                open={objAlert.open}
+                TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
+            />
+        </DialogContext.Provider>
+    )
+
+    return (
+        <DialogContext.Provider value={{
+            showAlert
+        }}>
+            {children}
+            <Snackbar
+                autoHideDuration={5000}
                 onClose={closeAlert}
                 open={objAlert.open}
                 TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}

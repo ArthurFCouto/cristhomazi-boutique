@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
-import { Engineering } from '@mui/icons-material';
+import { Box, Paper, useTheme } from '@mui/material';
 import { DrawerMenu, Footer, Header } from '../components';
 import { Environment } from '../environment';
 
@@ -9,11 +8,12 @@ interface BaseLayout {
     description?: string;
     sampleFooter?: boolean;
     showCategories?: boolean;
+    showLegend?: boolean;
     showSearch?: boolean;
     title?: string;
 }
 
-export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sampleFooter, showCategories, showSearch, title }) => {
+export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sampleFooter, showCategories, showLegend, showSearch, title }) => {
     const theme = useTheme();
     useEffect(() => {
         document.title = title || Environment.DEFAULT_TITLE;
@@ -29,7 +29,11 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                 height='100%'
                 overflow='auto'
             >
-                <Header showSearch={showSearch} showCategories={showCategories} />
+                <Header
+                showSearch={showSearch}
+                showLegend={showLegend}
+                showCategories={showCategories}
+                />
                 <Box
                     bgcolor={theme.palette.background.default}
                     borderRadius={0}

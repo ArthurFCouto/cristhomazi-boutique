@@ -87,15 +87,15 @@ export const Sacola: React.FC = () => {
             showSearch
             sampleFooter
         >
-            <Box
-                component={Paper}
-                elevation={0}
-                padding={1}
-            >
-                <Stack direction='row' justifyContent='space-between'>
-                    <Typography variant='h6'>Minha Sacola ({items.length})</Typography>
+
+            <Stack direction='row' justifyContent='space-between' padding={1}>
+                <Typography variant='h6'>Minha Sacola</Typography>
+                <Box alignItems='center' display='flex' flexDirection='row' gap={1}>
+                    <Typography color='text.secondary' variant='caption'>
+                        {`${items.length} produtos`}
+                    </Typography>
                     {
-                        items.length > 0 && (
+                        items.length == 0 && (
                             <Tooltip title='Remover todos os itens'>
                                 <IconButton
                                     color='secondary'
@@ -107,8 +107,8 @@ export const Sacola: React.FC = () => {
                             </Tooltip>
                         )
                     }
-                </Stack>
-            </Box>
+                </Box>
+            </Stack>
             <Box
                 display='flex'
                 flex={1}
@@ -207,19 +207,19 @@ export const Sacola: React.FC = () => {
                     <Button
                         disableElevation
                         onClick={() => navigation('/')}
-                        size='small'
+                        //size={smDownScreen ? 'small' : 'medium'}
                         variant='outlined'
                     >
-                        Continuar comprando
+                        Adicionar mais itens
                     </Button>
                     <Button
                         color='secondary'
                         disableElevation
                         onClick={handleCheckout}
-                        size='small'
+                        //size={smDownScreen ? 'small' : 'medium'}
                         variant='contained'
                     >
-                        Finalizar
+                        Fechar compra
                     </Button>
                 </Stack>
                 <Dialog

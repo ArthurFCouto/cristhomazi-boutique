@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Box, Card, CardMedia, Chip, Typography, useTheme } from '@mui/material';
+import { Box, Card, CardMedia, Typography, useTheme } from '@mui/material';
+import { ArrowBackIosOutlined, ArrowForwardIosOutlined } from '@mui/icons-material';
+import Carousel from 'react-material-ui-carousel';
 import { MCard, MCardArea, MCardSkeleton } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
@@ -21,7 +23,6 @@ export const Home: React.FC = () => {
   const theme = useTheme();
   const { showAlert } = useDialogContext();
   const [loading, setLoading] = useState(true);
-  const [showInfoBanner, setShowInfoBanner] = useState(true);
   const [produtos, setProdutos] = useState<IProduto[]>([]);
 
   useEffect(() => {
@@ -32,31 +33,33 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <BaseLayout showSearch showCategories>
-      <Box
-        paddingX={1}
-        position='relative'
-      >
+    <BaseLayout showSearch showLegend showCategories>
+      <Box paddingX={1}>
         <Card
-          sx={{ marginBottom: 2 }}
+          component={Box}
+          marginBottom={2}
+          sx={{ backgroundColor: 'transparent', border: 0 }}
           variant='outlined'
         >
-          <CardMedia
-            alt={banners[0].alt}
-            component='img'
-            image={banners[0].image}
-            sx={{ maxHeight: theme.spacing(50) }}
-            width='100%'
-          />
+          <Carousel
+            indicators={false}
+            NextIcon={<ArrowForwardIosOutlined />}
+            PrevIcon={<ArrowBackIosOutlined />}
+          >
+            {
+              banners.map((item, index) => (
+                <CardMedia
+                  alt={item.alt}
+                  component='img'
+                  image={item.image}
+                  key={index}
+                  sx={{ maxHeight: theme.spacing(50) }}
+                  width='100%'
+                />
+              ))
+            }
+          </Carousel>
         </Card>
-        {
-          showInfoBanner &&
-          <Chip
-            label='Banners promocionais e informativos 1024px x 466px'
-            onDelete={(_) => setShowInfoBanner(false)}
-            sx={{ position: 'absolute', top: 3, right: 3 }}
-          />
-        }
       </Box>
       <Typography mt={2} px={1} textAlign='left' variant='h6'>
         ÚLTIMOS LANÇAMENTOS
@@ -80,6 +83,6 @@ export const Home: React.FC = () => {
           </MCardArea>
         )
       }
-    </BaseLayout>
+    </BaseLayout >
   )
 }

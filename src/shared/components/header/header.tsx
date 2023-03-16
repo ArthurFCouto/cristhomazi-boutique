@@ -19,10 +19,11 @@ import { Environment } from '../../environment';
 
 interface IHeader {
     showCategories?: boolean;
+    showLegend?: boolean;
     showSearch?: boolean;
 };
 
-export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
+export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSearch }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { themeName, toggleTheme } = useAppThemeContext();
@@ -315,7 +316,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showSearch }) => {
                 )
             }
             {
-                !smDownScreen && (
+                (!smDownScreen && showLegend)  && (
                     <Stack
                         component={Paper}
                         direction='row'
