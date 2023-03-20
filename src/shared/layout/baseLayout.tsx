@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Box, Paper, useTheme } from '@mui/material';
 import { DrawerMenu, Footer, Header } from '../components';
 import { Environment } from '../environment';
+import { useAppThemeContext } from '../contexts';
 
 interface BaseLayout {
     children: React.ReactNode;
@@ -15,6 +16,7 @@ interface BaseLayout {
 
 export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sampleFooter, showCategories, showLegend, showSearch, title }) => {
     const theme = useTheme();
+    const { themeName } = useAppThemeContext();
     useEffect(() => {
         document.title = title || Environment.DEFAULT_TITLE;
         document.getElementsByTagName('META')[1].setAttribute('content', description || Environment.DEFAULT_DESCRIPTION);
@@ -30,9 +32,9 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                 overflow='auto'
             >
                 <Header
-                showSearch={showSearch}
-                showLegend={showLegend}
-                showCategories={showCategories}
+                    showSearch={showSearch}
+                    showLegend={showLegend}
+                    showCategories={showCategories}
                 />
                 <Box
                     bgcolor={theme.palette.background.default}
@@ -42,16 +44,14 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                     flex={1}
                     flexDirection='column'
                     alignItems='center'
+                    sx={{ background: themeName == 'light' ? `url('/background.png') right top fixed` : undefined }}
                     width='100%'
                 >
                     <Box
-                        //bgcolor={theme.palette.background.paper}
                         display='flex'
                         flexDirection='column'
                         height='100%'
                         maxWidth='lg'
-                        paddingBottom={4}
-                        paddingTop={2}
                         width='100%'
                     >
                         {children}

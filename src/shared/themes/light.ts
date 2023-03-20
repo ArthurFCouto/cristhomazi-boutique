@@ -11,14 +11,13 @@ export const LightTheme = createTheme({
             contrastText: '#121212',
         },
         secondary: {
-            //main: cyan[500],
             main: '#333333',
             dark: '#33333380',
             light: '#33333350',
             contrastText: '#ffffff',
         },
         background: {
-            paper: '#f5f6f7' || '#f0ead8' || '#eceff5',
+            paper: '#f5f6f7',
             default: '#ffffff',
         }
     },

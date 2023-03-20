@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Box, Card, CardMedia, Typography, useTheme } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Card, CardMedia, Link, Typography, useTheme } from '@mui/material';
 import { ArrowBackIosOutlined, ArrowForwardIosOutlined } from '@mui/icons-material';
 import Carousel from 'react-material-ui-carousel';
-import { MCard, MCardArea, MCardSkeleton } from '../../shared/components';
+import { MCardArea } from '../../shared/components';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
-import { Environment } from '../../shared/environment';
 import { useDialogContext } from '../../shared/contexts';
 
 const banners = [
@@ -16,6 +16,10 @@ const banners = [
   {
     alt: 'Banner 2',
     image: '/banner2.jpg'
+  },
+  {
+    alt: 'Banner 3',
+    image: '/banner3.jpeg'
   }
 ]
 
@@ -27,14 +31,15 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     ProdutoService.getAll()
-      .then((response) => setProdutos(response.list))
+      //.then((response) => setProdutos(response.list))
+      .then((response) => console.log)
       .catch((error) => showAlert(error.customMessage, 'error'))
       .finally(() => setLoading(false));
   }, []);
 
   return (
     <BaseLayout showSearch showLegend showCategories>
-      <Box paddingX={1}>
+      <Box paddingX={1} paddingTop={2}>
         <Card
           component={Box}
           marginBottom={2}
@@ -45,44 +50,32 @@ export const Home: React.FC = () => {
             indicators={false}
             NextIcon={<ArrowForwardIosOutlined />}
             PrevIcon={<ArrowBackIosOutlined />}
+            sx={{ zIndex: 0 }}
           >
             {
               banners.map((item, index) => (
-                <CardMedia
-                  alt={item.alt}
-                  component='img'
-                  image={item.image}
+                <Link
+                  component={RouterLink}
                   key={index}
-                  sx={{ maxHeight: theme.spacing(50) }}
-                  width='100%'
-                />
+                  to='#'
+                >
+                  <CardMedia
+                    alt={item.alt}
+                    component='img'
+                    image={item.image}
+                    sx={{ maxHeight: theme.spacing(50) }}
+                    width='100%'
+                  />
+                </Link>
               ))
             }
           </Carousel>
         </Card>
+        <Typography px={1} textAlign='left' variant='h6'>
+          Últimos Lançamentos
+        </Typography>
+        <MCardArea list={produtos} isLoading={loading} />
       </Box>
-      <Typography mt={2} px={1} textAlign='left' variant='h6'>
-        ÚLTIMOS LANÇAMENTOS
-      </Typography>
-      {
-        loading ? (
-          <MCardArea>
-            {
-              Array.from(Array(12)).map((_, index) => <MCardSkeleton key={index} />)
-            }
-          </MCardArea>
-        ) : produtos.length === 0 ? (
-          <Box textAlign='center'>
-            <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
-          </Box>
-        ) : (
-          <MCardArea>
-            {
-              produtos.map((item, index) => <MCard item={item} key={index} />)
-            }
-          </MCardArea>
-        )
-      }
     </BaseLayout >
   )
 }

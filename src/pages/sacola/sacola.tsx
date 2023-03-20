@@ -95,7 +95,7 @@ export const Sacola: React.FC = () => {
                         {`${items.length} produtos`}
                     </Typography>
                     {
-                        items.length == 0 && (
+                        items.length != 0 && (
                             <Tooltip title='Remover todos os itens'>
                                 <IconButton
                                     color='secondary'

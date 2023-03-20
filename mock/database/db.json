@@ -43,6 +43,18 @@
             ],
             "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
             "marca": "propria"
+        },
+        {
+            "id": 5,
+            "sku": "CPC",
+            "titulo": "CAMISA POLO COLCCI",
+            "categoria": [
+                "blusas",
+                "roupas",
+                "masculino"
+            ],
+            "descricao": "O manequim usa tamanho M.",
+            "marca": "Colcci"
         }
     ],
     "produto": [
@@ -164,6 +176,39 @@
             ],
             "valor": 89.9,
             "visitas": 9
+        },
+        {
+            "id": 8,
+            "idProdutoBase": 5,
+            "nome": "camisa-polo-colcci-verde",
+            "cor": "Verde",
+            "hex": "#90a96c",
+            "imagens": [
+                "/Colcci.jfif",
+                "/Colcci2.jfif"
+            ],
+            "tamanhos": [
+                "M"
+            ],
+            "valor": 189.9,
+            "visitas": 3
+        },
+        {
+            "id": 9,
+            "idProdutoBase": 5,
+            "nome": "camisa-polo-colcci-vermelho",
+            "cor": "Vermelho",
+            "hex": "#90a96c",
+            "imagens": [
+                "/ColcciVermelha.jfif",
+                "/ColcciVermelha2.jfif"
+            ],
+            "tamanhos": [
+                "M",
+                "P"
+            ],
+            "valor": 179.9,
+            "visitas": 3
         }
     ]
 }

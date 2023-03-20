@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
 import { BaseLayout } from '../../shared/layout';
-import { Breadcrumbs, MCard, MCardArea, MCardSkeleton } from '../../shared/components';
+import { Breadcrumbs, MCardArea } from '../../shared/components';
 import { IProduto, ProdutoService } from '../../shared/service';
-import { Environment } from '../../shared/environment';
 
 export const Buscar: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -30,25 +28,7 @@ export const Buscar: React.FC = () => {
     return (
         <BaseLayout title='Cris Thomazi Boutique' showCategories showSearch>
             <Breadcrumbs />
-            {
-                loading ? (
-                    <MCardArea>
-                        {
-                            Array.from(Array(12)).map((_, index) => <MCardSkeleton key={index} />)
-                        }
-                    </MCardArea>
-                ) : produtos.length === 0 ? (
-                    <Box textAlign='center'>
-                        <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
-                    </Box>
-                ) : (
-                    <MCardArea>
-                        {
-                            produtos.map((item, index) => <MCard item={item} key={index} />)
-                        }
-                    </MCardArea>
-                )
-            }
+            <MCardArea list={produtos} loading={loading} />
         </BaseLayout>
     )
 }

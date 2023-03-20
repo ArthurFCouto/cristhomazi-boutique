@@ -9,7 +9,7 @@ import {
 import { AddCard, Favorite, LocalMall, WhatsApp } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
-import { Breadcrumbs, MCard, MCardArea, MCardSkeleton } from '../../shared/components';
+import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
 import { useCartContext } from '../../shared/contexts';
@@ -49,8 +49,6 @@ export const Detalhes: React.FC = () => {
     const [sourceImage, setSourceImage] = useState<string>();
     const [sizeSelected, setSizeSelected] = useState('');
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const countMCardSkeleton = smDownScreen ? 2 : mdDownScreen ? 3 : 4;
 
     const ListImages: React.FC<ILists> = ({ list }) => {
         return (
@@ -123,7 +121,7 @@ export const Detalhes: React.FC = () => {
         ProdutoService.getAllByCategory(categoria)
             .then((response) => setProdutos(response.list))
             .catch((error) => alert(error.message))
-            .finally(() => setLoadingProducts(false));
+            .finally(() =>  setLoadingProducts(false));
     }
 
     const handleFavorite = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
@@ -392,19 +390,11 @@ export const Detalhes: React.FC = () => {
             </Typography>
             <Box
                 component={Paper}
-                marginY={2}
+                marginY={1}
                 square
                 variant='outlined'
             >
-                <MCardArea directionRow>
-                    {
-                        loadingProducts ? (
-                            Array.from(Array(countMCardSkeleton)).map((_, index) => <MCardSkeleton key={index} />)
-                        ) : produtos.length > 0 && (
-                            produtos.map((produto, index) => <MCard item={produto} key={index} />)
-                        )
-                    }
-                </MCardArea>
+                <MCardAreaRow list={produtos} isLoading={loadingProducts} />
             </Box>
         </BaseLayout >
     )
