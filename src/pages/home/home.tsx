@@ -31,8 +31,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     ProdutoService.getAll()
-      //.then((response) => setProdutos(response.list))
-      .then((response) => console.log)
+      .then((response) => setProdutos(response.list))
       .catch((error) => showAlert(error.customMessage, 'error'))
       .finally(() => setLoading(false));
   }, []);

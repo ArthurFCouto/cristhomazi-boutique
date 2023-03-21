@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     Box, Card, CardContent, CardMedia,
+    Divider,
     Fade, Grid, IconButton, Link, Skeleton,
     Stack, Typography, useMediaQuery, useTheme
 } from '@mui/material'
-import { FavoriteBorder } from '@mui/icons-material';
+import { FavoriteBorder, Keyboard, SortByAlpha, WifiOff } from '@mui/icons-material';
 import { useAppThemeContext, useDialogContext } from '../../contexts';
 import { IProduto } from '../../service';
 import { Environment } from '../../environment';
@@ -183,7 +184,7 @@ const MCardSkeleton: React.FC<{ directionRow?: boolean }> = ({ directionRow }) =
             minWidth={widhtWhenRow}
         >
             <Card sx={{ height: theme.spacing(45) }} variant='outlined'>
-                <Skeleton height={theme.spacing(33)} variant='rectangular' />
+                <Skeleton height='73%' variant='rectangular' />
                 <CardContent sx={{ flex: '1 0 auto', padding: 1 }}>
                     <Stack spacing={1}>
                         <Skeleton sx={{ width: '35%' }} variant='text' />
@@ -196,31 +197,75 @@ const MCardSkeleton: React.FC<{ directionRow?: boolean }> = ({ directionRow }) =
     )
 }
 
-export const MCardNotFound: React.FC = () => {
+const MCardNotFound: React.FC = () => {
+    const theme = useTheme();
+    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const Li: React.FC<{ icon: React.ReactNode, text: string }> = ({ icon, text }) => (
+        <Typography
+            alignItems='center'
+            color='text.secondary'
+            component={Box}
+            display='flex'
+            gap={1}
+            variant='subtitle2'
+        >
+            {icon}
+            {text}
+        </Typography>
+    )
 
     return (
-        <Grid
-            container
-            item
-            textAlign='center'
+        <Card
+            component={Box}
+            paddingY={2}
+            sx={{ backgroundColor: BackgroundColorCard() }}
+            width='100%'
         >
-            <Grid
-                item
-                xs={12}
-                sm={6}
+            <Stack
+                direction={smDownScreen ? 'column' : 'row'}
+                width='100%'
             >
-                <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
-            </Grid>
-            <Grid
-                item
-                xs={12}
-                sm={6}
-            >
-                <Typography variant='h6'>Confira se digitou corretamente</Typography>
-                <Typography variant='h6'>Use palavras chave diferentes</Typography>
-                <Typography variant='h6'>Tente novamente mais tarde</Typography>
-            </Grid>
-        </Grid>
+                <Box
+                    alignItems='center'
+                    display='flex'
+                    flexDirection='row'
+                    justifyContent={smDownScreen ? 'center' : 'end'}
+                    padding={1}
+                    width='100%'
+                >
+                    <Typography
+                        fontWeight={600}
+                        textAlign='center'
+                        variant='h6'
+                    >
+                        {Environment.DEFAULT_NOT_FOUND_MESSAGE}
+                    </Typography>
+                </Box>
+                <Divider orientation={smDownScreen ? 'horizontal' : 'vertical'} />
+                <Box
+                    alignItems='flex-start'
+                    display='flex'
+                    flexDirection='column'
+                    justifyContent='center'
+                    padding={1}
+                    width='100%'
+                >
+                    <Li
+                        icon={<Keyboard fontSize='inherit' />}
+                        text='Confira se digitou corretamente'
+                    />
+                    <Li
+                        icon={<SortByAlpha fontSize='inherit' />}
+                        text='Use palavras chave diferentes'
+                    />
+                    <Li
+                        icon={<WifiOff fontSize='inherit' />}
+                        text='Tente novamente mais tarde'
+                    />
+                </Box>
+            </Stack>
+        </Card >
     )
 }
 

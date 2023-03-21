@@ -28,7 +28,7 @@ export const Buscar: React.FC = () => {
     return (
         <BaseLayout title='Cris Thomazi Boutique' showCategories showSearch>
             <Breadcrumbs />
-            <MCardArea list={produtos} loading={loading} />
+            <MCardArea list={produtos} isLoading={loading} />
         </BaseLayout>
     )
 }

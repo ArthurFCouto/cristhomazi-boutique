@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material';
-import { cyan } from '@mui/material/colors';
 
 export const LightTheme = createTheme({
     palette: {
@@ -26,8 +25,10 @@ export const LightTheme = createTheme({
             color: 'black',
         },
         fontFamily: [
-            '-apple-system',
+            'lato',
+            'Montserrat',
             '"Helvetica Neue"',
+            '-apple-system',
             'sans-serif',
         ].join(','),
     }
