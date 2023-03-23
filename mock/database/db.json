@@ -1,66 +1,29 @@
 {
-    "produtoBase": [
-        {
-            "id": 1,
-            "sku": "CDLJ",
-            "titulo": "Calça de linho Joana",
-            "categoria": [
-                "calças",
-                "roupas"
-            ],
-            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marca": "Própria"
-        },
-        {
-            "id": 2,
-            "sku": "CME",
-            "titulo": "Calça MOM Escura",
-            "categoria": [
-                "calças",
-                "roupas"
-            ],
-            "descricao": "A modelo está vestindo tamanho 40. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marca": "Própria"
-        },
-        {
-            "id": 3,
-            "sku": "TSCW",
-            "titulo": "T-SHIRT CUTE WILD",
-            "categoria": [
-                "blusas",
-                "roupas"
-            ],
-            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marca": "propria"
-        },
-        {
-            "id": 4,
-            "sku": "BLCZ",
-            "titulo": "BLUSA DE LINHO COM ZIPER",
-            "categoria": [
-                "blusas",
-                "roupas"
-            ],
-            "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
-            "marca": "propria"
-        },
-        {
-            "id": 5,
-            "sku": "CPC",
-            "titulo": "CAMISA POLO COLCCI",
-            "categoria": [
-                "blusas",
-                "roupas",
-                "masculino"
-            ],
-            "descricao": "O manequim usa tamanho M.",
-            "marca": "Colcci"
-        }
+    "categoria": [
+        "blusas",
+        "calças",
+        "masculino",
+        "roupas"
+    ],
+    "marca": [
+        "Própria",
+        "Colcci"
     ],
     "produto": [
         {
             "id": 1,
             "idProdutoBase": 1,
+            "produtoBase": {
+                "id": 1,
+                "sku": "CDLJ",
+                "titulo": "Calça de linho Joana",
+                "categoria": [
+                    "calças",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "calca-de-linho-joana-nude",
             "cor": "nude",
             "hex": "#F7D1C6",
@@ -79,6 +42,17 @@
         {
             "id": 2,
             "idProdutoBase": 1,
+            "produtoBase": {
+                "id": 1,
+                "sku": "CDLJ",
+                "titulo": "Calça de linho Joana",
+                "categoria": [
+                    "calças",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "calca-de-linho-joana-roxo-simples",
             "cor": "roxo simples",
             "hex": "#993399",
@@ -96,6 +70,17 @@
         {
             "id": 3,
             "idProdutoBase": 2,
+            "produtoBase": {
+                "id": 2,
+                "sku": "CME",
+                "titulo": "Calça MOM Escura",
+                "categoria": [
+                    "calças",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho 40. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "calca-mom-escura-azul",
             "cor": "Azul",
             "hex": "#467FA8",
@@ -115,6 +100,17 @@
         {
             "id": 4,
             "idProdutoBase": 3,
+            "produtoBase": {
+                "id": 3,
+                "sku": "TSCW",
+                "titulo": "T-SHIRT CUTE WILD",
+                "categoria": [
+                    "blusas",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "t-shirt-cute-wild-branco",
             "cor": "Branco",
             "hex": "#EFEFEF",
@@ -132,6 +128,17 @@
         {
             "id": 5,
             "idProdutoBase": 3,
+            "produtoBase": {
+                "id": 3,
+                "sku": "TSCW",
+                "titulo": "T-SHIRT CUTE WILD",
+                "categoria": [
+                    "blusas",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "t-shirt-cute-wild-laranja",
             "cor": "Laranja",
             "hex": "#FF8602",
@@ -148,6 +155,17 @@
         {
             "id": 6,
             "idProdutoBase": 3,
+            "produtoBase": {
+                "id": 3,
+                "sku": "TSCW",
+                "titulo": "T-SHIRT CUTE WILD",
+                "categoria": [
+                    "blusas",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "t-shirt-cute-wild-amarelo",
             "cor": "Amarelo",
             "hex": "#E4F000",
@@ -164,6 +182,17 @@
         {
             "id": 7,
             "idProdutoBase": 4,
+            "produtoBase": {
+                "id": 4,
+                "sku": "BLCZ",
+                "titulo": "BLUSA DE LINHO COM ZIPER",
+                "categoria": [
+                    "blusas",
+                    "roupas"
+                ],
+                "descricao": "A modelo está vestindo tamanho P. Ela tem 1,65m de altura. Veste P na parte superior e 38/40 na parte inferior. Ela tem 106cm de quadril, 69cm de cintura e 88cm de busto.",
+                "marca": "Própria"
+            },
             "nome": "blusa-de-linho-com-ziper-verde",
             "cor": "Verde",
             "hex": "#90a96c",
@@ -180,6 +209,18 @@
         {
             "id": 8,
             "idProdutoBase": 5,
+            "produtoBase": {
+                "id": 5,
+                "sku": "CPC",
+                "titulo": "CAMISA POLO COLCCI",
+                "categoria": [
+                    "blusas",
+                    "roupas",
+                    "masculino"
+                ],
+                "descricao": "O manequim usa tamanho M.",
+                "marca": "Colcci"
+            },
             "nome": "camisa-polo-colcci-verde",
             "cor": "Verde",
             "hex": "#90a96c",
@@ -196,6 +237,18 @@
         {
             "id": 9,
             "idProdutoBase": 5,
+            "produtoBase": {
+                "id": 5,
+                "sku": "CPC",
+                "titulo": "CAMISA POLO COLCCI",
+                "categoria": [
+                    "blusas",
+                    "roupas",
+                    "masculino"
+                ],
+                "descricao": "O manequim usa tamanho M.",
+                "marca": "Colcci"
+            },
             "nome": "camisa-polo-colcci-vermelho",
             "cor": "Vermelho",
             "hex": "#90a96c",

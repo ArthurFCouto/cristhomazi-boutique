@@ -69,7 +69,7 @@ export const Detalhes: React.FC = () => {
                             sx={{ cursor: 'pointer', padding: 0.5 }}
                         >
                             <CardMedia
-                                alt={`${produto?.produto.titulo} - imagem ${index + 1}`}
+                                alt={`${produto?.produtoBase.titulo} - imagem ${index + 1}`}
                                 component='img'
                                 height={theme.spacing(8)}
                                 image={image}
@@ -131,12 +131,12 @@ export const Detalhes: React.FC = () => {
             if (sizeSelected.length > 0) {
                 const cartProduct = {
                     id: produto.id,
-                    titulo: produto.produto.titulo,
+                    titulo: produto.produtoBase.titulo,
                     nome: produto.nome,
                     cor: produto.cor,
                     imagem: produto.imagens[0],
                     tamanho: sizeSelected,
-                    categoria: produto.produto.categoria[0],
+                    categoria: produto.produtoBase.categoria[0],
                     valor: produto.valor,
                 }
                 addItem(cartProduct);
@@ -154,12 +154,12 @@ export const Detalhes: React.FC = () => {
             if (sizeSelected.length > 0) {
                 const cartProduct = {
                     id: produto.id,
-                    titulo: produto.produto.titulo,
+                    titulo: produto.produtoBase.titulo,
                     nome: produto.nome,
                     cor: produto.cor,
                     imagem: produto.imagens[0],
                     tamanho: sizeSelected,
-                    categoria: produto.produto.categoria[0],
+                    categoria: produto.produtoBase.categoria[0],
                     valor: produto.valor,
                 }
                 addItem(cartProduct);
@@ -190,12 +190,12 @@ export const Detalhes: React.FC = () => {
 
     return (
         <BaseLayout
-            description={Environment.CUSTOM_DESCRIPTION(String(produto?.produto.titulo))}
+            description={Environment.CUSTOM_DESCRIPTION(String(produto?.produtoBase.titulo))}
             showCategories
             showSearch
-            title={`${produto?.produto.titulo} - ${Environment.DEFAULT_TITLE}`}
+            title={`${produto?.produtoBase.titulo} - ${Environment.DEFAULT_TITLE}`}
         >
-            <Breadcrumbs loadingTitle={loading} title={String(produto?.produto.titulo)} />
+            <Breadcrumbs loadingTitle={loading} title={String(produto?.produtoBase.titulo)} />
             <Card
                 component={Box}
                 display='flex'
@@ -217,12 +217,12 @@ export const Detalhes: React.FC = () => {
                                 />
                             ) : (
                                 <CardMedia
-                                    alt={produto?.produto.titulo}
+                                    alt={produto?.produtoBase.titulo}
                                     component='img'
                                     height='100%'
                                     image={sourceImage}
                                     sx={{ objectFit: 'contain' }}
-                                    title={produto?.produto.titulo}
+                                    title={produto?.produtoBase.titulo}
                                 />
                             )
                         }
@@ -241,7 +241,7 @@ export const Detalhes: React.FC = () => {
                                     variant='h5'
                                 >
                                     {
-                                        loading ? <Skeleton variant='text' width='80%' /> : produto?.produto.titulo
+                                        loading ? <Skeleton variant='text' width='80%' /> : produto?.produtoBase.titulo
                                     }
                                 </Typography>
                                 <Typography
@@ -249,7 +249,7 @@ export const Detalhes: React.FC = () => {
                                     variant='caption'
                                 >
                                     {
-                                        loading ? <Skeleton variant='text' width='20%' /> : `Sku: ${produto?.produto.sku}`
+                                        loading ? <Skeleton variant='text' width='20%' /> : `Sku: ${produto?.produtoBase.sku}`
                                     }
                                 </Typography>
                                 <Typography
@@ -266,7 +266,7 @@ export const Detalhes: React.FC = () => {
                                             <Skeleton variant='text' width='50%' />
                                         ) : (
                                             <>
-                                                Categoria: {produto && <ListCategories list={produto.produto.categoria} />}
+                                                Categoria: {produto && <ListCategories list={produto.produtoBase.categoria} />}
                                             </>
                                         )
                                     }
@@ -374,7 +374,7 @@ export const Detalhes: React.FC = () => {
                                     <Skeleton variant='text' width='100%' />
                                     <Skeleton variant='text' width='80%' />
                                 </>
-                            ) : produto?.produto.descricao
+                            ) : produto?.produtoBase.descricao
                         }
                     </Typography>
                 </CardContent>

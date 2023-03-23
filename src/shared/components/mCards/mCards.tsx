@@ -43,7 +43,7 @@ const MCard: React.FC<IMCard> = ({ directionRow, item }) => {
     const widhtWhenRow = directionRow ? CalculateWidhtWhenRow() : undefined;
     const backgroundColorCard = BackgroundColorCard();
 
-    const { produto: { categoria, marca, titulo }, cor, nome, imagens, valor } = item;
+    const { produtoBase: { categoria, marca, titulo }, cor, nome, imagens, valor } = item;
     const [image, setImage] = useState(imagens[0]);
     const url = `/buscar/${categoria[0]}/${nome}`;
     const title = Capitalize(titulo + ' ' + cor);
@@ -63,7 +63,7 @@ const MCard: React.FC<IMCard> = ({ directionRow, item }) => {
     };
 
     useEffect(() => {
-        setTimeout(() => setShowTransition(true), 750)
+        setTimeout(() => setShowTransition(true), 500)
     }, []);
 
     return (
@@ -275,7 +275,7 @@ export const MCardArea: React.FC<IMCardArea> = ({ list, isLoading }) => {
     return (
         <Grid
             container
-            padding={1}
+            paddingY={1}
             marginX={0}
             marginBottom={2}
         >
