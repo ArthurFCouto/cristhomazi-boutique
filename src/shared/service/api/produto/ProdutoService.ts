@@ -76,7 +76,7 @@ const getByName = async (nome: string): Promise<IProduto> => {
 
 const getAllByCategory = async (categoria: string): Promise<IGetAll> => {
     try {
-        const { data: list } = await Api.get(`produto?produto.categoria_like=${categoria}`).catch((error) => error.response);
+        const { data: list } = await Api.get(`produto?produtoBase.categoria_like=${categoria}`).catch((error) => error.response);
         if (list.length < 1)
             throw new Error('Nenhum produto encontrado');
         return {

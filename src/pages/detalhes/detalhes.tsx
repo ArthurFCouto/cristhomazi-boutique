@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import {
     Box, Button, Card, CardContent,
@@ -12,15 +12,26 @@ import { IProduto, ProdutoService } from '../../shared/service';
 import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
-import { useCartContext } from '../../shared/contexts';
+import { useCartContext, useDialogContext } from '../../shared/contexts';
 
 interface ILists {
-    list: string[]
+    list: string[],
+    click?: (text: string) => void;
+    responseClick?: (text: string) => string;
+}
+
+interface IListsImage extends ILists {
+    heightImage: string;
+    widthImage: string;
 }
 
 const ListCategories: React.FC<ILists> = ({ list }) => {
     return (
-        <Stack direction='row' paddingX={1} spacing={1}>
+        <Stack
+            direction='row'
+            paddingX={1}
+            spacing={1}
+        >
             {
                 list.map((categoria, index) =>
                     <Link
@@ -37,165 +48,189 @@ const ListCategories: React.FC<ILists> = ({ list }) => {
     )
 }
 
+const ListSizes: React.FC<ILists> = ({ list, click }) => {
+    const theme = useTheme();
+    const [sizeSelected, setSizeSelected] = useState<string>('');
+
+    const handleClick = (size: string) => {
+        setSizeSelected((oldSizeSelected) => oldSizeSelected !== size ? size : '');
+        click && click(sizeSelected !== size ? size : '');
+    }
+
+    useEffect(() => {
+        if (list.length === 1) {
+            setSizeSelected(list[0]);
+            click && click(list[0]);
+        }
+    }, [list]);
+
+    return (
+        <Stack
+            direction='row'
+            marginTop={1}
+            spacing={1}
+        >
+            {
+                list.map((size, index) =>
+                    <Box
+                        component={Paper}
+                        bgcolor={size == sizeSelected ? theme.palette.primary.light : 'default'}
+                        elevation={1}
+                        key={index}
+                        onClick={() => handleClick(size)}
+                        paddingY={1}
+                        paddingX={2}
+                        square
+                        sx={{ cursor: 'pointer' }}
+                    >
+                        <Typography fontSize={12}>
+                            {Capitalize(size)}
+                        </Typography>
+                    </Box>
+                )
+            }
+        </Stack>
+    )
+}
+
+const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImage }) => {
+    const [selectedImage, setSelectedImage] = useState(list[0]);
+
+    const getOpacity = (image: string) => image == selectedImage ? 0.75 : 1;
+
+    const handleClick = (image: string) => {
+        setSelectedImage(image);
+        click && click(image);
+    }
+
+    return (
+        <Stack
+            alignItems='center'
+            direction='row'
+            justifyContent='center'
+            paddingY={1}
+            overflow='auto'
+            spacing={2}
+        >
+            {
+                list.map((image, index) =>
+                    <Card
+                        component={Paper}
+                        elevation={1}
+                        key={index}
+                        square
+                        sx={{ cursor: 'pointer', padding: 0.5 }}
+                    >
+                        <CardMedia
+                            alt={`Imagem ${index + 1}`}
+                            component='img'
+                            height={heightImage}
+                            image={image}
+                            key={index}
+                            onClick={() => handleClick(image)}
+                            sx={{ objectFit: 'contain', opacity: getOpacity(image), width: widthImage }}
+                        />
+                    </Card>
+                )
+            }
+        </Stack>
+    )
+}
+
 export const Detalhes: React.FC = () => {
     const { categoria = 'roupas', nome } = useParams();
     const theme = useTheme();
     const navigation = useNavigate();
     const { addItem } = useCartContext();
+    const { showAlert } = useDialogContext();
     const [loading, setLoading] = useState(true);
-    const [loadingProducts, setLoadingProducts] = useState(true);
+    const [loadingRecommendeds, setLoadingRecommendeds] = useState(true);
     const [produto, setProduto] = useState<IProduto>();
-    const [produtos, setProdutos] = useState<IProduto[]>([]);
+    const [recommendeds, setRecommendeds] = useState<IProduto[]>([]);
     const [sourceImage, setSourceImage] = useState<string>();
     const [sizeSelected, setSizeSelected] = useState('');
+    const [title, setTitle] = useState<string | undefined>();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const ListImages: React.FC<ILists> = ({ list }) => {
-        return (
-            <Stack
-                alignItems='center'
-                direction='row'
-                justifyContent='center'
-                paddingY={1}
-                overflow='auto'
-                spacing={2}
-            >
-                {
-                    list.map((image, index) =>
-                        <Paper
-                            elevation={1}
-                            key={index}
-                            square
-                            sx={{ cursor: 'pointer', padding: 0.5 }}
-                        >
-                            <CardMedia
-                                alt={`${produto?.produtoBase.titulo} - imagem ${index + 1}`}
-                                component='img'
-                                height={theme.spacing(8)}
-                                image={image}
-                                key={index}
-                                onClick={() => setSourceImage(image)}
-                                sx={{ objectFit: 'contain', width: theme.spacing(6) }}
-                                title={`Imagem ${index + 1}`}
-                            />
-                        </Paper>
-                    )
-                }
-            </Stack>
-        )
+    const addCart = (product: IProduto) => {
+        const cartProduct = {
+            id: product.id,
+            titulo: product.produtoBase.titulo,
+            nome: product.nome,
+            cor: product.cor,
+            imagem: product.imagens[0],
+            tamanho: sizeSelected,
+            categoria: product.produtoBase.categoria[0],
+            valor: product.valor,
+        };
+        addItem(cartProduct);
     }
 
-    const ListSizes: React.FC<ILists> = ({ list }) => {
-        const handleClick = (tamanho: string) => setSizeSelected((oldSizeSelected) => oldSizeSelected !== tamanho ? tamanho : '');
-        useEffect(() => {
-            if (list.length === 1)
-                setSizeSelected(list[0]);
-        }, [list]);
-
-        return (
-            <Stack direction='row' marginTop={1} spacing={1}>
-                {
-                    list.map((tamanho, index) =>
-                        <Box
-                            component={Paper}
-                            bgcolor={tamanho === sizeSelected ? theme.palette.background.default : 'default'}
-                            elevation={1}
-                            key={index}
-                            onClick={() => handleClick(tamanho)}
-                            paddingY={1}
-                            paddingX={2}
-                            square
-                            sx={{ cursor: 'pointer' }}
-                        >
-                            <Typography fontSize={12}>
-                                {Capitalize(tamanho)}
-                            </Typography>
-                        </Box>
-                    )
-                }
-            </Stack>
-        )
-    }
-
-    const handleListProducts = () => {
+    const handleListRecommendeds = () => {
         ProdutoService.getAllByCategory(categoria)
-            .then((response) => setProdutos(response.list))
-            .catch((error) => alert(error.message))
-            .finally(() =>  setLoadingProducts(false));
+            .then((response) => setRecommendeds(response.list))
+            .catch((error) => showAlert(error.message, 'error'))
+            .finally(() => setLoadingRecommendeds(false));
     }
 
-    const handleFavorite = () => alert(Environment.NOT_IMPLEMENTED_MESSAGE);
+    const handleFavorite = () => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning');
 
-    const handleShoppingBag = () => {
+    const handleActionBuy = (action: () => void) => {
         if (produto) {
             if (sizeSelected.length > 0) {
-                const cartProduct = {
-                    id: produto.id,
-                    titulo: produto.produtoBase.titulo,
-                    nome: produto.nome,
-                    cor: produto.cor,
-                    imagem: produto.imagens[0],
-                    tamanho: sizeSelected,
-                    categoria: produto.produtoBase.categoria[0],
-                    valor: produto.valor,
-                }
-                addItem(cartProduct);
-                alert('Produto adicionado a sacola!');
+                addCart(produto);
+                action();
             } else {
-                alert('Selecione um tamanho!')
+                showAlert('Selecione um tamanho!', 'warning');
             }
         } else {
-            alert('Não é possível adicionar a sacola!');
+            showAlert('Não é possível adicionar a sacola!', 'error');
         }
-    };
+    }
 
-    const handleBuy = () => {
-        if (produto) {
-            if (sizeSelected.length > 0) {
-                const cartProduct = {
-                    id: produto.id,
-                    titulo: produto.produtoBase.titulo,
-                    nome: produto.nome,
-                    cor: produto.cor,
-                    imagem: produto.imagens[0],
-                    tamanho: sizeSelected,
-                    categoria: produto.produtoBase.categoria[0],
-                    valor: produto.valor,
-                }
-                addItem(cartProduct);
-                navigation('/sacola');
-            } else {
-                alert('Selecione um tamanho!')
-            }
-        } else {
-            alert('Não é possível fazer esta operação!');
-        }
-    };
+    const Recommended = () => (
+        <Card
+            component={Box}
+            marginY={2}
+            padding={1}
+        >
+            <Typography
+                variant='h6'
+                sx={{ textTransform: 'uppercase' }}
+            >
+                Você também pode gostar
+            </Typography>
+            <Box marginY={1}>
+                <MCardAreaRow list={recommendeds} isLoading={loadingRecommendeds} />
+            </Box>
+        </Card>
+    )
 
     useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
-        setLoadingProducts(true);
+        setLoadingRecommendeds(true);
         ProdutoService.getByName(nome || '')
             .then((response) => {
                 setProduto(response);
+                setTitle(response.produtoBase.titulo);
                 setSourceImage(response.imagens[0]);
             })
-            .catch((error) => alert(error.message))
+            .catch((error) => showAlert(error.message, 'error'))
             .finally(() => {
                 setLoading(false);
-                handleListProducts();
+                handleListRecommendeds();
             })
     }, [nome]);
 
     return (
         <BaseLayout
-            description={Environment.CUSTOM_DESCRIPTION(String(produto?.produtoBase.titulo))}
+            description={Environment.CUSTOM_DESCRIPTION(String(title))}
             showCategories
             showSearch
-            title={`${produto?.produtoBase.titulo} - ${Environment.DEFAULT_TITLE}`}
+            title={`${title} - ${Environment.DEFAULT_TITLE}`}
         >
-            <Breadcrumbs loadingTitle={loading} title={String(produto?.produtoBase.titulo)} />
+            <Breadcrumbs loadingTitle={loading} title={title} />
             <Card
                 component={Box}
                 display='flex'
@@ -217,12 +252,11 @@ export const Detalhes: React.FC = () => {
                                 />
                             ) : (
                                 <CardMedia
-                                    alt={produto?.produtoBase.titulo}
+                                    alt={title}
                                     component='img'
                                     height='100%'
                                     image={sourceImage}
                                     sx={{ objectFit: 'contain' }}
-                                    title={produto?.produtoBase.titulo}
                                 />
                             )
                         }
@@ -289,7 +323,7 @@ export const Detalhes: React.FC = () => {
                                             }
                                         </Stack>
                                     ) : (
-                                        produto && <ListSizes list={produto.tamanhos} />
+                                        produto && <ListSizes list={produto.tamanhos} click={(size) => setSizeSelected(size)} />
                                     )
                                 }
                                 <Box
@@ -321,7 +355,7 @@ export const Detalhes: React.FC = () => {
                                         <Tooltip title='Adicionar a sacola'>
                                             <IconButton
                                                 color='secondary'
-                                                onClick={handleShoppingBag}
+                                                onClick={() => handleActionBuy(() => showAlert('Produto adicionado a sacola!', 'success'))}
                                             >
                                                 <LocalMall />
                                             </IconButton>
@@ -331,7 +365,7 @@ export const Detalhes: React.FC = () => {
                                 <Button
                                     color='secondary'
                                     endIcon={<AddCard />}
-                                    onClick={handleBuy}
+                                    onClick={() => handleActionBuy(() => navigation('/sacola'))}
                                     title='Comprar esta peça'
                                     variant='contained'
                                 >
@@ -359,7 +393,16 @@ export const Detalhes: React.FC = () => {
                                 </Link>
                             </Stack>
                             <Box flex={1} paddingY={1} >
-                                {(!loading && produto) && <ListImages list={produto.imagens} />}
+                                {
+                                    (!loading && produto) && (
+                                        <ListImages
+                                            click={(text) => setSourceImage(text)}
+                                            heightImage={theme.spacing(8)}
+                                            list={produto.imagens}
+                                            widthImage={theme.spacing(6)}
+                                        />
+                                    )
+                                }
                             </Box>
                         </CardContent>
                     </Box>
@@ -379,23 +422,7 @@ export const Detalhes: React.FC = () => {
                     </Typography>
                 </CardContent>
             </Card>
-            <Typography
-                fontWeight={500}
-                marginLeft={smDownScreen ? 2 : 0}
-                marginY={2}
-                variant='h6'
-                sx={{ textTransform: 'uppercase' }}
-            >
-                Você também pode gostar
-            </Typography>
-            <Box
-                component={Paper}
-                marginY={1}
-                square
-                variant='outlined'
-            >
-                <MCardAreaRow list={produtos} isLoading={loadingProducts} />
-            </Box>
+            <Recommended />
         </BaseLayout >
     )
 }

@@ -301,6 +301,7 @@ export const MCardAreaRow: React.FC<IMCardArea> = ({ list, isLoading }) => {
     return (
         <Stack
             direction='row'
+            paddingY={1}
             overflow='auto'
             sx={{
                 '::-webkit-scrollbar': {
@@ -314,9 +315,7 @@ export const MCardAreaRow: React.FC<IMCardArea> = ({ list, isLoading }) => {
                 ) : list.length > 0 ? (
                     list.map((item, index) => <MCard directionRow item={item} key={index} />)
                 ) : (
-                    <Box textAlign='center'>
-                        <Typography variant='h6'>{Environment.DEFAULT_NOT_FOUND_MESSAGE}</Typography>
-                    </Box>
+                    <MCardNotFound />
                 )
             }
         </Stack>

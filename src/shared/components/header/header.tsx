@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createSearchParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Badge, Box, ButtonBase,
@@ -30,6 +30,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const { items } = useCartContext();
     const { showAlert } = useDialogContext();
+    const inputRef = useRef<HTMLInputElement>(null);
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [busca, setBusca] = useState<string>('');
@@ -113,7 +114,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                 <ImgLogo height={5} />
                             </ButtonBase>
                             <ButtonGroup>
-                                <IconButton onClick={() => setIsShowSearch(true)}>
+                                <IconButton onClick={() => {setIsShowSearch(true); inputRef.current?.focus;}}>
                                     <Search />
                                 </IconButton>
                                 <IconButton onClick={() => navigate('/sacola')}>
@@ -217,6 +218,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                                     name='search'
                                                     placeholder='Colcci, Calvin Klein, Santa Lolla ...'
                                                     onChange={(event) => setBusca(event.target.value)}
+                                                    ref={inputRef}
                                                     size='small'
                                                     value={busca}
                                                 />
