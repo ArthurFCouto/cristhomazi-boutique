@@ -4,7 +4,6 @@ import { BaseLayout } from '../../shared/layout';
 import { Breadcrumbs, MCardArea } from '../../shared/components';
 import { IProduto, ProdutoService } from '../../shared/service';
 import { useDialogContext } from '../../shared/contexts';
-import { Box } from '@mui/material';
 
 export const Buscar: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -26,10 +25,8 @@ export const Buscar: React.FC = () => {
 
     return (
         <BaseLayout title='Cris Thomazi Boutique' showCategories showSearch>
-            <Box paddingX={1} paddingTop={2}>
-                <Breadcrumbs />
-                <MCardArea list={produtos} isLoading={loading} />
-            </Box>
+            <Breadcrumbs />
+            <MCardArea list={produtos} isLoading={loading} />
         </BaseLayout>
     )
 }

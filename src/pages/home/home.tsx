@@ -38,51 +38,51 @@ export const Home: React.FC = () => {
 
   return (
     <BaseLayout showSearch showLegend showCategories>
-      <Box paddingX={1} paddingTop={2}>
-        <Card
-          component={Box}
-          marginBottom={2}
-          sx={{ backgroundColor: 'transparent', border: 0 }}
-          variant='outlined'
-        >{
-            loading ? (
-              <Skeleton
-                height={theme.spacing(50)}
-                variant='rectangular'
-              />
-            ) : (
-              <Carousel
-                indicators={false}
-                NextIcon={<ArrowForwardIosOutlined />}
-                PrevIcon={<ArrowBackIosOutlined />}
-                sx={{ zIndex: 0 }}
-              >
-                {
-                  banners.map((item, index) => (
-                    <Link
-                      component={RouterLink}
-                      key={index}
-                      to='#'
-                    >
-                      <CardMedia
-                        alt={item.alt}
-                        component='img'
-                        image={item.image}
-                        sx={{ maxHeight: theme.spacing(50) }}
-                        width='100%'
-                      />
-                    </Link>
-                  ))
-                }
-              </Carousel>
-            )
-          }
-        </Card>
-        <Typography px={1} textAlign='left' variant='h5'>
-          Últimos Lançamentos
-        </Typography>
-        <MCardArea list={produtos} isLoading={loading} />
-      </Box>
+      <Card
+        component={Box}
+        marginBottom={2}
+        sx={{ backgroundColor: 'transparent', border: 0 }}
+        variant='outlined'
+      >
+        {
+          loading ? (
+            <Skeleton
+              height={theme.spacing(50)}
+              variant='rectangular'
+            />
+          ) : (
+            <Carousel
+              autoPlay
+              indicators={false}
+              NextIcon={<ArrowForwardIosOutlined />}
+              PrevIcon={<ArrowBackIosOutlined />}
+              sx={{ zIndex: 0 }}
+            >
+              {
+                banners.map((item, index) => (
+                  <Link
+                    component={RouterLink}
+                    key={index}
+                    to='#'
+                  >
+                    <CardMedia
+                      alt={item.alt}
+                      component='img'
+                      image={item.image}
+                      sx={{ maxHeight: theme.spacing(50) }}
+                      width='100%'
+                    />
+                  </Link>
+                ))
+              }
+            </Carousel>
+          )
+        }
+      </Card>
+      <Typography px={1} textAlign='left' variant='h5'>
+        Últimos Lançamentos
+      </Typography>
+      <MCardArea list={produtos} isLoading={loading} />
     </BaseLayout >
   )
 }

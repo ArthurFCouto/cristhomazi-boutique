@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import {
     Box, Button, Card, CardContent,
@@ -6,23 +6,33 @@ import {
     Paper, Skeleton, Stack, Tooltip,
     Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { AddCard, Favorite, LocalMall, WhatsApp } from '@mui/icons-material';
+import { AddCard, ArrowBackIosOutlined, ArrowForwardIosOutlined, Favorite, LocalMall, WhatsApp } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
 import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
 import { useCartContext, useDialogContext } from '../../shared/contexts';
+import Carousel from 'react-material-ui-carousel';
 
 interface ILists {
     list: string[],
     click?: (text: string) => void;
-    responseClick?: (text: string) => string;
 }
 
 interface IListsImage extends ILists {
-    heightImage: string;
-    widthImage: string;
+    heightImage: number;
+    widthImage: number;
+}
+
+interface IAreaImage {
+    img: string | undefined;
+    isLoading: boolean;
+}
+
+interface IAreaRecommended {
+    recommendeds: IProduto[];
+    isLoading: boolean;
 }
 
 const ListCategories: React.FC<ILists> = ({ list }) => {
@@ -94,6 +104,7 @@ const ListSizes: React.FC<ILists> = ({ list, click }) => {
 }
 
 const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImage }) => {
+    const theme = useTheme();
     const [selectedImage, setSelectedImage] = useState(list[0]);
 
     const getOpacity = (image: string) => image == selectedImage ? 0.75 : 1;
@@ -124,11 +135,11 @@ const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImag
                         <CardMedia
                             alt={`Imagem ${index + 1}`}
                             component='img'
-                            height={heightImage}
+                            height={theme.spacing(heightImage)}
                             image={image}
                             key={index}
                             onClick={() => handleClick(image)}
-                            sx={{ objectFit: 'contain', opacity: getOpacity(image), width: widthImage }}
+                            sx={{ objectFit: 'contain', opacity: getOpacity(image), width: theme.spacing(widthImage) }}
                         />
                     </Card>
                 )
@@ -137,6 +148,41 @@ const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImag
     )
 }
 
+const AreaImage: React.FC<IAreaImage> = ({ img, isLoading }) => {
+    return isLoading ? (
+        <Skeleton
+            height='100%'
+            variant='rounded'
+        />
+    ) : (
+        <CardMedia
+            alt='Imagem principal'
+            component='img'
+            height='100%'
+            image={img}
+            sx={{ objectFit: 'contain' }}
+        />
+    )
+}
+
+const AreaRecommended: React.FC<IAreaRecommended> = ({ isLoading, recommendeds }) => (
+    <Card
+        component={Box}
+        marginY={2}
+        padding={1}
+    >
+        <Typography
+            variant='h6'
+            sx={{ textTransform: 'uppercase' }}
+        >
+            Você também pode gostar
+        </Typography>
+        <Box marginY={1}>
+            <MCardAreaRow list={recommendeds} isLoading={isLoading} />
+        </Box>
+    </Card>
+)
+
 export const Detalhes: React.FC = () => {
     const { categoria = 'roupas', nome } = useParams();
     const theme = useTheme();
@@ -144,8 +190,8 @@ export const Detalhes: React.FC = () => {
     const { addItem } = useCartContext();
     const { showAlert } = useDialogContext();
     const [loading, setLoading] = useState(true);
-    const [loadingRecommendeds, setLoadingRecommendeds] = useState(true);
     const [produto, setProduto] = useState<IProduto>();
+    const [loadingRecommendeds, setLoadingRecommendeds] = useState(true);
     const [recommendeds, setRecommendeds] = useState<IProduto[]>([]);
     const [sourceImage, setSourceImage] = useState<string>();
     const [sizeSelected, setSizeSelected] = useState('');
@@ -184,27 +230,9 @@ export const Detalhes: React.FC = () => {
                 showAlert('Selecione um tamanho!', 'warning');
             }
         } else {
-            showAlert('Não é possível adicionar a sacola!', 'error');
+            showAlert('Não foi possível adicionar a sacola!', 'error');
         }
     }
-
-    const Recommended = () => (
-        <Card
-            component={Box}
-            marginY={2}
-            padding={1}
-        >
-            <Typography
-                variant='h6'
-                sx={{ textTransform: 'uppercase' }}
-            >
-                Você também pode gostar
-            </Typography>
-            <Box marginY={1}>
-                <MCardAreaRow list={recommendeds} isLoading={loadingRecommendeds} />
-            </Box>
-        </Card>
-    )
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -242,26 +270,11 @@ export const Detalhes: React.FC = () => {
                         height={theme.spacing(50)}
                         marginY='auto'
                         padding={1}
-                        width={smDownScreen ? '100%' : '50%'}
+                        width={smDownScreen ? '100%' : '65%'}
                     >
-                        {
-                            loading ? (
-                                <Skeleton
-                                    height='100%'
-                                    variant='rounded'
-                                />
-                            ) : (
-                                <CardMedia
-                                    alt={title}
-                                    component='img'
-                                    height='100%'
-                                    image={sourceImage}
-                                    sx={{ objectFit: 'contain' }}
-                                />
-                            )
-                        }
+                        <AreaImage img={sourceImage} isLoading={loading} />
                     </Box>
-                    <Box width={smDownScreen ? '100%' : '50%'}>
+                    <Box width={smDownScreen ? '100%' : '35%'}>
                         <CardContent
                             component={Box}
                             display='flex'
@@ -270,41 +283,32 @@ export const Detalhes: React.FC = () => {
                             sx={{ cursor: 'default' }}
                         >
                             <Stack direction='column'>
-                                <Typography
-                                    fontWeight={500}
-                                    variant='h5'
-                                >
+                                <Typography fontWeight={500} variant='h5'>
                                     {
                                         loading ? <Skeleton variant='text' width='80%' /> : produto?.produtoBase.titulo
                                     }
                                 </Typography>
-                                <Typography
-                                    fontSize={10}
-                                    variant='caption'
-                                >
+                                <Typography fontSize={10} variant='caption'>
                                     {
                                         loading ? <Skeleton variant='text' width='20%' /> : `Sku: ${produto?.produtoBase.sku}`
                                     }
                                 </Typography>
-                                <Typography
-                                    component='nav'
-                                    display='flex'
-                                    alignItems='center'
-                                    flexDirection='row'
-                                    fontSize={10}
-                                    overflow='auto'
-                                    variant='caption'
-                                >
-                                    {
-                                        loading ? (
-                                            <Skeleton variant='text' width='50%' />
-                                        ) : (
-                                            <>
-                                                Categoria: {produto && <ListCategories list={produto.produtoBase.categoria} />}
-                                            </>
-                                        )
-                                    }
-                                </Typography>
+                                {
+                                    loading ? (
+                                        <Skeleton variant='text' width='50%' />
+                                    ) : (
+                                        <Typography
+                                            display='flex'
+                                            alignItems='center'
+                                            flexDirection='row'
+                                            fontSize={10}
+                                            overflow='auto'
+                                            variant='caption'
+                                        >
+                                            Categoria: {produto && <ListCategories list={produto.produtoBase.categoria} />}
+                                        </Typography>
+                                    )
+                                }
                                 <Typography marginTop={1} variant='h6'>
                                     Tamanhos
                                 </Typography>
@@ -332,7 +336,6 @@ export const Detalhes: React.FC = () => {
                                     flexDirection='row'
                                     justifyContent='space-between'
                                     marginY={2}
-                                    gap={1}
                                 >
                                     <Typography fontWeight={500} variant='h5'>
                                         {
@@ -343,7 +346,7 @@ export const Detalhes: React.FC = () => {
                                             )
                                         }
                                     </Typography>
-                                    <Stack direction='row' spacing={2}>
+                                    <Stack direction='row' spacing={1}>
                                         <Tooltip title='Adicionar aos favoritos'>
                                             <IconButton
                                                 color='secondary'
@@ -362,19 +365,30 @@ export const Detalhes: React.FC = () => {
                                         </Tooltip>
                                     </Stack>
                                 </Box>
+                                {
+                                    (!loading && produto && Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade > 1) && (
+                                        <Typography
+                                            color='text.secondary'
+                                            marginBottom={2}
+                                            marginTop={-2}
+                                            sx={{ cursor: 'default' }}
+                                            variant='caption'
+                                        >
+                                            {`Em até ${Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade}x de ${FormatBRL(Environment.CALCULATE_INSTALLMENT(produto.valor).parcela)}`}
+                                        </Typography>
+                                    )
+                                }
                                 <Button
                                     color='secondary'
                                     endIcon={<AddCard />}
                                     onClick={() => handleActionBuy(() => navigation('/sacola'))}
-                                    title='Comprar esta peça'
                                     variant='contained'
                                 >
-                                    Comprar
+                                    Eu quero
                                 </Button>
                                 <Link
                                     href={`https://wa.me/?text=${window.location.href}`}
                                     target='_blank'
-                                    title='Compartilhar pelo WhatsApp'
                                     underline='hover'
                                 >
                                     <Stack
@@ -397,9 +411,9 @@ export const Detalhes: React.FC = () => {
                                     (!loading && produto) && (
                                         <ListImages
                                             click={(text) => setSourceImage(text)}
-                                            heightImage={theme.spacing(8)}
+                                            heightImage={8}
                                             list={produto.imagens}
-                                            widthImage={theme.spacing(6)}
+                                            widthImage={6}
                                         />
                                     )
                                 }
@@ -422,7 +436,36 @@ export const Detalhes: React.FC = () => {
                     </Typography>
                 </CardContent>
             </Card>
-            <Recommended />
+            <AreaRecommended recommendeds={recommendeds} isLoading={loadingRecommendeds} />
+            {
+                produto && (
+                    <Card
+                        component={Box}
+                        marginBottom={2}
+                        padding={1}
+                    >
+                        <Carousel
+                            autoPlay
+                            height={theme.spacing(75)}
+                            NextIcon={<ArrowForwardIosOutlined />}
+                            PrevIcon={<ArrowBackIosOutlined />}
+                            sx={{ zIndex: 0 }}
+                        >
+                            {
+                                produto.imagens.map((image, index) => (
+                                    <CardMedia
+                                        alt={title}
+                                        component='img'
+                                        height='100%'
+                                        image={image}
+                                        sx={{ objectFit: 'contain' }}
+                                    />
+                                ))
+                            }
+                        </Carousel>
+                    </Card>
+                )
+            }
         </BaseLayout >
     )
 }

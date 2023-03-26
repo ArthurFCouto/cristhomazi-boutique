@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Breadcrumbs as MuiBreadcrumbs, Button, Skeleton, Typography, useTheme } from '@mui/material';
+import { Breadcrumbs as MuiBreadcrumbs, Button, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import { Class, Home, List } from '@mui/icons-material';
 import { useMemo } from 'react';
 
@@ -13,10 +13,10 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
     const [searchParams] = useSearchParams();
     const { categoria } = useParams();
     const theme = useTheme();
-    const search = useMemo(()=> searchParams.get('busca'), [searchParams]);
+    const search = useMemo(() => searchParams.get('busca'), [searchParams]);
 
     return (
-        <MuiBreadcrumbs aria-label='breadcrumb'>
+        <MuiBreadcrumbs>
             <Button
                 color='inherit'
                 onClick={() => navigate('/')}
@@ -38,29 +38,27 @@ export const Breadcrumbs: React.FC<IBreadcrumbs> = ({ loadingTitle, title }) => 
                 )
             }
             {
-                search  && search.length > 0 && (
-                    <Typography
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                        color='text.primary'
-                    >
-                        <List sx={{ mr: 0.5 }} fontSize='inherit' />
-                        {`Resultados para ${search?.toUpperCase()}`}
-                    </Typography>
+                search && search.length > 0 && (
+                    <Stack direction='row' alignItems='center' spacing={0.5}>
+                        <List />
+                        <Typography variant='subtitle2'>
+                            {`Resultados para ${search?.toUpperCase()}`}
+                        </Typography>
+                    </Stack>
                 )
             }
             {
                 title && (
-                    <Typography
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                        color='text.primary'
-                    >
-                        <List sx={{ mr: 0.5 }} fontSize='inherit' />
-                        {
-                            loadingTitle ? (
-                                <Skeleton variant='text' sx={{ fontSize: 'inherit', width: theme.spacing(10) }} />
-                            ) : title
-                        }
-                    </Typography>
+                    <Stack direction='row' alignItems='center' spacing={0.5}>
+                        <List />
+                        <Typography variant='subtitle2'>
+                            {
+                                loadingTitle ? (
+                                    <Skeleton variant='text' sx={{ fontSize: 'inherit', width: theme.spacing(10) }} />
+                                ) : title
+                            }
+                        </Typography>
+                    </Stack>
                 )
             }
         </MuiBreadcrumbs>

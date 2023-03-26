@@ -38,13 +38,13 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                 />
                 <Box
                     bgcolor={theme.palette.background.default}
-                    borderRadius={0}
                     component={Paper}
                     display='flex'
                     flex={1}
                     flexDirection='column'
                     alignItems='center'
                     sx={{ background: themeName == 'light' ? `url('/background.png') right top fixed` : undefined }}
+                    square
                     width='100%'
                 >
                     <Box
@@ -52,6 +52,7 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                         flexDirection='column'
                         height='100%'
                         maxWidth='lg'
+                        paddingTop={1}
                         width='100%'
                     >
                         {children}

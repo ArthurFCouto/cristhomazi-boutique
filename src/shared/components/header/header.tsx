@@ -231,7 +231,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                             gap={1}
                                             justifyContent='end'
                                         >
-                                            <Tooltip title='Alternar Tema'>
+                                            <Tooltip title='Alto Contraste'>
                                                 <IconButton
                                                     onClick={toggleTheme}
                                                     size='small'

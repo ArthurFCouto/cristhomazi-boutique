@@ -1,5 +1,5 @@
 import {
-  Divider, Drawer, Icon, List, ListItemButton,
+  Divider, Drawer, List, ListItemButton,
   ListItemIcon, ListItemText, useTheme
 } from '@mui/material';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
@@ -96,7 +96,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
                 <ListItemIcon>
                   <DarkMode />
                 </ListItemIcon>
-                <ListItemText primary='Alternar tema' />
+                <ListItemText primary='Alto contraste' />
               </ListItemButton>
             </List>
           </Box>
