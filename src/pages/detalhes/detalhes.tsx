@@ -6,7 +6,10 @@ import {
     Paper, Skeleton, Stack, Tooltip,
     Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { AddCard, ArrowBackIosOutlined, ArrowForwardIosOutlined, Favorite, LocalMall, WhatsApp } from '@mui/icons-material';
+import {
+    AddCard, ArrowBackIosOutlined, ArrowForwardIosOutlined,
+    Favorite, LocalMall, WhatsApp
+} from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
 import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
@@ -25,12 +28,12 @@ interface IListsImage extends ILists {
     widthImage: number;
 }
 
-interface IAreaImage {
+interface IImageArea {
     img: string | undefined;
     isLoading: boolean;
 }
 
-interface IAreaRecommended {
+interface IRecommendedArea {
     recommendeds: IProduto[];
     isLoading: boolean;
 }
@@ -137,7 +140,6 @@ const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImag
                             component='img'
                             height={theme.spacing(heightImage)}
                             image={image}
-                            key={index}
                             onClick={() => handleClick(image)}
                             sx={{ objectFit: 'contain', opacity: getOpacity(image), width: theme.spacing(widthImage) }}
                         />
@@ -148,7 +150,7 @@ const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImag
     )
 }
 
-const AreaImage: React.FC<IAreaImage> = ({ img, isLoading }) => {
+const ImageArea: React.FC<IImageArea> = ({ img, isLoading }) => {
     return isLoading ? (
         <Skeleton
             height='100%'
@@ -165,7 +167,7 @@ const AreaImage: React.FC<IAreaImage> = ({ img, isLoading }) => {
     )
 }
 
-const AreaRecommended: React.FC<IAreaRecommended> = ({ isLoading, recommendeds }) => (
+const RecommendedArea: React.FC<IRecommendedArea> = ({ isLoading, recommendeds }) => (
     <Card
         component={Box}
         marginY={2}
@@ -183,8 +185,40 @@ const AreaRecommended: React.FC<IAreaRecommended> = ({ isLoading, recommendeds }
     </Card>
 )
 
+const AreaOfAllImages: React.FC<ILists> = ({ list }) => {
+    const theme = useTheme();
+    return (
+        <Card
+            component={Box}
+            marginBottom={2}
+            padding={1}
+        >
+            <Carousel
+                autoPlay
+                height={theme.spacing(75)}
+                NextIcon={<ArrowForwardIosOutlined />}
+                PrevIcon={<ArrowBackIosOutlined />}
+                sx={{ zIndex: 0 }}
+            >
+                {
+                    list.map((image, index) => (
+                        <CardMedia
+                            alt={`Imagem ${index}`}
+                            component='img'
+                            height='100%'
+                            key={index}
+                            image={image}
+                            sx={{ objectFit: 'contain' }}
+                        />
+                    ))
+                }
+            </Carousel>
+        </Card>
+    )
+}
+
 export const Detalhes: React.FC = () => {
-    const { categoria = 'roupas', nome } = useParams();
+    const { categoria = 'roupas', nome = '*' } = useParams();
     const theme = useTheme();
     const navigation = useNavigate();
     const { addItem } = useCartContext();
@@ -238,7 +272,7 @@ export const Detalhes: React.FC = () => {
         window.scrollTo(0, 0);
         setLoading(true);
         setLoadingRecommendeds(true);
-        ProdutoService.getByName(nome || '')
+        ProdutoService.getByName(nome)
             .then((response) => {
                 setProduto(response);
                 setTitle(response.produtoBase.titulo);
@@ -272,7 +306,7 @@ export const Detalhes: React.FC = () => {
                         padding={1}
                         width={smDownScreen ? '100%' : '65%'}
                     >
-                        <AreaImage img={sourceImage} isLoading={loading} />
+                        <ImageArea img={sourceImage} isLoading={loading} />
                     </Box>
                     <Box width={smDownScreen ? '100%' : '35%'}>
                         <CardContent
@@ -366,7 +400,7 @@ export const Detalhes: React.FC = () => {
                                     </Stack>
                                 </Box>
                                 {
-                                    (!loading && produto && Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade > 1) && (
+                                    (produto && Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade > 1) && (
                                         <Typography
                                             color='text.secondary'
                                             marginBottom={2}
@@ -406,9 +440,9 @@ export const Detalhes: React.FC = () => {
                                     </Stack>
                                 </Link>
                             </Stack>
-                            <Box flex={1} paddingY={1} >
+                            <Box flex={1}>
                                 {
-                                    (!loading && produto) && (
+                                    produto && (
                                         <ListImages
                                             click={(text) => setSourceImage(text)}
                                             heightImage={8}
@@ -423,48 +457,22 @@ export const Detalhes: React.FC = () => {
                 </Stack>
                 <Divider />
                 <CardContent sx={{ cursor: 'default' }}>
-                    <Typography variant='h6'>Informações da modelo</Typography>
+                    <Typography variant='h6'>Informações do modelo</Typography>
                     <Typography variant='body1'>
                         {
                             loading ? (
-                                <>
+                                <Box>
                                     <Skeleton variant='text' width='100%' />
                                     <Skeleton variant='text' width='80%' />
-                                </>
+                                </Box>
                             ) : produto?.produtoBase.descricao
                         }
                     </Typography>
                 </CardContent>
             </Card>
-            <AreaRecommended recommendeds={recommendeds} isLoading={loadingRecommendeds} />
+            <RecommendedArea recommendeds={recommendeds} isLoading={loadingRecommendeds} />
             {
-                produto && (
-                    <Card
-                        component={Box}
-                        marginBottom={2}
-                        padding={1}
-                    >
-                        <Carousel
-                            autoPlay
-                            height={theme.spacing(75)}
-                            NextIcon={<ArrowForwardIosOutlined />}
-                            PrevIcon={<ArrowBackIosOutlined />}
-                            sx={{ zIndex: 0 }}
-                        >
-                            {
-                                produto.imagens.map((image, index) => (
-                                    <CardMedia
-                                        alt={title}
-                                        component='img'
-                                        height='100%'
-                                        image={image}
-                                        sx={{ objectFit: 'contain' }}
-                                    />
-                                ))
-                            }
-                        </Carousel>
-                    </Card>
-                )
+                produto && <AreaOfAllImages list={produto.imagens} />
             }
         </BaseLayout >
     )

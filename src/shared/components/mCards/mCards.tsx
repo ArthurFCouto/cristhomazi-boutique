@@ -93,7 +93,6 @@ const MCard: React.FC<IMCard> = ({ directionRow, item }) => {
                     <Link
                         component={RouterLink}
                         to={url}
-                        preventScrollReset={true}
                         underline='none'
                     >
                         <CardMedia
