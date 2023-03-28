@@ -58,11 +58,11 @@ export const Environment = {
     /**
      * Informações básicas da loja
      * 
-     * @BASE_TELL - Telefone atual da loja no formato (xx) xxxxx-xxxx
+     * @BASE_TELL Telefone atual da loja no formato (xx) xxxxx-xxxx
      * 
-     * @BASE_URL_WHATSAPP - Url base para enviar mensagem para o Whats da loja, incluir o texto da mensagem
+     * @BASE_URL_WHATSAPP Url base para enviar mensagem para o Whats da loja, incluir o texto da mensagem
      * 
-     * @BASE_INSTAGRAM - Url base para para o IG, e usuário do IG da loja
+     * @BASE_INSTAGRAM Url base para para o IG, e usuário do IG da loja
      */
     INFORMATION_BASE: {
         BASE_TELL: '(38) 99732-6440',

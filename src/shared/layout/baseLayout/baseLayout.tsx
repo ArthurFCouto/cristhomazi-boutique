@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Box, Paper, useTheme } from '@mui/material';
-import { DrawerMenu, Footer, Header } from '../components';
-import { Environment } from '../environment';
-import { useAppThemeContext } from '../contexts';
+import { DrawerMenu, Footer, Header } from '../../components';
+import { Environment } from '../../environment';
+import { useAppThemeContext } from '../../contexts';
 
-interface BaseLayout {
+interface IBaseLayout {
     children: React.ReactNode;
     description?: string;
     sampleFooter?: boolean;
@@ -14,7 +14,7 @@ interface BaseLayout {
     title?: string;
 }
 
-export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sampleFooter, showCategories, showLegend, showSearch, title }) => {
+export const BaseLayout: React.FC<IBaseLayout> = ({ children, description, sampleFooter, showCategories, showLegend, showSearch, title }) => {
     const theme = useTheme();
     const { themeName } = useAppThemeContext();
     useEffect(() => {
@@ -25,9 +25,9 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
     return (
         <DrawerMenu>
             <Box
+                alignItems='center'
                 display='flex'
                 flexDirection='column'
-                alignItems='center'
                 height='100%'
                 overflow='auto'
             >
@@ -37,12 +37,12 @@ export const BaseLayout: React.FC<BaseLayout> = ({ children, description, sample
                     showCategories={showCategories}
                 />
                 <Box
+                    alignItems='center'
                     bgcolor={theme.palette.background.default}
                     component={Paper}
                     display='flex'
                     flex={1}
                     flexDirection='column'
-                    alignItems='center'
                     sx={{ background: themeName == 'light' ? `url('/background.png') right top fixed` : undefined }}
                     square
                     width='100%'

@@ -23,7 +23,7 @@ export const useDialogContext = () => {
 export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
     const [severityAlert, setSeverityAlert] = useState<ISeverity>('info');
     const [directionAlert, setDirectionAlert] = useState<IDirection>('up');
-    const [objAlert, setObjAlert] = useState({
+    const [propsAlert, setPropsAlert] = useState({
         message: '',
         open: false
     });
@@ -31,7 +31,7 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
     const showAlert = (message: string, severity: ISeverity, direction?: IDirection) => {
         setSeverityAlert(severity);
         setDirectionAlert(direction || 'up');
-        setObjAlert({
+        setPropsAlert({
             message,
             open: true
         });
@@ -41,7 +41,7 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
         if (reason === 'clickaway') {
             return;
         }
-        setObjAlert({
+        setPropsAlert({
             message: '',
             open: false
         });
@@ -65,9 +65,9 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
             <Snackbar
                 autoHideDuration={5000}
                 action={<SnackbarAction />}
-                message={objAlert.message}
+                message={propsAlert.message}
                 onClose={closeAlert}
-                open={objAlert.open}
+                open={propsAlert.open}
                 TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
             />
         </DialogContext.Provider>
@@ -81,7 +81,7 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
             <Snackbar
                 autoHideDuration={5000}
                 onClose={closeAlert}
-                open={objAlert.open}
+                open={propsAlert.open}
                 TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
                 action={<SnackbarAction />}
             >
@@ -90,7 +90,7 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
                     severity={severityAlert}
                     sx={{ width: '100%' }}
                 >
-                    {objAlert.message}
+                    {propsAlert.message}
                 </Alert>
             </Snackbar>
         </DialogContext.Provider>

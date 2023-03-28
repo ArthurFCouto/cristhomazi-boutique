@@ -39,6 +39,13 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
   const { themeName, toggleTheme } = useAppThemeContext();
 
+  const handleClick = (route: string) => {
+    toggleDrawerOpen();
+    navigate(route);
+  }
+
+
+
   return (
     <>
       <Drawer
@@ -51,19 +58,19 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
           display='flex'
           flexDirection='column'
           height='100%'
-          width={theme.spacing(28)}
+          width={theme.spacing(30)}
         >
           <Box
-            display='flex'
             alignItems='center'
+            display='flex'
+            height={theme.spacing(15)}
             justifyContent='center'
-            height={theme.spacing(14)}
             width='100%'
           >
             <img
               alt='Logo da Loja'
               loading='lazy'
-              onClick={() => { toggleDrawerOpen(); navigate('/') }}
+              onClick={() => handleClick('/')}
               src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
               width='60%'
             />
@@ -71,7 +78,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ children }) => {
           <Divider />
           <Box flex={1}>
             <List component='nav'>
-              <ListItemButton onClick={() => { toggleDrawerOpen(); navigate('/acessar') }}>
+              <ListItemButton onClick={() => handleClick('/acessar')}>
                 <ListItemIcon>
                   <AccountBox />
                 </ListItemIcon>

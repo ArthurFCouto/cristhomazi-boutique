@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { useDialogContext } from './dialogContext';
+import { useDialogContext } from '../dialogContext/dialogContext';
 
 export interface ICartProduct {
     id: number;
@@ -34,18 +34,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [items, setItems] = useState<ICartProduct[]>([]);
 
     const addItem = (item: ICartProduct) => {
-        const existItem = items.filter((produto) => produto.id == item.id);
-        if (existItem.length == 0) {
-            setItems([...items, item]);
+        const existItem = items.filter((produto) => produto.id === item.id);
+        if (existItem.length === 0) {
+            setItems(oldItems=> [...oldItems, item]);
             showAlert('Item adicionado a sacola', 'success');
         }
         else {
-            showAlert('Este item já está adicionado a sacola', 'error');
+            showAlert('Este item já está na sacola', 'error');
         }
     }
 
     const removeItem = (item: ICartProduct) => {
-        setItems(items.filter((produto) => produto.id != item.id));
+        setItems(oldItems=> oldItems.filter((produto) => produto.id !== item.id));
         showAlert('Item removido da sacola', 'success');
     }
 
