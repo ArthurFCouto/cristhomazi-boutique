@@ -231,6 +231,7 @@ export const Detalhes: React.FC = () => {
     const [sizeSelected, setSizeSelected] = useState('');
     const [title, setTitle] = useState<string | undefined>();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const addCart = (product: IProduto) => {
         const cartProduct = {
@@ -304,11 +305,11 @@ export const Detalhes: React.FC = () => {
                         height={theme.spacing(50)}
                         marginY='auto'
                         padding={1}
-                        width={smDownScreen ? '100%' : '65%'}
+                        width={smDownScreen ? '100%' : '60%'}
                     >
                         <ImageArea img={sourceImage} isLoading={loading} />
                     </Box>
-                    <Box width={smDownScreen ? '100%' : '35%'}>
+                    <Box width={smDownScreen ? '100%' : '40%'}>
                         <CardContent
                             component={Box}
                             display='flex'
@@ -385,6 +386,7 @@ export const Detalhes: React.FC = () => {
                                             <IconButton
                                                 color='secondary'
                                                 onClick={handleFavorite}
+                                                size={mdDownScreen ? 'small' : 'medium'}
                                             >
                                                 <Favorite />
                                             </IconButton>
@@ -393,6 +395,7 @@ export const Detalhes: React.FC = () => {
                                             <IconButton
                                                 color='secondary'
                                                 onClick={() => handleActionBuy(() => showAlert('Produto adicionado a sacola!', 'success'))}
+                                                size={mdDownScreen ? 'small' : 'medium'}
                                             >
                                                 <LocalMall />
                                             </IconButton>

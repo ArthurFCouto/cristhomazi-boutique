@@ -23,10 +23,44 @@ interface IHeader {
     showSearch?: boolean;
 };
 
+interface IButtonLink {
+    label: string;
+    to: string;
+}
+
+const ButtonLink: React.FC<IButtonLink> = ({ label, to }) => (
+    <Link
+        component={RouterLink}
+        to={to}
+        underline='none'
+    >
+        {label.toLowerCase()}
+    </Link>
+)
+
+const ImgLogo: React.FC<{ height: number }> = ({ height }) => {
+    const theme = useTheme();
+    const { themeName } = useAppThemeContext();
+    return (
+        <Link
+            component={RouterLink}
+            to={'/'}
+            underline='none'
+        >
+            <img
+                alt={Environment.DEFAULT_TITLE}
+                height={theme.spacing(height)}
+                loading='lazy'
+                src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
+            />
+        </Link>
+    )
+}
+
 export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSearch }) => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const { themeName, toggleTheme } = useAppThemeContext();
+    const { toggleTheme } = useAppThemeContext();
     const { drawerOptions, toggleDrawerOpen } = useDrawerContext();
     const { items } = useCartContext();
     const { showAlert } = useDialogContext();
@@ -34,7 +68,6 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [busca, setBusca] = useState<string>('');
-    const [isShowSearch, setIsShowSearch] = useState<boolean>(showSearch || false);
 
     const handleInputSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -42,7 +75,6 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
     }
 
     const redirectSearch = () => {
-        setIsShowSearch(false);
         navigate({
             pathname: '/buscar',
             search: createSearchParams({
@@ -56,31 +88,6 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
             <Search onClick={redirectSearch} sx={{ cursor: 'pointer' }} />
         </InputAdornment>
     );
-
-    const ImgLogo: React.FC<{ height: number }> = ({ height }) => (
-        <img
-            alt={Environment.DEFAULT_TITLE}
-            height={theme.spacing(height)}
-            loading='lazy'
-            onClick={() => navigate('/')}
-            src={themeName === 'light' ? '/logoDark.png' : '/logoLight.png'}
-        />
-    )
-
-    const ButtonLink: React.FC<{ label: string, to: string }> = ({ label, to }) => (
-        /*
-        <Button size='small' onClick={() => navigate(to)}>
-            {label}
-        </Button>
-        */
-        <Link
-            component={RouterLink}
-            to={to}
-            underline='none'
-        >
-            {label.toLowerCase()}
-        </Link>
-    )
 
     return (
         <Box
@@ -114,7 +121,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                 <ImgLogo height={5} />
                             </ButtonBase>
                             <ButtonGroup>
-                                <IconButton onClick={() => {setIsShowSearch(true); inputRef.current?.focus;}}>
+                                <IconButton onClick={() => inputRef.current?.focus()}>
                                     <Search />
                                 </IconButton>
                                 <IconButton onClick={() => navigate('/sacola')}>
@@ -144,9 +151,9 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                     target='_blank'
                                     underline='none'
                                 >
-                                    <Box display='flex' alignItems='center'>
+                                    <Box display='flex' alignItems='center' gap={0.5}>
                                         <Instagram htmlColor={theme.palette.primary.contrastText} sx={{ fontSize: 14 }} />
-                                        <Typography fontSize={12} ml={0.5} variant='body2'>
+                                        <Typography fontSize={12} variant='body2'>
                                             {Environment.INFORMATION_BASE.BASE_INSTAGRAM.user}
                                         </Typography>
                                     </Box>
@@ -158,9 +165,9 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                     target='_blank'
                                     underline='none'
                                 >
-                                    <Box display='flex' alignItems='center'>
+                                    <Box display='flex' alignItems='center' gap={0.5}>
                                         <WhatsApp htmlColor={theme.palette.primary.contrastText} sx={{ fontSize: 14 }} />
-                                        <Typography fontSize={12} ml={0.5} variant='body2'>
+                                        <Typography fontSize={12} variant='body2'>
                                             {Environment.INFORMATION_BASE.BASE_TELL}
                                         </Typography>
                                     </Box>
@@ -171,109 +178,108 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                 }
             </Box>
             {
-                isShowSearch && (
+                showSearch && (
                     <Box
                         display='flex'
                         justifyContent='center'
                         width='100%'
                     >
-                        <Fade in={isShowSearch}>
+                        <Grid
+                            alignItems='center'
+                            container
+                            direction='row'
+                            marginX={1}
+                            paddingY={1}
+                            maxWidth='lg'
+                            width='100%'
+                        >
                             <Grid
-                                alignItems='center'
-                                container
-                                direction='row'
-                                marginX={1}
-                                paddingY={1}
-                                maxWidth='lg'
-                                width='100%'
+                                item
+                                display={smDownScreen ? 'none' : 'flex'}
+                                sm={3}
                             >
-                                <Grid
-                                    item
-                                    display={smDownScreen ? 'none' : 'flex'}
-                                    sm={3}
-                                >
-                                    <ButtonBase sx={{ height: theme.spacing(10), marginRight: 'auto' }} >
-                                        <ImgLogo height={mdDownScreen ? 5 : 7} />
-                                    </ButtonBase>
-                                </Grid>
-                                <Grid
-                                    item
-                                    paddingY={smDownScreen ? 1 : 0}
-                                    sm={9}
-                                    xs={12}
-                                >
-                                    <Stack
-                                        direction='row'
-                                        spacing={3}
-                                        width='100%'
-                                    >
-                                        <FormControl
-                                            component='form'
-                                            fullWidth
-                                            onSubmit={handleInputSearch}
-                                        >
-                                            <Tooltip title='Digite algo para pesquisar'>
-                                                <OutlinedInput
-                                                    endAdornment={<IconInput />}
-                                                    name='search'
-                                                    placeholder='Colcci, Calvin Klein, Santa Lolla ...'
-                                                    onChange={(event) => setBusca(event.target.value)}
-                                                    ref={inputRef}
-                                                    size='small'
-                                                    value={busca}
-                                                />
-                                            </Tooltip>
-                                        </FormControl>
-                                        <Box
-                                            alignItems='center'
-                                            display={smDownScreen ? 'none' : 'flex'}
-                                            flexDirection='row'
-                                            gap={1}
-                                            justifyContent='end'
-                                        >
-                                            <Tooltip title='Alto Contraste'>
-                                                <IconButton
-                                                    onClick={toggleTheme}
-                                                    size='small'
-                                                >
-                                                    <DarkMode />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title='Acessar conta'>
-                                                <IconButton
-                                                    onClick={() => navigate('/acessar')}
-                                                    size='small'
-                                                >
-                                                    <Person2 />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title='Ver favoritos'>
-                                                <IconButton
-                                                    onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
-                                                    size='small'
-                                                >
-                                                    <Favorite />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title='Ver sacola'>
-                                                <IconButton
-                                                    onClick={() => navigate('/sacola')}
-                                                    size='small'
-                                                >
-                                                    <Badge
-                                                        badgeContent={items.length}
-                                                        color='secondary'
-                                                        max={10}
-                                                    >
-                                                        <LocalMall />
-                                                    </Badge>
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Box>
-                                    </Stack>
-                                </Grid>
+                                <ButtonBase sx={{ height: theme.spacing(10), marginRight: 'auto' }} >
+                                    <ImgLogo height={mdDownScreen ? 5 : 7} />
+                                </ButtonBase>
                             </Grid>
-                        </Fade>
+                            <Grid
+                                item
+                                paddingY={smDownScreen ? 1 : 0}
+                                sm={9}
+                                xs={12}
+                            >
+                                <Stack
+                                    direction='row'
+                                    spacing={3}
+                                    width='100%'
+                                >
+                                    <FormControl
+                                        component='form'
+                                        fullWidth
+                                        onSubmit={handleInputSearch}
+                                    >
+                                        <Tooltip title='Digite algo para pesquisar'>
+                                            <OutlinedInput
+                                                endAdornment={<IconInput />}
+                                                name='search'
+                                                placeholder='Colcci, Calvin Klein, Santa Lolla ...'
+                                                onChange={(event) => setBusca(event.target.value)}
+                                                inputRef={inputRef}
+                                                size='small'
+                                                type='search'
+                                                value={busca}
+                                            />
+                                        </Tooltip>
+                                    </FormControl>
+                                    <Box
+                                        alignItems='center'
+                                        display={smDownScreen ? 'none' : 'flex'}
+                                        flexDirection='row'
+                                        gap={1}
+                                        justifyContent='end'
+                                    >
+                                        <Tooltip title='Alto Contraste'>
+                                            <IconButton
+                                                onClick={toggleTheme}
+                                                size='small'
+                                            >
+                                                <DarkMode />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title='Acessar conta'>
+                                            <IconButton
+                                                onClick={() => navigate('/acessar')}
+                                                size='small'
+                                            >
+                                                <Person2 />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title='Ver favoritos'>
+                                            <IconButton
+                                                onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
+                                                size='small'
+                                            >
+                                                <Favorite />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title='Ver sacola'>
+                                            <IconButton
+                                                onClick={() => navigate('/sacola')}
+                                                size='small'
+                                            >
+                                                <Badge
+                                                    badgeContent={items.length}
+                                                    color='secondary'
+                                                    max={10}
+                                                >
+                                                    <LocalMall />
+                                                </Badge>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Box>
+                                </Stack>
+                            </Grid>
+                        </Grid>
                     </Box>
                 )
             }
@@ -318,14 +324,13 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                 )
             }
             {
-                (!smDownScreen && showLegend)  && (
+                (!smDownScreen && showLegend) && (
                     <Stack
                         component={Paper}
                         direction='row'
                         elevation={0}
                         justifyContent='center'
                         padding={1}
-                        spacing={2}
                         square
                         width='100%'
                     >
