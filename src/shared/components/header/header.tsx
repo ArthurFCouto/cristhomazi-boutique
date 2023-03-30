@@ -1,15 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { createSearchParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-    Badge, Box, ButtonBase,
-    ButtonGroup, Divider, Fade, FormControl, Grid,
-    IconButton, InputAdornment, Link,
-    OutlinedInput, Paper, Stack, Tooltip,
-    Typography, useMediaQuery, useTheme
+    Badge, Box, ButtonBase, ButtonGroup,
+    Divider, FormControl, Grid, IconButton,
+    InputAdornment, Link, OutlinedInput, Paper,
+    Stack, Tooltip, Typography,
+    useMediaQuery, useTheme
 } from '@mui/material';
 import {
     DarkMode, Favorite, Instagram,
-    LocalMall, Menu, Person2, Search, WhatsApp
+    LocalMall, Menu, Person2,
+    Search, WhatsApp
 } from '@mui/icons-material';
 import {
     useAppThemeContext, useCartContext,
@@ -178,7 +179,7 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                 }
             </Box>
             {
-                showSearch && (
+                (showSearch) && (
                     <Box
                         display='flex'
                         justifyContent='center'
@@ -218,18 +219,16 @@ export const Header: React.FC<IHeader> = ({ showCategories, showLegend, showSear
                                         fullWidth
                                         onSubmit={handleInputSearch}
                                     >
-                                        <Tooltip title='Digite algo para pesquisar'>
-                                            <OutlinedInput
-                                                endAdornment={<IconInput />}
-                                                name='search'
-                                                placeholder='Colcci, Calvin Klein, Santa Lolla ...'
-                                                onChange={(event) => setBusca(event.target.value)}
-                                                inputRef={inputRef}
-                                                size='small'
-                                                type='search'
-                                                value={busca}
-                                            />
-                                        </Tooltip>
+                                        <OutlinedInput
+                                            endAdornment={<IconInput />}
+                                            inputRef={inputRef}
+                                            name='search'
+                                            placeholder='Colcci, Calvin Klein, Santa Lolla ...'
+                                            onChange={(event) => setBusca(event.target.value)}
+                                            size='small'
+                                            type='search'
+                                            value={busca}
+                                        />
                                     </FormControl>
                                     <Box
                                         alignItems='center'

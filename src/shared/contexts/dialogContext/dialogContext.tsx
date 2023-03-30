@@ -23,18 +23,22 @@ export const useDialogContext = () => {
 export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
     const [severityAlert, setSeverityAlert] = useState<ISeverity>('info');
     const [directionAlert, setDirectionAlert] = useState<IDirection>('up');
+    const [showSnackbar, setShowSnackbar] = useState(false);
     const [propsAlert, setPropsAlert] = useState({
         message: '',
         open: false
     });
 
     const showAlert = (message: string, severity: ISeverity, direction?: IDirection) => {
-        setSeverityAlert(severity);
-        setDirectionAlert(direction || 'up');
-        setPropsAlert({
-            message,
-            open: true
-        });
+        setShowSnackbar(true);
+        setTimeout(() => {
+            setSeverityAlert(severity);
+            setDirectionAlert(direction || 'up');
+            setPropsAlert({
+                message,
+                open: true
+            });
+        }, 500);
     };
 
     const closeAlert = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -44,7 +48,8 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
         setPropsAlert({
             message: '',
             open: false
-        });
+        })
+        setTimeout(() => setShowSnackbar(false), 500);
     };
 
     const SnackbarAction: React.FC = () => (
@@ -62,14 +67,18 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
             showAlert
         }}>
             {children}
-            <Snackbar
-                autoHideDuration={5000}
-                action={<SnackbarAction />}
-                message={propsAlert.message}
-                onClose={closeAlert}
-                open={propsAlert.open}
-                TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
-            />
+            {
+                showSnackbar && (
+                    <Snackbar
+                        autoHideDuration={5000}
+                        action={<SnackbarAction />}
+                        message={propsAlert.message}
+                        onClose={closeAlert}
+                        open={propsAlert.open}
+                        TransitionComponent={(props) => <Slide {...props} direction={directionAlert} />}
+                    />
+                )
+            }
         </DialogContext.Provider>
     )
 
