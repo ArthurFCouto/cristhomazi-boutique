@@ -196,7 +196,7 @@ const MCardSkeleton: React.FC<{ directionRow?: boolean }> = ({ directionRow }) =
     )
 }
 
-const MCardNotFound: React.FC = () => {
+export const MCardNotFound: React.FC = () => {
     const theme = useTheme();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 

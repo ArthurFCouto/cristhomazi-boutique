@@ -36,15 +36,15 @@ const installment = (price: number) => {
 
 export const Environment = {
     /**
-     * Define o titulo padrão da página
+     * Retorna o titulo padrão da página
      */
     DEFAULT_TITLE: 'Cris Thomazi Boutique',
     /**
-     * Define o alerta padrão para função não implementadas
+     * Retorna a mensagem padrão para função não implementada
      */
     NOT_IMPLEMENTED_MESSAGE: 'Função ainda não implementada.',
     /**
-     * Define a descrição padrão da página
+     * Retorna a descrição padrão da página
      */
     DEFAULT_DESCRIPTION: 'Bem vindo a CrisThomazi Boutique',
     /**
@@ -52,7 +52,7 @@ export const Environment = {
      */
     CUSTOM_DESCRIPTION: (title: string) => `Confira ${title} na CrisThomazi Boutique.`,
     /**
-     * Define a mensagem para produto não encontrado
+     * Retorna a mensagem padrão para produto não encontrado
      */
     DEFAULT_NOT_FOUND_MESSAGE: 'Não encontramos produtos para exibir.',
     /**
@@ -73,7 +73,7 @@ export const Environment = {
         },
     },
     /**
-     * Retorna a quantidade de parcelas possíveis o valor, e o valor da parcelas
+     * Retorna a quantidade de parcelas possíveis para dividir o valor, e o valor da parcelas
      */
     CALCULATE_INSTALLMENT: installment,
 }

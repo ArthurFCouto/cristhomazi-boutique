@@ -38,7 +38,7 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
                 message,
                 open: true
             });
-        }, 500);
+        }, 100);
     };
 
     const closeAlert = (event: React.SyntheticEvent | Event, reason?: string) => {

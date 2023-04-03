@@ -16,10 +16,6 @@ const banners = [
   {
     alt: 'Banner 2',
     image: '/banner2.jpg'
-  },
-  {
-    alt: 'Banner 3',
-    image: '/banner3.jpeg'
   }
 ]
 

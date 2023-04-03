@@ -8,7 +8,7 @@ import {
     Link, Paper, Stack, Tooltip, Typography,
     useMediaQuery, useTheme
 } from '@mui/material'
-import { Clear, Delete, DeleteForever, Done } from '@mui/icons-material';
+import { Clear, DeleteForever, Done } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout'
 import { ICartProduct, useCartContext, useDialogContext } from '../../shared/contexts';
 import { SendOrderMessage, FormatBRL } from '../../shared/util';
@@ -43,6 +43,7 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
     const theme = useTheme();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
+
     return (
         <Card
             component={Box}
@@ -98,7 +99,7 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
                                     disableElevation
                                     onClick={clickDelete}
                                     size='small'
-                                    startIcon={<Delete />}
+                                    startIcon={<DeleteForever />}
                                     variant='contained'
                                 >
                                     Remover
@@ -124,14 +125,19 @@ export const Sacola: React.FC = () => {
         title: ''
     })
 
+    const handleClearCart = () => {
+        clearCart();
+        setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } });
+    }
+
     const handleRemove = (item: ICartProduct) => {
         removeItem(item);
-        setPropsBoxDialog({ ...propsBoxDialog, open: false });
+        setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } });
     }
 
     const handleDialogRemove = (item: ICartProduct) => {
         setPropsBoxDialog({
-            action: ()=> handleRemove(item),
+            action: () => handleRemove(item),
             contentText: 'Tem certeza que deseja remover este item da sacola?',
             open: true,
             title: 'Remover item da sacola?'
@@ -140,7 +146,7 @@ export const Sacola: React.FC = () => {
 
     const handleDialogClear = () => {
         setPropsBoxDialog({
-            action: clearCart,
+            action: handleClearCart,
             contentText: 'Tem certeza que deseja remover todos os itens da sacola?',
             open: true,
             title: 'Remover todos os itens da sacola?'
@@ -217,16 +223,17 @@ export const Sacola: React.FC = () => {
                 elevation={0}
                 padding={1}
             >
-                <Typography variant='button'>Resumo</Typography>
+                <Typography fontWeight={600} variant='button'>Resumo</Typography>
                 <Stack
                     alignItems='start'
                     direction='row'
                     justifyContent='space-between'
                     marginY={1}
+                    sx={{ cursor: 'default' }}
                 >
                     <Typography>Total</Typography>
                     <Box>
-                        <Typography fontWeight={500} textAlign='right'>
+                        <Typography textAlign='right'>
                             {FormatBRL(amount)}
                         </Typography>
                         {
@@ -234,7 +241,6 @@ export const Sacola: React.FC = () => {
                                 <Typography
                                     color='text.secondary'
                                     marginY={2}
-                                    sx={{ cursor: 'default' }}
                                     textAlign='right'
                                     variant='caption'
                                 >
@@ -254,47 +260,54 @@ export const Sacola: React.FC = () => {
                     <Button
                         disableElevation
                         onClick={() => navigation('/')}
-                        //size={smDownScreen ? 'small' : 'medium'}
                         variant='outlined'
                     >
                         Adicionar itens
                     </Button>
+                    {
+                        items.length > 0 && (
+                            <Button
+                                color='secondary'
+                                disableElevation
+                                onClick={handleCheckout}
+                                variant='contained'
+                            >
+                                Fechar compra
+                            </Button>
+                        )
+                    }
+                </Stack>
+            </Box>
+            <Dialog
+                open={propsBoxDialog.open}
+                onClose={() => setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } })}
+            >
+                <DialogTitle>
+                    {propsBoxDialog.title}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {propsBoxDialog.contentText}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
                     <Button
+                        onClick={() => setPropsBoxDialog({ ...propsBoxDialog, open: false })}
+                        size='small'
+                    >
+                        Cancelar
+                    </Button>
+                    <Button
+                        autoFocus
                         color='secondary'
-                        disableElevation
-                        onClick={handleCheckout}
-                        //size={smDownScreen ? 'small' : 'medium'}
+                        onClick={propsBoxDialog.action}
+                        size='small'
                         variant='contained'
                     >
-                        Fechar compra
+                        Remover
                     </Button>
-                </Stack>
-                <Dialog
-                    open={propsBoxDialog.open}
-                    onClose={() => setPropsBoxDialog({ ...propsBoxDialog, open: false })}
-                >
-                    <DialogTitle>
-                        {propsBoxDialog.title}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {propsBoxDialog.contentText}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setPropsBoxDialog({ ...propsBoxDialog, open: false })} size='small'>Cancelar</Button>
-                        <Button
-                            autoFocus
-                            color='secondary'
-                            onClick={propsBoxDialog.action}
-                            size='small'
-                            variant='contained'
-                        >
-                            Remover
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Box>
+                </DialogActions>
+            </Dialog>
         </BaseLayout>
     )
 }

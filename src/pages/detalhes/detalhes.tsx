@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import {
     Box, Button, Card, CardContent,
-    CardMedia, Divider, IconButton, Link,
-    Paper, Skeleton, Stack, Tooltip,
+    CardMedia, CircularProgress, Divider, IconButton,
+    Link, Paper, Stack, Tooltip,
     Typography, useMediaQuery, useTheme
 } from '@mui/material';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
-import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
+import { Breadcrumbs, MCardAreaRow, MCardNotFound } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
 import { useCartContext, useDialogContext } from '../../shared/contexts';
@@ -28,14 +28,53 @@ interface IListsImage extends ILists {
     widthImage: number;
 }
 
-interface IImageArea {
-    img: string | undefined;
-    isLoading: boolean;
-}
-
 interface IRecommendedArea {
     recommendeds: IProduto[];
     isLoading: boolean;
+}
+
+const AreaOfAllImages: React.FC<ILists> = ({ list }) => {
+    const theme = useTheme();
+    return (
+        <Card
+            component={Box}
+            marginBottom={2}
+            padding={1}
+        >
+            <Carousel
+                autoPlay
+                height={theme.spacing(75)}
+                NextIcon={<ArrowForwardIosOutlined />}
+                PrevIcon={<ArrowBackIosOutlined />}
+                sx={{ zIndex: 0 }}
+            >
+                {
+                    list.map((image, index) => (
+                        <CardMedia
+                            alt={`Imagem ${index}`}
+                            component='img'
+                            height='100%'
+                            key={index}
+                            image={image}
+                            sx={{ objectFit: 'contain' }}
+                        />
+                    ))
+                }
+            </Carousel>
+        </Card>
+    )
+}
+
+const ImageArea: React.FC<{ img: string }> = ({ img }) => {
+    return (
+        <CardMedia
+            alt='Imagem principal'
+            component='img'
+            height='100%'
+            image={img}
+            sx={{ objectFit: 'contain' }}
+        />
+    )
 }
 
 const ListCategories: React.FC<ILists> = ({ list }) => {
@@ -44,6 +83,7 @@ const ListCategories: React.FC<ILists> = ({ list }) => {
             direction='row'
             paddingX={1}
             spacing={1}
+            fontSize={10}
         >
             {
                 list.map((categoria, index) =>
@@ -61,61 +101,16 @@ const ListCategories: React.FC<ILists> = ({ list }) => {
     )
 }
 
-const ListSizes: React.FC<ILists> = ({ list, click }) => {
-    const theme = useTheme();
-    const [sizeSelected, setSizeSelected] = useState<string>('');
-
-    const handleClick = (size: string) => {
-        setSizeSelected((oldSizeSelected) => oldSizeSelected !== size ? size : '');
-        click && click(sizeSelected !== size ? size : '');
-    }
-
-    useEffect(() => {
-        if (list.length === 1) {
-            setSizeSelected(list[0]);
-            click && click(list[0]);
-        }
-    }, [list]);
-
-    return (
-        <Stack
-            direction='row'
-            marginTop={1}
-            spacing={1}
-        >
-            {
-                list.map((size, index) =>
-                    <Box
-                        component={Paper}
-                        bgcolor={size == sizeSelected ? theme.palette.primary.light : 'default'}
-                        elevation={1}
-                        key={index}
-                        onClick={() => handleClick(size)}
-                        paddingY={1}
-                        paddingX={2}
-                        square
-                        sx={{ cursor: 'pointer' }}
-                    >
-                        <Typography fontSize={12}>
-                            {Capitalize(size)}
-                        </Typography>
-                    </Box>
-                )
-            }
-        </Stack>
-    )
-}
-
 const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImage }) => {
     const theme = useTheme();
     const [selectedImage, setSelectedImage] = useState(list[0]);
 
-    const getOpacity = (image: string) => image == selectedImage ? 0.75 : 1;
+    const getOpacity = useCallback((image: string) => image == selectedImage ? 0.75 : 1, [selectedImage]);
 
-    const handleClick = (image: string) => {
+    const handleClick = useCallback((image: string) => {
         setSelectedImage(image);
         click && click(image);
-    }
+    }, [click, selectedImage]);
 
     return (
         <Stack
@@ -150,20 +145,48 @@ const ListImages: React.FC<IListsImage> = ({ list, click, heightImage, widthImag
     )
 }
 
-const ImageArea: React.FC<IImageArea> = ({ img, isLoading }) => {
-    return isLoading ? (
-        <Skeleton
-            height='100%'
-            variant='rounded'
-        />
-    ) : (
-        <CardMedia
-            alt='Imagem principal'
-            component='img'
-            height='100%'
-            image={img}
-            sx={{ objectFit: 'contain' }}
-        />
+const ListSizes: React.FC<ILists> = ({ list, click }) => {
+    const theme = useTheme();
+    const [sizeSelected, setSizeSelected] = useState<string>('');
+
+    const handleClick = useCallback((size: string) => {
+        setSizeSelected((oldSizeSelected) => oldSizeSelected !== size ? size : '');
+        click && click(sizeSelected !== size ? size : '');
+    }, [sizeSelected]);
+
+    useEffect(() => {
+        if (list.length === 1) {
+            setSizeSelected(list[0]);
+            click && click(list[0]);
+        }
+    }, [list]);
+
+    return (
+        <Stack
+            direction='row'
+            marginTop={1}
+            spacing={1}
+        >
+            {
+                list.map((size, index) =>
+                    <Box
+                        component={Paper}
+                        bgcolor={size == sizeSelected ? theme.palette.primary.light : 'default'}
+                        elevation={1}
+                        key={index}
+                        onClick={() => handleClick(size)}
+                        paddingY={1}
+                        paddingX={2}
+
+                        sx={{ cursor: 'pointer' }}
+                    >
+                        <Typography fontSize={12}>
+                            {Capitalize(size)}
+                        </Typography>
+                    </Box>
+                )
+            }
+        </Stack>
     )
 }
 
@@ -185,37 +208,7 @@ const RecommendedArea: React.FC<IRecommendedArea> = ({ isLoading, recommendeds }
     </Card>
 )
 
-const AreaOfAllImages: React.FC<ILists> = ({ list }) => {
-    const theme = useTheme();
-    return (
-        <Card
-            component={Box}
-            marginBottom={2}
-            padding={1}
-        >
-            <Carousel
-                autoPlay
-                height={theme.spacing(75)}
-                NextIcon={<ArrowForwardIosOutlined />}
-                PrevIcon={<ArrowBackIosOutlined />}
-                sx={{ zIndex: 0 }}
-            >
-                {
-                    list.map((image, index) => (
-                        <CardMedia
-                            alt={`Imagem ${index}`}
-                            component='img'
-                            height='100%'
-                            key={index}
-                            image={image}
-                            sx={{ objectFit: 'contain' }}
-                        />
-                    ))
-                }
-            </Carousel>
-        </Card>
-    )
-}
+
 
 export const Detalhes: React.FC = () => {
     const { categoria = 'roupas', nome = '*' } = useParams();
@@ -227,9 +220,9 @@ export const Detalhes: React.FC = () => {
     const [produto, setProduto] = useState<IProduto>();
     const [loadingRecommendeds, setLoadingRecommendeds] = useState(true);
     const [recommendeds, setRecommendeds] = useState<IProduto[]>([]);
-    const [sourceImage, setSourceImage] = useState<string>();
+    const [sourceImage, setSourceImage] = useState<string>('');
     const [sizeSelected, setSizeSelected] = useState('');
-    const [title, setTitle] = useState<string | undefined>();
+    const [title, setTitle] = useState<string>(Capitalize(nome.replaceAll('-', ' ')));
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -294,185 +287,153 @@ export const Detalhes: React.FC = () => {
             title={`${title} - ${Environment.DEFAULT_TITLE}`}
         >
             <Breadcrumbs loadingTitle={loading} title={title} />
-            <Card
-                component={Box}
-                display='flex'
-                flexDirection='column'
-                variant='outlined'
-            >
-                <Stack direction={smDownScreen ? 'column' : 'row'}>
-                    <Box
-                        height={theme.spacing(50)}
-                        marginY='auto'
-                        padding={1}
-                        width={smDownScreen ? '100%' : '60%'}
+            {
+                loading ? (
+                    <Card
+                        alignItems='center'
+                        component={Box}
+                        display='flex'
+                        justifyContent='center'
+                        paddingY={10}
                     >
-                        <ImageArea img={sourceImage} isLoading={loading} />
-                    </Box>
-                    <Box width={smDownScreen ? '100%' : '40%'}>
-                        <CardContent
-                            component={Box}
-                            display='flex'
-                            flexDirection={smDownScreen ? 'column-reverse' : 'column'}
-                            height='100%'
-                            sx={{ cursor: 'default' }}
-                        >
-                            <Stack direction='column'>
-                                <Typography fontWeight={500} variant='h5'>
-                                    {
-                                        loading ? <Skeleton variant='text' width='80%' /> : produto?.produtoBase.titulo
-                                    }
-                                </Typography>
-                                <Typography fontSize={10} variant='caption'>
-                                    {
-                                        loading ? <Skeleton variant='text' width='20%' /> : `Sku: ${produto?.produtoBase.sku}`
-                                    }
-                                </Typography>
-                                {
-                                    loading ? (
-                                        <Skeleton variant='text' width='50%' />
-                                    ) : (
-                                        <Typography
+                        <CircularProgress />
+                    </Card>
+                ) : produto ? (
+                    <Card
+                        component={Box}
+                        display='flex'
+                        flexDirection='column'
+                        variant='outlined'
+                    >
+                        <Stack direction={smDownScreen ? 'column' : 'row'}>
+                            <Box
+                                height={theme.spacing(50)}
+                                marginY='auto'
+                                padding={1}
+                                width={smDownScreen ? '100%' : '60%'}
+                            >
+                                <ImageArea img={sourceImage} />
+                            </Box>
+                            <Box width={smDownScreen ? '100%' : '40%'}>
+                                <CardContent
+                                    component={Box}
+                                    display='flex'
+                                    flexDirection={smDownScreen ? 'column-reverse' : 'column'}
+                                    height='100%'
+                                    sx={{ cursor: 'default' }}
+                                >
+                                    <Stack direction='column'>
+                                        <Typography fontWeight={500} variant='h5'>
+                                            {produto.produtoBase.titulo}
+                                        </Typography>
+                                        <Typography fontSize={10} variant='caption'>
+                                            {`Sku: ${produto.produtoBase.sku}`}
+                                        </Typography>
+                                        <Stack alignItems='center' direction='row' spacing={0.5} overflow='auto'>
+                                            <Typography fontSize={10} variant='caption'>
+                                                Categoria:
+                                            </Typography>
+                                            <ListCategories list={produto.produtoBase.categoria} />
+                                        </Stack>
+                                        <Typography marginTop={1} variant='h6'>
+                                            Tamanhos
+                                        </Typography>
+                                        <ListSizes list={produto.tamanhos} click={(size) => setSizeSelected(size)} />
+                                        <Box
                                             display='flex'
                                             alignItems='center'
                                             flexDirection='row'
-                                            fontSize={10}
-                                            overflow='auto'
-                                            variant='caption'
+                                            justifyContent='space-between'
+                                            marginY={2}
                                         >
-                                            Categoria: {produto && <ListCategories list={produto.produtoBase.categoria} />}
-                                        </Typography>
-                                    )
-                                }
-                                <Typography marginTop={1} variant='h6'>
-                                    Tamanhos
-                                </Typography>
-                                {
-                                    loading ? (
-                                        <Stack direction='row' spacing={2}>
-                                            {
-                                                Array.from(Array(4)).map((_, index) =>
-                                                    <Skeleton
-                                                        height={theme.spacing(5)}
-                                                        key={index}
-                                                        variant='rounded'
-                                                        width={theme.spacing(6)}
-                                                    />
-                                                )
-                                            }
-                                        </Stack>
-                                    ) : (
-                                        produto && <ListSizes list={produto.tamanhos} click={(size) => setSizeSelected(size)} />
-                                    )
-                                }
-                                <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    flexDirection='row'
-                                    justifyContent='space-between'
-                                    marginY={2}
-                                >
-                                    <Typography fontWeight={500} variant='h5'>
+                                            <Typography fontWeight={500} variant='h5'>
+                                                {FormatBRL(produto.valor)}
+                                            </Typography>
+                                            <Stack direction='row' spacing={1}>
+                                                <Tooltip title='Adicionar aos favoritos'>
+                                                    <IconButton
+                                                        color='secondary'
+                                                        onClick={handleFavorite}
+                                                        size={mdDownScreen ? 'small' : 'medium'}
+                                                    >
+                                                        <Favorite />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title='Adicionar a sacola'>
+                                                    <IconButton
+                                                        color='secondary'
+                                                        onClick={() => handleActionBuy(() => showAlert('Produto adicionado a sacola!', 'success'))}
+                                                        size={mdDownScreen ? 'small' : 'medium'}
+                                                    >
+                                                        <LocalMall />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Stack>
+                                        </Box>
                                         {
-                                            loading ? (
-                                                <Skeleton variant='text' width={theme.spacing(15)} />
-                                            ) : (
-                                                produto && `${FormatBRL(produto.valor)}`
+                                            (Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade > 1) && (
+                                                <Typography
+                                                    color='text.secondary'
+                                                    marginBottom={2}
+                                                    marginTop={-2}
+                                                    sx={{ cursor: 'default' }}
+                                                    variant='caption'
+                                                >
+                                                    {`Em até ${Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade}x de ${FormatBRL(Environment.CALCULATE_INSTALLMENT(produto.valor).parcela)}`}
+                                                </Typography>
                                             )
                                         }
-                                    </Typography>
-                                    <Stack direction='row' spacing={1}>
-                                        <Tooltip title='Adicionar aos favoritos'>
-                                            <IconButton
-                                                color='secondary'
-                                                onClick={handleFavorite}
-                                                size={mdDownScreen ? 'small' : 'medium'}
-                                            >
-                                                <Favorite />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title='Adicionar a sacola'>
-                                            <IconButton
-                                                color='secondary'
-                                                onClick={() => handleActionBuy(() => showAlert('Produto adicionado a sacola!', 'success'))}
-                                                size={mdDownScreen ? 'small' : 'medium'}
-                                            >
-                                                <LocalMall />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Stack>
-                                </Box>
-                                {
-                                    (produto && Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade > 1) && (
-                                        <Typography
-                                            color='text.secondary'
-                                            marginBottom={2}
-                                            marginTop={-2}
-                                            sx={{ cursor: 'default' }}
-                                            variant='caption'
+                                        <Button
+                                            color='secondary'
+                                            endIcon={<AddCard />}
+                                            onClick={() => handleActionBuy(() => navigation('/sacola'))}
+                                            variant='contained'
                                         >
-                                            {`Em até ${Environment.CALCULATE_INSTALLMENT(produto.valor).quantidade}x de ${FormatBRL(Environment.CALCULATE_INSTALLMENT(produto.valor).parcela)}`}
-                                        </Typography>
-                                    )
-                                }
-                                <Button
-                                    color='secondary'
-                                    endIcon={<AddCard />}
-                                    onClick={() => handleActionBuy(() => navigation('/sacola'))}
-                                    variant='contained'
-                                >
-                                    Eu quero
-                                </Button>
-                                <Link
-                                    href={`https://wa.me/?text=${window.location.href}`}
-                                    target='_blank'
-                                    underline='hover'
-                                >
-                                    <Stack
-                                        alignItems='center'
-                                        direction='row'
-                                        justifyContent='center'
-                                        marginY={2}
-                                        spacing={1}
-                                        width='100%'
-                                    >
-                                        <Typography fontSize='inherit'>
-                                            Curtiu? Compartilhe essa peça!
-                                        </Typography>
-                                        <WhatsApp color='success' />
+                                            Eu quero
+                                        </Button>
+                                        <Link
+                                            href={`https://wa.me/?text=${window.location.href}`}
+                                            target='_blank'
+                                            underline='hover'
+                                        >
+                                            <Stack
+                                                alignItems='center'
+                                                direction='row'
+                                                justifyContent='center'
+                                                marginY={2}
+                                                spacing={1}
+                                                width='100%'
+                                            >
+                                                <Typography fontSize='inherit'>
+                                                    Curtiu? Compartilhe essa peça!
+                                                </Typography>
+                                                <WhatsApp color='success' />
+                                            </Stack>
+                                        </Link>
                                     </Stack>
-                                </Link>
-                            </Stack>
-                            <Box flex={1}>
-                                {
-                                    produto && (
+                                    <Box flex={1}>
                                         <ListImages
                                             click={(text) => setSourceImage(text)}
                                             heightImage={8}
                                             list={produto.imagens}
                                             widthImage={6}
                                         />
-                                    )
-                                }
+                                    </Box>
+                                </CardContent>
                             </Box>
+                        </Stack>
+                        <Divider />
+                        <CardContent sx={{ cursor: 'default' }}>
+                            <Typography variant='h6'>Informações do modelo</Typography>
+                            <Typography variant='body2'>
+                                {produto.produtoBase.descricao}
+                            </Typography>
                         </CardContent>
-                    </Box>
-                </Stack>
-                <Divider />
-                <CardContent sx={{ cursor: 'default' }}>
-                    <Typography variant='h6'>Informações do modelo</Typography>
-                    <Typography variant='body1'>
-                        {
-                            loading ? (
-                                <Box>
-                                    <Skeleton variant='text' width='100%' />
-                                    <Skeleton variant='text' width='80%' />
-                                </Box>
-                            ) : produto?.produtoBase.descricao
-                        }
-                    </Typography>
-                </CardContent>
-            </Card>
+                    </Card>
+                ) : (
+                    <MCardNotFound />
+                )
+            }
             <RecommendedArea recommendeds={recommendeds} isLoading={loadingRecommendeds} />
             {
                 produto && <AreaOfAllImages list={produto.imagens} />
