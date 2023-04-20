@@ -63,6 +63,12 @@ export const Environment = {
      * @BASE_URL_WHATSAPP Url base para enviar mensagem para o Whats da loja, incluir o texto da mensagem
      * 
      * @BASE_INSTAGRAM Url base para para o IG, e usuário do IG da loja
+     * 
+     * @CNPJ Cnpj da loja no formato ##.###.###/####-## 
+     * 
+     * @EMAIL E-mail da loja
+     * 
+     * @SOCIAL_NAME Razão social
      */
     INFORMATION_BASE: {
         BASE_TELL: '(38) 99732-6440',
@@ -71,6 +77,9 @@ export const Environment = {
             url: 'https://www.instagram.com/cristhomaziboutique/',
             user: '@cristhomaziboutique'
         },
+        CNPJ: '32.291.204/0001-15',
+        EMAIL: 'cristhomazi07@gmail.com',
+        SOCIAL_NAME: 'Cris Thomazi Multimarcas LTDA'
     },
     /**
      * Retorna a quantidade de parcelas possíveis para dividir o valor, e o valor da parcelas

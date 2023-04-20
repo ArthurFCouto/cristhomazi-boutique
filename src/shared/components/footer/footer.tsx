@@ -1,5 +1,6 @@
-import { Box, Grid, Link, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Instagram, WhatsApp } from '@mui/icons-material';
+import { Box, Grid, Link, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Instagram, Store, WhatsApp } from '@mui/icons-material';
+import { Environment } from '../../environment';
 
 interface IFooter {
     sampleFooter?: boolean;
@@ -23,42 +24,43 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                     <Grid
                         container
                         direction={smDownScreen ? 'column' : 'row'}
-                        maxWidth='md'
-                        spacing={1}
-                        paddingLeft={theme.spacing(1)}
+                        maxWidth='lg'
+                        paddingX={1}
                     >
-                        <Grid item xs>
-                            <Typography variant='button'>
+                        <Grid item xs={12} sm={3}>
+                            <Typography fontWeight={600} gutterBottom variant='button'>
                                 Endereço
                             </Typography>
                             <Typography variant='caption'>
                                 <br />Rua Alcides Carneiro 162 Centro
-                                <br />Arinos - MG
-                                <br />38680-000
+                                <br />Arinos - MG 38680-000
                             </Typography>
                         </Grid>
-                        <Grid item xs>
-                            <Typography variant='button'>
+                        <Grid item xs={12} sm={6}>
+                            <Typography fontWeight={600} gutterBottom variant='button'>
                                 Atendimento
                             </Typography>
                             <Typography variant='caption'>
                                 <br />(38) 99187-2888 (Cris Thomazi)
-                                <br />(38) 99732-6440 (WhatsApp)
-                                <br />Atendimento: Segunda à Sexta das 13h às 19h e Sábado das 9h às 13h.
-                                <br /><Link href='mailto:cristhomazi07@gmail.com' underline='none'>cristhomazi07@gmail.com</Link>
+                                <br />
+                                <Stack alignItems='center' direction='row'>
+                                    <Store fontSize='inherit' sx={{ marginRight: 0.5 }} />
+                                    Segunda à Sexta das 13h às 19h e Sábado das 9h às 13h.
+                                </Stack>
+                                <Link href={`mailto:${Environment.INFORMATION_BASE.EMAIL}`} underline='none'>{Environment.INFORMATION_BASE.EMAIL}</Link>
                             </Typography>
                         </Grid>
-                        <Grid item xs>
-                            <Typography variant='button'>
+                        <Grid item xs={12} sm={3}>
+                            <Typography fontWeight={600} gutterBottom variant='button'>
                                 Redes Sociais
                             </Typography>
                             <Box display='flex' gap={theme.spacing(1)}>
-                                <Link href='https://www.instagram.com/cristhomaziboutique/' underline='none'>
+                                <Link href={Environment.INFORMATION_BASE.BASE_INSTAGRAM.url} underline='none'>
                                     <Box display='flex' alignContent='center' title='Instagram'>
                                         <Instagram fontSize='medium' htmlColor={theme.palette.primary.contrastText} />
                                     </Box>
                                 </Link>
-                                <Link href='https://api.whatsapp.com/send?phone=553897326440&text=Ol%C3%A1!%20' underline='none'>
+                                <Link href={Environment.INFORMATION_BASE.BASE_URL_WHATSAPP('Olá Cris!')} underline='none'>
                                     <Box display='flex' alignContent='center' title='WhatsApp'>
                                         <WhatsApp fontSize='medium' htmlColor={theme.palette.primary.contrastText} />
                                     </Box>
@@ -69,13 +71,16 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                 )
             }
             <Box
-                bgcolor={theme.palette.background.paper}
+                component={Paper}
+                elevation={0}
                 marginY={theme.spacing(1)}
                 paddingY={theme.spacing(0.5)}
                 textAlign='center'
                 width='100%'
             >
-                <Typography variant='overline'>Cris Thomazi Boutique 32.291.204/0001-15</Typography>
+                <Typography variant='overline'>
+                    {`${Environment.INFORMATION_BASE.SOCIAL_NAME} ${Environment.INFORMATION_BASE.CNPJ}`}
+                </Typography>
             </Box>
         </Box>
     )

@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout';
 import { IProduto, ProdutoService } from '../../shared/service';
-import { Breadcrumbs, MCardAreaRow, MCardNotFound } from '../../shared/components';
+import { Breadcrumbs, MCardAreaRow } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { Capitalize, FormatBRL } from '../../shared/util';
 import { useCartContext, useDialogContext } from '../../shared/contexts';
@@ -81,8 +81,7 @@ const ListCategories: React.FC<ILists> = ({ list }) => {
     return (
         <Stack
             direction='row'
-            paddingX={1}
-            spacing={1}
+            spacing={0.5}
             fontSize={10}
         >
             {
@@ -208,8 +207,6 @@ const RecommendedArea: React.FC<IRecommendedArea> = ({ isLoading, recommendeds }
     </Card>
 )
 
-
-
 export const Detalhes: React.FC = () => {
     const { categoria = 'roupas', nome = '*' } = useParams();
     const theme = useTheme();
@@ -222,7 +219,7 @@ export const Detalhes: React.FC = () => {
     const [recommendeds, setRecommendeds] = useState<IProduto[]>([]);
     const [sourceImage, setSourceImage] = useState<string>('');
     const [sizeSelected, setSizeSelected] = useState('');
-    const [title, setTitle] = useState<string>(Capitalize(nome.replaceAll('-', ' ')));
+    const [title, setTitle] = useState<string>(nome);
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDownScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -249,11 +246,11 @@ export const Detalhes: React.FC = () => {
 
     const handleFavorite = () => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning');
 
-    const handleActionBuy = (action: () => void) => {
+    const handleActionBuy = (action?: () => void) => {
         if (produto) {
             if (sizeSelected.length > 0) {
                 addCart(produto);
-                action();
+                action && action();
             } else {
                 showAlert('Selecione um tamanho!', 'warning');
             }
@@ -271,17 +268,18 @@ export const Detalhes: React.FC = () => {
                 setProduto(response);
                 setTitle(response.produtoBase.titulo);
                 setSourceImage(response.imagens[0]);
-            })
-            .catch((error) => showAlert(error.message, 'error'))
-            .finally(() => {
                 setLoading(false);
                 handleListRecommendeds();
+            })
+            .catch((error) => {
+                showAlert(error.message, 'error');
+                navigation('/404');
             })
     }, [nome]);
 
     return (
         <BaseLayout
-            description={Environment.CUSTOM_DESCRIPTION(String(title))}
+            description={Environment.CUSTOM_DESCRIPTION(title)}
             showCategories
             showSearch
             title={`${title} - ${Environment.DEFAULT_TITLE}`}
@@ -298,7 +296,7 @@ export const Detalhes: React.FC = () => {
                     >
                         <CircularProgress />
                     </Card>
-                ) : produto ? (
+                ) : produto && (
                     <Card
                         component={Box}
                         display='flex'
@@ -362,7 +360,7 @@ export const Detalhes: React.FC = () => {
                                                 <Tooltip title='Adicionar a sacola'>
                                                     <IconButton
                                                         color='secondary'
-                                                        onClick={() => handleActionBuy(() => showAlert('Produto adicionado a sacola!', 'success'))}
+                                                        onClick={() => handleActionBuy()}
                                                         size={mdDownScreen ? 'small' : 'medium'}
                                                     >
                                                         <LocalMall />
@@ -424,14 +422,12 @@ export const Detalhes: React.FC = () => {
                         </Stack>
                         <Divider />
                         <CardContent sx={{ cursor: 'default' }}>
-                            <Typography variant='h6'>Informações do modelo</Typography>
+                            <Typography variant='h6'>Informações da(o) modelo</Typography>
                             <Typography variant='body2'>
                                 {produto.produtoBase.descricao}
                             </Typography>
                         </CardContent>
                     </Card>
-                ) : (
-                    <MCardNotFound />
                 )
             }
             <RecommendedArea recommendeds={recommendeds} isLoading={loadingRecommendeds} />

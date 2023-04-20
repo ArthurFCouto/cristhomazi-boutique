@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Buscar, Detalhes, Home, Login, Sacola } from '../pages';
 import { useDrawerContext } from '../shared/contexts';
+import { NotFound } from '../pages/notFound/notFound';
 
 export default function FullRoutes() {
     const { setDrawerOptions } = useDrawerContext();
@@ -43,7 +44,7 @@ export default function FullRoutes() {
                 <Route element={<Detalhes />} path='buscar/:categoria/:nome' />
                 <Route element={<Login />} path='/acessar' />
                 <Route element={<Sacola />} path='/sacola' />
-                <Route element={<span>Página não encontrada!</span>} path='*' />
+                <Route element={<NotFound/>} path='*' />
             </Routes>
         </BrowserRouter>
     )

@@ -8,7 +8,7 @@ import {
     Link, Paper, Stack, Tooltip, Typography,
     useMediaQuery, useTheme
 } from '@mui/material'
-import { Clear, DeleteForever, Done } from '@mui/icons-material';
+import { Clear, DeleteForever, Done, ShoppingBag } from '@mui/icons-material';
 import { BaseLayout } from '../../shared/layout'
 import { ICartProduct, useCartContext, useDialogContext } from '../../shared/contexts';
 import { SendOrderMessage, FormatBRL } from '../../shared/util';
@@ -22,6 +22,69 @@ interface IDetailsProduct {
 interface ICardProduct {
     clickDelete: () => void;
     produto: ICartProduct;
+}
+
+const CartNotFound: React.FC = () => {
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    return (
+        <Box
+            alignItems='center'
+            display='flex'
+            flexDirection='column'
+            gap={2}
+            paddingY={2}
+            width='100%'
+        >
+            <Stack
+                direction={smDownScreen ? 'column' : 'row'}
+                width='100%'
+            >
+                <Typography
+                    fontWeight={600}
+                    textAlign={smDownScreen ? 'center' : 'right'}
+                    padding={1}
+                    variant='h6'
+                    width='100%'
+                >
+                    Sua sacola está vazia
+                </Typography>
+                <Divider orientation={smDownScreen ? 'horizontal' : 'vertical'} />
+                <Box
+                    alignItems='flex-start'
+                    display='flex'
+                    flexDirection='column'
+                    justifyContent='center'
+                    padding={1}
+                    width='100%'
+                >
+                    <Typography
+                        alignItems='center'
+                        color='text.secondary'
+                        component={Box}
+                        display='flex'
+                        gap={1}
+                        variant='subtitle2'
+                    >
+                        <ShoppingBag fontSize='small' />
+                        {'São dezenas de produtos para você escolher'}
+                    </Typography>
+                </Box>
+            </Stack>
+            <Box padding={2}>
+                <Button
+                    color='secondary'
+                    disableElevation
+                    onClick={() => navigate('/')}
+                    variant='contained'
+                >
+                    Conferir Novidades
+                </Button>
+            </Box>
+        </Box >
+    )
 }
 
 const DetailsProduct: React.FC<IDetailsProduct> = ({ param, value }) => (
@@ -49,6 +112,7 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
             component={Box}
             display='flex'
             flexDirection='row'
+            sx={{ backgroundColor: theme.palette.background.default }}
             width='100%'
         >
             <CardContent sx={{ width: '25%' }}>
@@ -68,7 +132,7 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
                         underline='none'
                         variant='inherit'
                     >
-                        <Typography gutterBottom variant='button'>
+                        <Typography fontWeight={600} gutterBottom variant='button'>
                             {produto.titulo}
                         </Typography>
                     </Link>
@@ -84,9 +148,14 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
                     justifyContent='center'
                     spacing={1}
                 >
-                    <Typography textAlign='left' variant='subtitle2'>
-                        {'Por: ' + FormatBRL(produto.valor)}
-                    </Typography>
+                    <Stack direction='row' spacing={0.5}>
+                        <Typography textAlign='left' variant='subtitle2'>
+                            Por
+                        </Typography>
+                        <Typography fontWeight={600} textAlign='left' variant='subtitle2'>
+                            {FormatBRL(produto.valor)}
+                        </Typography>
+                    </Stack>
                     <CardActions>
                         {
                             mdDownScreen ? (
@@ -114,6 +183,7 @@ const CardProduct: React.FC<ICardProduct> = ({ clickDelete, produto }) => {
 }
 
 export const Sacola: React.FC = () => {
+    const theme = useTheme();
     const navigation = useNavigate();
     const { clearCart, items, removeItem } = useCartContext();
     const { showAlert } = useDialogContext();
@@ -125,14 +195,16 @@ export const Sacola: React.FC = () => {
         title: ''
     })
 
+    const handleCloseDialog = () => setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } });
+
     const handleClearCart = () => {
         clearCart();
-        setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } });
+        handleCloseDialog();
     }
 
     const handleRemove = (item: ICartProduct) => {
         removeItem(item);
-        setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } });
+        handleCloseDialog();
     }
 
     const handleDialogRemove = (item: ICartProduct) => {
@@ -176,7 +248,7 @@ export const Sacola: React.FC = () => {
                 direction='row'
                 justifyContent='space-between'
                 padding={1}>
-                <Typography variant='h6'>Minha Sacola</Typography>
+                <Typography fontWeight={600} variant='h6'>Minha Sacola</Typography>
                 <Box
                     alignItems='center'
                     display='flex'
@@ -209,21 +281,25 @@ export const Sacola: React.FC = () => {
                 padding={1}
             >
                 {
-                    items.map((produto, index) =>
+                    items.length > 0 ? items.map((produto, index) =>
                         <CardProduct
                             clickDelete={() => handleDialogRemove(produto)}
                             key={index}
                             produto={produto}
                         />
+                    ) : (
+                        <CartNotFound />
                     )
                 }
             </Box>
             <Box
+                bgcolor={theme.palette.background.default}
                 component={Paper}
                 elevation={0}
+                marginY={2}
                 padding={1}
             >
-                <Typography fontWeight={600} variant='button'>Resumo</Typography>
+                <Typography fontWeight={600} variant='h6'>Resumo</Typography>
                 <Stack
                     alignItems='start'
                     direction='row'
@@ -231,9 +307,9 @@ export const Sacola: React.FC = () => {
                     marginY={1}
                     sx={{ cursor: 'default' }}
                 >
-                    <Typography>Total</Typography>
+                    <Typography variant='h6'>Total</Typography>
                     <Box>
-                        <Typography textAlign='right'>
+                        <Typography fontWeight={600} textAlign='right' variant='h6'>
                             {FormatBRL(amount)}
                         </Typography>
                         {
@@ -251,21 +327,21 @@ export const Sacola: React.FC = () => {
                     </Box>
                 </Stack>
                 <Divider />
-                <Stack
-                    direction='row'
-                    justifyContent='end'
-                    marginY={1}
-                    spacing={1}
-                >
-                    <Button
-                        disableElevation
-                        onClick={() => navigation('/')}
-                        variant='outlined'
-                    >
-                        Adicionar itens
-                    </Button>
-                    {
-                        items.length > 0 && (
+                {
+                    items.length > 0 && (
+                        <Stack
+                            direction='row'
+                            justifyContent='end'
+                            marginY={1}
+                            spacing={1}
+                        >
+                            <Button
+                                disableElevation
+                                onClick={() => navigation('/')}
+                                variant='outlined'
+                            >
+                                Adicionar itens
+                            </Button>
                             <Button
                                 color='secondary'
                                 disableElevation
@@ -274,13 +350,13 @@ export const Sacola: React.FC = () => {
                             >
                                 Fechar compra
                             </Button>
-                        )
-                    }
-                </Stack>
+                        </Stack>
+                    )
+                }
             </Box>
             <Dialog
                 open={propsBoxDialog.open}
-                onClose={() => setPropsBoxDialog((oldPropsBoxDialog) => { return { ...oldPropsBoxDialog, open: false } })}
+                onClose={handleCloseDialog}
             >
                 <DialogTitle>
                     {propsBoxDialog.title}
@@ -292,7 +368,7 @@ export const Sacola: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        onClick={() => setPropsBoxDialog({ ...propsBoxDialog, open: false })}
+                        onClick={handleCloseDialog}
                         size='small'
                     >
                         Cancelar

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     Box, Card, CardContent, CardMedia,
-    Divider,
-    Fade, Grid, IconButton, Link, Skeleton,
+    Divider, Grid, IconButton, Link, Skeleton,
     Stack, Typography, useMediaQuery, useTheme
 } from '@mui/material'
 import { FavoriteBorder, Keyboard, SortByAlpha, WifiOff } from '@mui/icons-material';
@@ -30,15 +29,18 @@ interface IMCardArea {
     isLoading: boolean;
 }
 
-interface IMCard {
-    item: IProduto;
+interface IMCardSkeleton {
     directionRow?: boolean;
+}
+
+interface IMCard extends IMCardSkeleton {
+    item: IProduto;
 }
 
 const MCard: React.FC<IMCard> = ({ directionRow, item }) => {
     const theme = useTheme();
     const { showAlert } = useDialogContext();
-    const [showTransition, setShowTransition] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
     const [variantCard, setVariantCard] = useState<'outlined' | 'elevation'>('outlined');
     const widhtWhenRow = directionRow ? CalculateWidhtWhenRow() : undefined;
     const backgroundColorCard = BackgroundColorCard();
@@ -62,113 +64,115 @@ const MCard: React.FC<IMCard> = ({ directionRow, item }) => {
         setVariantCard('outlined');
     };
 
-    useEffect(() => {
-        setTimeout(() => setShowTransition(true), 500)
+    useEffect(()=>{
+        if(cardRef.current) {
+            //console.log('Card', cardRef.current);
+        }
     }, []);
 
     return (
         <Grid
             item
-            paddingX={1}
+            minWidth={widhtWhenRow}
             paddingTop={2}
+            paddingX={1}
             xs={6}
             sm={4}
             md={3}
-            minWidth={widhtWhenRow}
         >
-            <Fade in={showTransition}>
-                <Card
-                    component={Box}
-                    height={theme.spacing(45)}
-                    position='relative'
-                    sx={{ backgroundColor: backgroundColorCard, border: 0 }}
-                    variant={variantCard}
+            <Card
+                className='animationFadeInUp'
+                component={Box}
+                height={theme.spacing(45)}
+                ref={cardRef}
+                position='relative'
+                sx={{ backgroundColor: backgroundColorCard, border: 0 }}
+                variant={variantCard}
+            >
+                <IconButton
+                    onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
+                    sx={{ position: 'absolute', top: 5, right: 5 }}
                 >
-                    <IconButton
-                        onClick={() => showAlert(Environment.NOT_IMPLEMENTED_MESSAGE, 'warning')}
-                        sx={{ position: 'absolute', top: 5, right: 5 }}
+                    <FavoriteBorder />
+                </IconButton>
+                <Link
+                    component={RouterLink}
+                    to={url}
+                    underline='none'
+                >
+                    <CardMedia
+                        alt={title}
+                        component='img'
+                        height='73%'
+                        image={image}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseOut={handleMouseOut}
+                        sx={{ objectFit: 'contain' }}
+                    />
+                </Link>
+                <CardContent sx={{ flex: '1 0 auto', padding: 1 }}>
+                    <Typography
+                        fontSize={10}
+                        fontWeight={600}
+                        sx={{ cursor: 'default' }}
+                        textTransform='capitalize'
                     >
-                        <FavoriteBorder />
-                    </IconButton>
-                    <Link
-                        component={RouterLink}
-                        to={url}
-                        underline='none'
+                        {marca}
+                    </Typography>
+                    <Typography
+                        component='div'
+                        fontSize={12}
+                        gutterBottom
+                        noWrap
+                        textOverflow='ellipsis'
+                        variant='button'
                     >
-                        <CardMedia
-                            alt={title}
-                            component='img'
-                            height='73%'
-                            image={image}
-                            onMouseEnter={handleMouseEnter}
-                            onMouseOut={handleMouseOut}
-                            sx={{ objectFit: 'contain' }}
-                        />
-                    </Link>
-                    <CardContent sx={{ flex: '1 0 auto', padding: 1 }}>
+                        <Link
+                            component={RouterLink}
+                            to={url}
+                            underline='none'
+                            variant='inherit'
+                        >
+                            {title}
+                        </Link>
+                    </Typography>
+                    <Stack
+                        alignItems='center'
+                        direction='row'
+                        spacing={1}
+                    >
                         <Typography
-                            fontSize={10}
+                            sx={{ cursor: 'default' }}
+                            variant='caption'
+                        >
+                            por
+                        </Typography>
+                        <Typography
                             fontWeight={600}
                             sx={{ cursor: 'default' }}
-                            textTransform='capitalize'
+                            variant='subtitle1'
                         >
-                            {marca}
+                            {price}
                         </Typography>
-                        <Typography
-                            component='div'
-                            fontSize={12}
-                            gutterBottom
-                            noWrap
-                            textOverflow='ellipsis'
-                            variant='button'
-                        >
-                            <Link
-                                component={RouterLink}
-                                to={url}
-                                underline='none'
-                                variant='inherit'
-                            >
-                                {title}
-                            </Link>
-                        </Typography>
-                        <Stack
-                            alignItems='center'
-                            direction='row'
-                            spacing={1}
-                        >
+                    </Stack>
+                    {
+                        installment.quantidade > 1 && (
                             <Typography
+                                color='text.secondary'
                                 sx={{ cursor: 'default' }}
                                 variant='caption'
                             >
-                                por
+                                {`Em até ${installment.quantidade}x de ${FormatBRL(installment.parcela)}`}
                             </Typography>
-                            <Typography
-                                fontWeight={600}
-                                sx={{ cursor: 'default' }}
-                                variant='subtitle1'
-                            >
-                                {price}
-                            </Typography>
-                        </Stack>
-                        {
-                            installment.quantidade > 1 && (
-                                <Typography
-                                    color='text.secondary'
-                                    sx={{ cursor: 'default' }}
-                                    variant='caption'
-                                >
-                                    {`Em até ${installment.quantidade}x de ${FormatBRL(installment.parcela)}`}
-                                </Typography>
-                            )
-                        }
-                    </CardContent>
-                </Card>
-            </Fade>
+                        )
+                    }
+                </CardContent>
+            </Card>
         </Grid>
     )
 }
 
-const MCardSkeleton: React.FC<{ directionRow?: boolean }> = ({ directionRow }) => {
+const MCardSkeleton: React.FC<IMCardSkeleton> = ({ directionRow }) => {
     const theme = useTheme();
     const widhtWhenRow = directionRow ? CalculateWidhtWhenRow() : undefined;
 
@@ -196,7 +200,7 @@ const MCardSkeleton: React.FC<{ directionRow?: boolean }> = ({ directionRow }) =
     )
 }
 
-export const MCardNotFound: React.FC = () => {
+const MCardNotFound: React.FC = () => {
     const theme = useTheme();
     const smDownScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
