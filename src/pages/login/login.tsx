@@ -88,8 +88,9 @@ export const Login: React.FC = () => {
     return (
         <BaseLayout sampleFooter title='Acessar minha conta'>
             <Box
+                sx={{ backgroundColor: theme.palette.background.default }}
                 component={Paper}
-                height='100%'
+                marginY={5}
                 marginX='auto'
                 maxWidth='100%'
                 paddingX={2}

@@ -299,7 +299,7 @@ export const Sacola: React.FC = () => {
                 marginY={2}
                 padding={1}
             >
-                <Typography fontWeight={600} variant='h6'>Resumo</Typography>
+                <Typography fontWeight={600} variant='button'>Resumo</Typography>
                 <Stack
                     alignItems='start'
                     direction='row'
@@ -307,9 +307,9 @@ export const Sacola: React.FC = () => {
                     marginY={1}
                     sx={{ cursor: 'default' }}
                 >
-                    <Typography variant='h6'>Total</Typography>
+                    <Typography variant='body1'>Total</Typography>
                     <Box>
-                        <Typography fontWeight={600} textAlign='right' variant='h6'>
+                        <Typography fontWeight={600} textAlign='right' variant='subtitle1'>
                             {FormatBRL(amount)}
                         </Typography>
                         {

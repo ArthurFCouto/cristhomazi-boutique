@@ -23,11 +23,10 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                 !sampleFooter && (
                     <Grid
                         container
-                        direction={smDownScreen ? 'column' : 'row'}
                         maxWidth='lg'
                         paddingX={1}
                     >
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={3} marginTop={smDownScreen ? 2 : 0}>
                             <Typography fontWeight={600} gutterBottom variant='button'>
                                 Endereço
                             </Typography>
@@ -36,7 +35,7 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                                 <br />Arinos - MG 38680-000
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={6} marginTop={smDownScreen ? 2 : 0}>
                             <Typography fontWeight={600} gutterBottom variant='button'>
                                 Atendimento
                             </Typography>
@@ -50,7 +49,7 @@ export const Footer: React.FC<IFooter> = ({ sampleFooter }) => {
                                 <Link href={`mailto:${Environment.INFORMATION_BASE.EMAIL}`} underline='none'>{Environment.INFORMATION_BASE.EMAIL}</Link>
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={3} marginTop={smDownScreen ? 2 : 0}>
                             <Typography fontWeight={600} gutterBottom variant='button'>
                                 Redes Sociais
                             </Typography>
